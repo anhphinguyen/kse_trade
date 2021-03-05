@@ -166,8 +166,16 @@ switch ($typeManager) {
                 returnError("Chọn loại tài khoản!");
             } else {
                 $id_type = $_REQUEST['id_type'];
+                if($id_type == 3){
+                    if(isset($_REQUEST['account_code']) && !empty($_REQUEST['account_code'])){
+                        $account_code = $_REQUEST['account_code'];
+                    }else{
+                        returnError("Nhập mã giới thiệu cho nhân viên sale : account_code");
+                    }
+                }
             }
         }
+
         $email = '';
         if (isset($_REQUEST['email']) &&  !empty($_REQUEST['email'])) {
             $email = $_REQUEST['email'];
@@ -182,9 +190,9 @@ switch ($typeManager) {
 
         $fullname = $_REQUEST['full_name'];
 
-        if($id_type == 3){
-            $account_code = "MGT".substr(time(), -8);
-        }
+        // if($id_type == 3){
+        //     $account_code = "MGT".substr(time(), -8);
+        // }
 
         $sql_create_user = "INSERT INTO tbl_account_account SET
               account_username = '" . $username . "'

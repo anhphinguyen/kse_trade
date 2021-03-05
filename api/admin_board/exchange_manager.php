@@ -65,7 +65,7 @@ switch ($typeManager) {
 
     case 'list_exchange':{
         $result_arr = array();
-        $sql = "SELECT * FROM tbl_exchange";
+        $sql = "SELECT * FROM tbl_exchange_exchange";
         $result = db_qr($sql);
         $nums = db_nums($result);
         if($nums > 0){
@@ -92,9 +92,9 @@ switch ($typeManager) {
             $time_present = time();
         // }
         
-        $sql = "SELECT * FROM tbl_trading_session 
-                WHERE session_time_open <= '$time_present'
-                AND session_time_close > '$time_present'";
+        $sql = "SELECT * FROM tbl_exchange_period 
+                WHERE period_open <= '$time_present'
+                AND period_close > '$time_present'";
         $result = db_qr($sql);
         $num = db_nums($result);
         if ($num > 0) {

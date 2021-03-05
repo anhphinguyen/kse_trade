@@ -8,14 +8,6 @@ $sql = "SELECT
             ON tbl_customer_customer.id = tbl_request_deposit.id_customer
             WHERE 1=1";
 
-// if (isset($_REQUEST['filter_status'])) {
-//     if ($_REQUEST['filter_status'] == '') {
-//         unset($_REQUEST['filter_status']);
-//     } else {
-//         $filter_status = htmlspecialchars($_REQUEST['filter_status']);
-//         $sql .= " AND request_status = '$filter_status'";
-//     }
-// }
 
 if (isset($_REQUEST['date_begin'])) {
     if ($_REQUEST['date_begin'] == '') {

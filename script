@@ -1,0 +1,54 @@
+kịch bản potman
+* customer_manager:
+    - type_manager: delete : id_customer
+                    update : id_customer
+                             customer_name
+                             customer_introduce
+                             customer_cert_img
+                             id_bank
+                             customer_account_no
+                             customer_account_holder
+                             customer_account_img
+                    create : customer_name
+                             customer_phone
+                             customer_introduce
+                             customer_cert_no
+                             customer_account_no
+                             customer_account_holder
+                             customer_account_img
+                    list_customer_history
+                    list_customer_detail : id_customer
+                    list_customer_customer : filter - customer_code, customer_fullname, customer_cert_no, customer_phone
+* deposit_manager:
+ - type_manager: create_request_comfirm: id_customer
+                                         request_value
+                list_customer : filter - customer_code, customer_fullname, customer_cert_no, customer_phone
+                list_deposit_detail : id_request
+                list_request_deposit : date_begin, date_end
+* payment_manager:
+ - type_manager: update_img_payment : id_request
+                                      request_img
+                list_payment_detail : id_request
+                list_request_payment : filter_status, date_begin, date_end
+* exchange_manager :
+ - type_manager : update : id_exchange
+                           id_account
+                           time_open
+                           time_close
+                           time_living
+                 list_exchange
+                 detail_exchange_trade
+* change_pass : 
+ - type_account : customer
+                  employee
+ - id_account
+
+* list_customer_customer : filter - customer_code, customer_fullname, customer_cert_no, customer_phone  
+* list_customer_detail : id_customer    
+* list_deposit_detail : id_request  
+* list_payment_detail : id_request   
+* list_request_deposit : date_begin, date_end
+* list_request_payment : filter_status, date_begin, date_end
+
+
+                    
