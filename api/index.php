@@ -42,8 +42,33 @@ switch ($detect) {
         include_once 'admin_board/account_type_manager.php';
         break;
     }
+    case 'app_deploy_manager':{
+        include_once 'admin_board/app_deploy_manager.php';
+        break;
+    }
+    case 'customer_manager':{
+        include_once 'admin_board/customer_manager.php';
+        break;
+    }
+    case 'deposit_manager':{
+        include_once 'admin_board/deposit_manager.php';
+        break;
+    }
+    case 'payment_manager':{
+        include_once 'admin_board/payment_manager.php';
+        break;
+    }
+    case 'exchange_manager':{
+        include_once 'admin_board/exchange_manager.php';
+        break;
+    }
     case 'force_signout':{
         include_once 'admin_board/force_signout.php';
+        break;
+    }
+    /*customer board*/
+    case 'register':{
+        include_once 'customer_board/register.php';
         break;
     }
     /*viewlist board*/
@@ -53,6 +78,34 @@ switch ($detect) {
     }
     case 'change_pass':{
         include_once 'socket_board/change_pass.php';
+        break;
+    }
+    case 'list_customer_customer':{
+        include_once 'socket_board/list_customer_customer.php';
+        break;
+    }
+    case 'list_customer_detail':{
+        include_once 'socket_board/list_customer_detail.php';
+        break;
+    }
+    case 'list_customer_history':{
+        include_once 'socket_board/list_customer_history.php';
+        break;
+    }
+    case 'list_deposit_detail':{
+        include_once 'socket_board/list_deposit_detail.php';
+        break;
+    }
+    case 'list_payment_detail':{
+        include_once 'socket_board/list_payment_detail.php';
+        break;
+    }
+    case 'list_request_deposit':{
+        include_once 'socket_board/list_request_deposit.php';
+        break;
+    }
+    case 'list_request_payment':{
+        include_once 'socket_board/list_request_payment.php';
         break;
     }
 
