@@ -1,0 +1,17 @@
+Ngày 04-03-2021
+* admin
+ - account_manager
+ - account_type_manager
+ - app_deploy_manager
+ - force_sigout
+*view 
+ - change_pass
+ - login
+
+Ngày 05-03-2021
+* admin
+ - customer_manager
+ - list_customer_customer
+ - register
+ - làm list_customer_history
+ - phần quản lý rút tiền - nạp tiền : mới làm list_request_payment
