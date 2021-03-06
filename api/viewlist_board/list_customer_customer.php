@@ -33,40 +33,37 @@ $total_page = ceil($total / $limit);
 $start = ($page - 1) * $limit;
 $sql .= " ORDER BY `tbl_customer_customer`.`id` DESC LIMIT {$start},{$limit}";
 
-if (empty($error)) {
-    $customer_arr['success'] = 'true';
+$customer_arr['success'] = 'true';
 
-    $customer_arr['total'] = strval($total);
-    $customer_arr['total_page'] = strval($total_page);
-    $customer_arr['limit'] = strval($limit);
-    $customer_arr['page'] = strval($page);
-    $customer_arr['data'] = array();
-    $result = db_qr($sql);
-    $nums = db_nums($result);
+$customer_arr['total'] = strval($total);
+$customer_arr['total_page'] = strval($total_page);
+$customer_arr['limit'] = strval($limit);
+$customer_arr['page'] = strval($page);
+$customer_arr['data'] = array();
+$result = db_qr($sql);
+$nums = db_nums($result);
 
-    
-    if ($nums > 0) {
-        while ($row = db_assoc($result)) {
-            $customer_item = array(
-                'id_customer' => $row['id'],
-                // 'id_bank' => $row['id_bank'],
-                'customer_name' => htmlspecialchars_decode($row['customer_fullname']),
-                // 'customer_code' => htmlspecialchars_decode($row['customer_code']),
-                'customer_phone' => htmlspecialchars_decode($row['customer_phone']),
-                // 'customer_introduce' => htmlspecialchars_decode($row['customer_introduce']),
-                'customer_cert_no' => htmlspecialchars_decode($row['customer_cert_no']),
-                // 'customer_cert_img' => htmlspecialchars_decode($row['customer_cert_img']),
-                // 'customer_account_no' => htmlspecialchars_decode($row['customer_account_no']),
-                // 'customer_account_holder' => htmlspecialchars_decode($row['customer_account_holder']),
-                // 'customer_account_img' => htmlspecialchars_decode($row['customer_account_img']),
-                // 'customer_wallet_bet' => htmlspecialchars_decode($row['customer_wallet_bet']),
-                // 'customer_wallet_payment' => htmlspecialchars_decode($row['customer_wallet_payment']),
-            );
 
-            array_push($customer_arr['data'], $customer_item);
-        }
-        reJson($customer_arr);
-    } else {
-        returnSuccess("Không có khách hàng");
+if ($nums > 0) {
+    while ($row = db_assoc($result)) {
+        $customer_item = array(
+            'id_customer' => $row['id'],
+            'customer_name' => htmlspecialchars_decode($row['customer_fullname']),
+            // 'customer_code' => htmlspecialchars_decode($row['customer_code']),
+            'customer_phone' => htmlspecialchars_decode($row['customer_phone']),
+            // 'customer_introduce' => htmlspecialchars_decode($row['customer_introduce']),
+            'customer_cert_no' => htmlspecialchars_decode($row['customer_cert_no']),
+            // 'customer_cert_img' => htmlspecialchars_decode($row['customer_cert_img']),
+            // 'customer_account_no' => htmlspecialchars_decode($row['customer_account_no']),
+            // 'customer_account_holder' => htmlspecialchars_decode($row['customer_account_holder']),
+            // 'customer_account_img' => htmlspecialchars_decode($row['customer_account_img']),
+            // 'customer_wallet_bet' => htmlspecialchars_decode($row['customer_wallet_bet']),
+            // 'customer_wallet_payment' => htmlspecialchars_decode($row['customer_wallet_payment']),
+        );
+
+        array_push($customer_arr['data'], $customer_item);
     }
+    reJson($customer_arr);
+} else {
+    returnSuccess("Không có khách hàng");
 }

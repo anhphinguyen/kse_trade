@@ -50,5 +50,20 @@ kịch bản potman
 * list_request_deposit : date_begin, date_end
 * list_request_payment : filter_status, date_begin, date_end
 
-
+Loại tài khoản : type : id 1 - admin
+                        id 2 - officer
+                        id 3 - sale
+Loại module quyền : module_account
+                    module_customer
+                    module_exchange
+                    module_request ( rút - nạp)
+                    module_report  ( thống kê )
+                    module_force
+Trạng thái list_support : 1 : chưa xử lý
+                          2 : đang xử lý
+                          3 : đã xử lý
+Trạng thái lệnh : 1 : Tạo lệnh
+                  2 : Chờ xác nhận 
+                  3 : Hoàn tất
+                  4 : Hủy lệnh
                     

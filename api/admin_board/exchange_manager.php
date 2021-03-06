@@ -15,83 +15,85 @@ $typeManager = $_REQUEST['type_manager'];
 
 switch ($typeManager) {
 
-    case 'update':{
-        if(isset($_REQUEST['id_exchange']) && !empty($_REQUEST['id_exchange'])){
-            $id_exchange = $_REQUEST['id_exchange'];
-        }else{
-            return("Nhập id_exchange");
-        }
-
-        if(isset($_REQUEST['id_account']) && !empty($_REQUEST['id_account'])){
-            $id_account = $_REQUEST['id_account'];
-        }else{
-            return("Nhập id_account");
-        }
-
-        if(isset($_REQUEST['time_open']) && !empty($_REQUEST['time_open'])){
-            if(date("d", $_REQUEST['time_open']) <= date("d", time())){
-                returnError("Chỉ được cập nhật thời gian mở sàn cho ngày hôm sau");
+    case 'update': {
+            if (isset($_REQUEST['id_exchange']) && !empty($_REQUEST['id_exchange'])) {
+                $id_exchange = $_REQUEST['id_exchange'];
+            } else {
+                return ("Nhập id_exchange");
             }
-            $time_open = $_REQUEST['time_open'];
-        }
 
-
-        if(isset($_REQUEST['time_close']) && !empty($_REQUEST['time_close'])){
-            if(date("d", $_REQUEST['time_close']) <= date("d", time())){
-                returnError("Chỉ được cập nhật thời gian đóng sàn cho ngày hôm sau");
-            }elseif($_REQUEST['time_close'] == $_REQUEST['time_open']){
-                returnError("Thời gian đóng sàn không được trùng với thời gian mở sàn");
+            if (isset($_REQUEST['id_account']) && !empty($_REQUEST['id_account'])) {
+                $id_account = $_REQUEST['id_account'];
+            } else {
+                return ("Nhập id_account");
             }
-            $time_close = $_REQUEST['time_close'];
-        }
 
-        if(isset($_REQUEST['time_living']) && !empty($_REQUEST['time_living'])){
-            $time_living = $_REQUEST['time_living'];
-        }
+            if (isset($_REQUEST['time_open']) && !empty($_REQUEST['time_open'])) {
+                if (date("d", $_REQUEST['time_open']) <= date("d", time())) {
+                    returnError("Chỉ được cập nhật thời gian mở sàn cho ngày hôm sau");
+                }
+                $time_open = $_REQUEST['time_open'];
+            }
 
-        $sql = "INSERT INTO tbl_exchange_temporary SET
+
+            if (isset($_REQUEST['time_close']) && !empty($_REQUEST['time_close'])) {
+                if (date("d", $_REQUEST['time_close']) <= date("d", time())) {
+                    returnError("Chỉ được cập nhật thời gian đóng sàn cho ngày hôm sau");
+                } elseif ($_REQUEST['time_close'] == $_REQUEST['time_open']) {
+                    returnError("Thời gian đóng sàn không được trùng với thời gian mở sàn");
+                }
+                $time_close = $_REQUEST['time_close'];
+            }
+
+            if (isset($_REQUEST['time_living']) && !empty($_REQUEST['time_living'])) {
+                $time_living = $_REQUEST['time_living'];
+            }
+
+            $sql = "INSERT INTO tbl_exchange_temporary SET
                 id_exchange = '$id_exchange',
                 exchange_open = '$time_open',
                 exchange_close = '$time_close',
                 exchange_period = '$time_living',
                 exchange_update_by = '$id_account'
                 ";
-        if(db_qr($sql)){
-            returnSuccess("Sàn mới sẽ bắt đầu từ lúc ".date("d/m/Y H:i:s", $time_open));
-        }
-
-        break;
-    }
-
-    case 'list_exchange':{
-        $result_arr = array();
-        $sql = "SELECT * FROM tbl_exchange_exchange";
-        $result = db_qr($sql);
-        $nums = db_nums($result);
-        if($nums > 0){
-            while($row = db_assoc($result)){
-                $result_item = array(
-                    'id_exchange' => $row['id'],
-                    'exchange_name' => $row['exchange_name'],
-                    'exchange_open' => $row['exchange_open'],
-                    'exchange_close' => $row['exchange_close'],
-                    'exchange_quantity' => $row['exchange_quantity'],
-                    'exchange_update_by' => $row['exchange_update_by'],
-                );
-                array_push($result_arr, $result_item);
+            if (db_qr($sql)) {
+                returnSuccess("Sàn mới sẽ bắt đầu từ lúc " . date("d/m/Y H:i:s", $time_open));
             }
-            reJson($result_arr);
+
+            break;
         }
-        break;
-    }
+
+    case 'list_exchange': {
+            $result_arr = array();
+            $sql = "SELECT * FROM tbl_exchange_exchange";
+            $result = db_qr($sql);
+            $nums = db_nums($result);
+            if ($nums > 0) {
+                $result_arr['success'] = 'true';
+                $result_arr['data'] = array();
+                while ($row = db_assoc($result)) {
+                    $result_item = array(
+                        'id_exchange' => $row['id'],
+                        'exchange_name' => $row['exchange_name'],
+                        'exchange_open' => $row['exchange_open'],
+                        'exchange_close' => $row['exchange_close'],
+                        'exchange_quantity' => $row['exchange_quantity'],
+                        'exchange_update_by' => $row['exchange_update_by'],
+                    );
+                    array_push($result_arr['data'], $result_item);
+                }
+                reJson($result_arr);
+            }
+            break;
+        }
 
     case 'detail_exchange_trade':
         // if (isset($_REQUEST['time_present']) && !empty($_REQUEST['time_present'])) {
-            // $time_present = $_REQUEST['time_present'];
+        // $time_present = $_REQUEST['time_present'];
         // } else {
-            $time_present = time();
+        $time_present = time();
         // }
-        
+
         $sql = "SELECT * FROM tbl_exchange_period 
                 WHERE period_open <= '$time_present'
                 AND period_close > '$time_present'";
@@ -105,7 +107,7 @@ switch ($typeManager) {
         } else {
             returnError('Chưa có phiên được tạo');
         }
-        
+
 
         $total_people_up = "";
         $total_people_down = "";
@@ -162,6 +164,8 @@ switch ($typeManager) {
         }
 
         $result_arr = array();
+        $result_arr['success'] = 'true';
+        $result_arr['data'] = array();
         $result_item = array(
             'total_people_up' => $total_people_up,
             'total_people_down' => $total_people_down,
@@ -172,7 +176,7 @@ switch ($typeManager) {
         array_push($result_arr, $result_item);
         reJson($result_arr);
         break;
-    
+
     default:
         returnError("type_manager is not accept!");
         break;

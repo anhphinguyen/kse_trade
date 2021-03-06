@@ -307,11 +307,7 @@ function return_error($message)
 
 function reJson($array)
 {
-    $arr_result = array(
-        'success' => 'true',
-        'data' => $array
-    );
-    echo json_encode($arr_result);
+    echo json_encode($array);
     exit();
 }
 function returnError($string)

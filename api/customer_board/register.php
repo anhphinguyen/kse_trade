@@ -49,8 +49,10 @@ if((db_nums($result)) > 0){
     returnError("Đã tồn tại tài khoản");
 }
 $dir_save_cert_img = handing_file_img($customer_cert_img, $dir_save_customer_cert_img);
+$customer_code ="KH" . substr(time(), -8);
 $sql = "INSERT INTO tbl_customer_customer SET 
         customer_phone = '$customer_phone', 
+        customer_code = '$customer_code', 
         customer_password = '$customer_password', 
         customer_introduce = '$customer_introduce', 
         customer_cert_img = '$dir_save_cert_img', 
