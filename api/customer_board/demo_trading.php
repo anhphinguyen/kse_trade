@@ -1,9 +1,9 @@
 <?php
 
-if (isset($_REQUEST['id_customer']) && !empty($_REQUEST['id_customer'])) {
-    $id_customer = $_REQUEST['id_customer'];
+if (isset($_REQUEST['id_demo']) && !empty($_REQUEST['id_demo'])) {
+    $id_demo = $_REQUEST['id_demo'];
 } else {
-    returnError("Nhập id_customer");
+    returnError("Nhập id_demo");
 }
 
 if (isset($_REQUEST['id_exchange_period']) && !empty($_REQUEST['id_exchange_period'])) {
@@ -30,15 +30,15 @@ if (isset($_REQUEST['trading_type']) && !empty($_REQUEST['trading_type'])) {
     returnError("Nhập trading_type");
 }
 
-$sql = "SELECT * FROM tbl_customer_customer WHERE id = '$id_customer'";
+$sql = "SELECT * FROM tbl_customer_demo WHERE id = '$id_demo'";
 $result = db_qr($sql);
 $nums = db_nums($result);
 if ($nums > 0) {
     while ($row = db_assoc($result)) {
-        if ($trading_bet > $row['customer_wallet_bet']) {
+        if ($trading_bet > $row['demo_wallet_bet']) {
             returnError("Số tiền trong tài khoản của bạn không đủ để trade. Xin vui lòng nạp tiền để có thể đầu tư");
         }
-        $sub_money = $row['customer_wallet_bet'] - $trading_bet;
+        $sub_money = $row['demo_wallet_bet'] - $trading_bet;
         $sql = "UPDATE tbl_customer_customer SET customer_wallet_bet = '$sub_money' WHERE id = '$id_customer'";
         db_qr($sql);
     }
@@ -60,8 +60,9 @@ if ($nums > 0) {
     }
 }
 
-$sql = "INSERT INTO tbl_trading_log SET
-            id_customer = '$id_customer',
+
+$sql = "INSERT INTO tbl_customer_demo_log SET
+            id_demo = '$id_demo',
             id_exchange_period = '$id_exchange_period',
             trading_bet = '$trading_bet',
             trading_log = '$trading_log',

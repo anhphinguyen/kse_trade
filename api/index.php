@@ -78,7 +78,44 @@ switch ($detect) {
         include_once 'admin_board/force_signout.php';
         break;
     }
+    /*employee board*/
+    case 'sale_update_info':{
+        include_once 'employee_board/sale_update_info.php';
+        break;
+    }
+    case 'sale_customer':{
+        include_once 'employee_board/sale_customer.php';
+        break;
+    }
+    case 'officer_support':{
+        include_once 'employee_board/officer_support.php';
+        break;
+    }
+    case 'officer_payment_request':{
+        include_once 'employee_board/officer_payment_request.php';
+        break;
+    }
+    case 'officer_edit_info':{
+        include_once 'employee_board/officer_edit_info.php';
+        break;
+    }
     /*customer board*/
+    case 'demo_trading':{
+        include_once 'customer_board/demo_trading.php';
+        break;
+    }
+    case 'demo_register':{
+        include_once 'customer_board/demo_register.php';
+        break;
+    }
+    case 'demo_deposit':{
+        include_once 'customer_board/demo_deposit.php';
+        break;
+    }
+    case 'demo_check_service':{
+        include_once 'customer_board/demo_check_service.php';
+        break;
+    }
     case 'get_time_duration':{
         include_once 'customer_board/get_time_duration.php';
         break;

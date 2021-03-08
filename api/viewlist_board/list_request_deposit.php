@@ -9,6 +9,15 @@ $sql = "SELECT
             WHERE 1=1";
 
 
+if (isset($_REQUEST['id_customer'])) {
+    if ($_REQUEST['id_customer'] == '') {
+        unset($_REQUEST['id_customer']);
+    } else {
+        $id_customer = $_REQUEST['id_customer'];
+        $sql .= " AND `id_customer` = '{$id_customer}'";
+    }
+}
+
 if (isset($_REQUEST['date_begin'])) {
     if ($_REQUEST['date_begin'] == '') {
         unset($_REQUEST['date_begin']);

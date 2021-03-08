@@ -7,13 +7,16 @@ $sql = "SELECT
             LEFT JOIN tbl_customer_customer
             ON tbl_customer_customer.id = tbl_request_payment.id_customer
             WHERE 1=1";
-// id
-// id_customer
-// request_created
-// request_code
-// request_value
-// request_completed
-// request_status
+
+if (isset($_REQUEST['id_customer'])) {
+    if ($_REQUEST['id_customer'] == '') {
+        unset($_REQUEST['id_customer']);
+    } else {
+        $id_customer = $_REQUEST['id_customer'];
+        $sql .= " AND `id_customer` = '{$id_customer}'";
+    }
+}
+
 if (isset($_REQUEST['filter_status'])) {
     if ($_REQUEST['filter_status'] == '') {
         unset($_REQUEST['filter_status']);

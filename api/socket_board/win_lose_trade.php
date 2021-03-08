@@ -25,6 +25,7 @@ $num = db_nums($result);
 if ($num > 0) {
     while ($row = db_assoc($result)) {
         $id_session = $row['id'];
+        // $exchange_percent = $row['exchange_percent'];
         $session_time_close = strval((int)$row['period_close'] - 1);
     }
 } else {
@@ -62,9 +63,10 @@ if ($total_trade_up <= $total_trade_down) {
             ";
     db_qr($sql);
     // Cộng tiền cho customer
-    // if($time_break >= $session_time_close){
-    //     $sql = "SELECT "
-    // }
+    if ($time_break >= $session_time_close) {
+        customer_add_money($id_session,'up');
+        demo_add_money($id_session,'up');
+    }
 } else {
     $result_trade = "down";
     $sql = "UPDATE tbl_exchange_period SET 
@@ -72,11 +74,11 @@ if ($total_trade_up <= $total_trade_down) {
             WHERE id = '$id_session' 
             ";
     db_qr($sql);
-    // $sql = "UPDATE tbl_trading_playing SET 
-    //         play_status_bet = 'lose'
-    //         WHERE id_session = '$id_session' 
-    //         AND play_status_trade = 'up'";
-    // db_qr($sql);
+    // Cộng tiền cho customer
+    if ($time_break >= $session_time_close) {
+        customer_add_money($id_session,'down');
+        demo_add_money($id_session,'down');
+    }
 }
 
 $sql_session = "SELECT id FROM tbl_trading_session 
@@ -105,7 +107,7 @@ if ($nums_get_coordinate_g > 0) {
 $result_arr = array();
 $result_item = array(
     'result_trade' => $result_trade,
-    'coordinate_g' => isset($coordinate_g)?$coordinate_g:"null",
+    'coordinate_g' => isset($coordinate_g) ? $coordinate_g : "null",
     'time_close' => $session_time_close - 1
 );
 array_push($result_arr, $result_item);
