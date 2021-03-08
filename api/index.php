@@ -34,6 +34,18 @@ switch ($detect) {
 
     
     /*admin board*/
+    case 'set_open_exchange':{
+        include_once 'admin_board/set_open_exchange.php';
+        break;
+    }
+    case 'service_exchange':{
+        include_once 'admin_board/service_exchange.php';
+        break;
+    }
+    case 'active_exchange':{
+        include_once 'admin_board/active_exchange.php';
+        break;
+    }
     case 'account_manager':{
         include_once 'admin_board/account_manager.php';
         break;
@@ -67,8 +79,54 @@ switch ($detect) {
         break;
     }
     /*customer board*/
+    case 'get_time_duration':{
+        include_once 'customer_board/get_time_duration.php';
+        break;
+    }
+    case 'get_coordinate':{
+        include_once 'customer_board/get_coordinate.php';
+        break;
+    }
+    case 'customer_trading':{
+        include_once 'customer_board/customer_trading.php';
+        break;
+    }
+    case 'customer_trade_one_period':{
+        include_once 'customer_board/customer_trade_one_period.php';
+        break;
+    }
+    case 'customer_result_bet':{
+        include_once 'customer_board/customer_result_bet.php';
+        break;
+    }
+    case 'customer_request_payment':{
+        include_once 'customer_board/customer_request_payment.php';
+        break;
+    }
+    case 'customer_request_deposit':{
+        include_once 'customer_board/customer_request_deposit.php';
+        break;
+    }
+    case 'customer_check_service':{
+        include_once 'customer_board/customer_check_service.php';
+        break;
+    }
     case 'register':{
         include_once 'customer_board/register.php';
+        break;
+    }
+    /*socket board*/
+
+    case 'win_lose_trade':{
+        include_once 'socket_board/win_lose_trade.php';
+        break;
+    }
+    case 'check_time_block':{
+        include_once 'socket_board/check_time_block.php';
+        break;
+    }
+    case 'add_coordinate':{
+        include_once 'socket_board/add_coordinate.php';
         break;
     }
     /*viewlist board*/
@@ -77,35 +135,39 @@ switch ($detect) {
         break;
     }
     case 'change_pass':{
-        include_once 'socket_board/change_pass.php';
+        include_once 'viewlist_board/change_pass.php';
+        break;
+    }
+    case 'list_period_result':{
+        include_once 'viewlist_board/list_period_result.php';
         break;
     }
     case 'list_customer_customer':{
-        include_once 'socket_board/list_customer_customer.php';
+        include_once 'viewlist_board/list_customer_customer.php';
         break;
     }
     case 'list_customer_detail':{
-        include_once 'socket_board/list_customer_detail.php';
+        include_once 'viewlist_board/list_customer_detail.php';
         break;
     }
     case 'list_customer_history':{
-        include_once 'socket_board/list_customer_history.php';
+        include_once 'viewlist_board/list_customer_history.php';
         break;
     }
     case 'list_deposit_detail':{
-        include_once 'socket_board/list_deposit_detail.php';
+        include_once 'viewlist_board/list_deposit_detail.php';
         break;
     }
     case 'list_payment_detail':{
-        include_once 'socket_board/list_payment_detail.php';
+        include_once 'viewlist_board/list_payment_detail.php';
         break;
     }
     case 'list_request_deposit':{
-        include_once 'socket_board/list_request_deposit.php';
+        include_once 'viewlist_board/list_request_deposit.php';
         break;
     }
     case 'list_request_payment':{
-        include_once 'socket_board/list_request_payment.php';
+        include_once 'viewlist_board/list_request_payment.php';
         break;
     }
 

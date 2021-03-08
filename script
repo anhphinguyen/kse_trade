@@ -53,10 +53,11 @@ kịch bản potman
 Loại tài khoản : type : id 1 - admin
                         id 2 - officer
                         id 3 - sale
-Loại module quyền : module_account
+Loại module quyền : module_exchange
+                    module_account
                     module_customer
-                    module_exchange
-                    module_request ( rút - nạp)
+                    module_request_payment ( rút )
+                    module_confirm_deposit ( nạp)
                     module_report  ( thống kê )
                     module_force
 Trạng thái list_support : 1 : chưa xử lý
@@ -66,4 +67,15 @@ Trạng thái lệnh : 1 : Tạo lệnh
                   2 : Chờ xác nhận 
                   3 : Hoàn tất
                   4 : Hủy lệnh
+
+Ngay 08-03-2021 : 
+ * officer_payment_request :
+  - type_manager : cancel_request_payment : id_request
+                                            request_comment
+                   list_deposit_detail : id_request
+                   list_request_deposit : date_begin, date_end
+ * officer_support : 
+  - type_manager : finished : id_support_customer
+                   processing : id_support_customer
+                   list_support
                     

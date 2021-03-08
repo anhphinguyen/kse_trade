@@ -64,7 +64,7 @@ switch ($typeManager) {
                 `tbl_account_account`.`account_email` as `account_email`,
                 `tbl_account_account`.`account_phone` as `account_phone`,
                 `tbl_account_account`.`account_status` as `account_status`,
-                `tbl_account_account`.`account_token` as `account_token`, -- chưa bổ sung vào DB
+                -- `tbl_account_account`.`account_token` as `account_token`, -- chưa bổ sung vào DB
                 `tbl_account_account`.`force_sign_out` as `force_sign_out`,
 
 
@@ -83,6 +83,8 @@ switch ($typeManager) {
 
         $result = mysqli_query($conn, $sql);
 
+        // echo $sql;
+        // exit();
         // Get row count
         $num = mysqli_num_rows($result);
 
@@ -105,7 +107,7 @@ switch ($typeManager) {
                     'phone_number' => $row['account_phone'],
                     'status_employee' => $row['account_status'],
                     'type_description' => $row['type_description'],
-                    'role_permission' => getRolePermission($row['id'], $conn)
+                    'role_permission' => getRolePermission($row['id_account'], $conn)
                 );
 
                 // Push to "data"

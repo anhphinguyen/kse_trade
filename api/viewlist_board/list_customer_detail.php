@@ -18,7 +18,6 @@ if (isset($_REQUEST['id_customer'])) {
 returnError("Nhập id_customer");
 
 $customer_arr = array();
-
 $customer_arr['success'] = 'true';
 
 $customer_arr['data'] = array();

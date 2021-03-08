@@ -2,7 +2,7 @@
     $db["hostname"] = "localhost";
     $db["username"] = "root";
     $db["password"] = "";
-    $db["database"] = "db_test_tradingview";
+    $db["database"] = "db_kse_trading";
 
     db_connect($db);
 
