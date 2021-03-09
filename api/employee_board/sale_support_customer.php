@@ -28,7 +28,7 @@ switch ($type_manager) {
                     tbl_trading_log.trading_type as trading_type,
                     MAX(tbl_trading_log.trading_log) as trading_log,
                     COUNT(tbl_trading_log.id_customer) as count,
-
+                    (SELECT COUNT(tbl_trading_log.id_customer) FROM tbl_trading_log WHERE tbl_trading_log.id_customer = customer_id) as total_trade,
                     ROUND((SELECT COUNT(tbl_trading_log.id_customer) FROM tbl_trading_log WHERE trading_result = 'win' AND tbl_trading_log.id_customer = customer_id) / (SELECT COUNT(tbl_trading_log.id_customer) FROM tbl_trading_log WHERE tbl_trading_log.id_customer = customer_id)*100) as percent_win
 
                     FROM tbl_trading_log
@@ -81,7 +81,8 @@ switch ($type_manager) {
                         'id_customer' => $row['customer_id'],
                         'customer_name' => $row['customer_fullname'],
                         'customer_phone' => $row['customer_phone'],
-                        'percent_win' => $row['percent_win'],
+                        'percent_win' => $row['percent_win']."%",
+                        'total_trade' => $row['total_trade'],
                         'trading_log' => date("d/m/Y", $row['trading_log']),
                     );
                     array_push($result_arr['data'], $result_item);
