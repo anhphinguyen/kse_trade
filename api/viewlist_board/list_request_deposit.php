@@ -7,6 +7,7 @@ $sql = "SELECT
             LEFT JOIN tbl_customer_customer
             ON tbl_customer_customer.id = tbl_request_deposit.id_customer
             WHERE 1=1";
+            
 
 
 if (isset($_REQUEST['id_customer'])) {
@@ -22,28 +23,36 @@ if (isset($_REQUEST['date_begin'])) {
     if ($_REQUEST['date_begin'] == '') {
         unset($_REQUEST['date_begin']);
     } else {
-        $date_begin = $_REQUEST['date_begin'];
-        $sql .= " AND `request_time_completed` >= '{$date_begin}" . " 00:00:00'";
+        $date_begin = time($_REQUEST['date_begin']. " 00:00:00");
+        $sql .= " AND `request_time_completed` >= '{$date_begin}'";
     }
 } else {
     $three_month_ago = time() - 3 * 30 * 24 * 60 * 60; //7 776 000
-
-    $month = date("Y-m", $three_month_ago);
-    $sql .= " AND `request_time_completed` >= '" . $month . "-1 00:00:00'";
+    $sql .= " AND `request_time_completed` >= '" . $three_month_ago . "'";
 }
 
 if (isset($_REQUEST['date_end'])) {
     if ($_REQUEST['date_end'] == '') {
         unset($_REQUEST['date_end']);
     } else {
-        $date_end = $_REQUEST['date_end'];
-        $sql .= " AND `request_time_completed` <= '{$date_end}" . " 23:59:59'";
+        $date_begin = time($_REQUEST['date_end']. " 23:59:59");
+        $sql .= " AND `request_time_completed` <= '{$date_end}'";
     }
 } else {
-    $month = date("Y-m", time());
-    $sql .= " AND `request_time_completed` <= '" . $month . "-31 23:59:59'";
+    $month = time();
+    $sql .= " AND `request_time_completed` <= '" . $month . "'";
 }
 
+if (isset($_REQUEST['filter'])) {
+    if ($_REQUEST['filter'] == '') {
+        unset($_REQUEST['filter']);
+    } else {
+        $filter = htmlspecialchars($_REQUEST['filter']);
+        $sql .= " AND ( tbl_customer_customer.customer_code LIKE '%{$filter}%'";
+        $sql .= " OR tbl_customer_customer.customer_fullname LIKE '%{$filter}%'";
+        $sql .= " OR tbl_customer_customer.customer_phone LIKE '%{$filter}%' )";
+    }
+}
 
 $customer_arr = array();
 
@@ -61,7 +70,7 @@ if (isset($_REQUEST['page']) && !empty($_REQUEST['page'])) {
 
 $total_page = ceil($total / $limit);
 $start = ($page - 1) * $limit;
-$sql .= " ORDER BY `tbl_customer_customer`.`id` DESC LIMIT {$start},{$limit}";
+$sql .= " ORDER BY `tbl_request_deposit`.`id` ASC LIMIT {$start},{$limit}";
 
 $customer_arr['success'] = 'true';
 
@@ -76,6 +85,7 @@ $nums = db_nums($result);
 if ($nums > 0) {
     while ($row = db_assoc($result)) {
         $customer_item = array(
+            'id_request' => $row['id'],
             'id_customer' => $row['id_customer'],
             'customer_name' => htmlspecialchars_decode($row['customer_fullname']),
             'request_code' => $row['request_code'],

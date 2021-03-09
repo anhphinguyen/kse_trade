@@ -51,8 +51,8 @@ kịch bản potman
 * list_request_payment : filter_status, date_begin, date_end
 
 Loại tài khoản : type : id 1 - admin
-                        id 2 - officer
-                        id 3 - sale
+                        id 2 - customer_services
+                        id 3 - sales
 Loại module quyền : module_exchange
                     module_account
                     module_customer
@@ -74,6 +74,17 @@ Ngay 08-03-2021 :
                                             request_comment
                    list_deposit_detail : id_request
                    list_request_deposit : date_begin, date_end
+ * officer_support : 
+  - type_manager : finished : id_support_customer
+                   processing : id_support_customer
+                   list_support
+
+Ngay 09-03-2021 : 
+ * customer_request_support :
+  - type_manager : request_support : id_customer
+                                      id_support_category
+                                      support_request
+                   list_support_category 
  * officer_support : 
   - type_manager : finished : id_support_customer
                    processing : id_support_customer

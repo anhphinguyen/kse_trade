@@ -15,6 +15,14 @@ $typeManager = $_REQUEST['type_manager'];
 switch ($typeManager) {
 
     case 'list_account':
+        $id_account = '';
+        if (isset($_REQUEST['id_account'])) {
+            if ($_REQUEST['id_account'] == '') {
+                unset($_REQUEST['id_account']);
+            } else {
+                $id_account = $_REQUEST['id_account'];
+            }
+        }
         $filter = '';
         if (isset($_REQUEST['filter'])) {
             if ($_REQUEST['filter'] == '') {
@@ -33,7 +41,12 @@ switch ($typeManager) {
                           OR account_username LIKE '%{$filter}%' 
                           OR account_phone LIKE '%{$filter}%')";
         }
+        if (!empty($id_account)) {
+            $sql .= " AND id = '$id_account'";
+        }
 
+        // echo $sql;
+        // exit();
 
         $result = mysqli_query($conn, $sql);
         while ($row = $result->fetch_assoc()) {
@@ -73,10 +86,14 @@ switch ($typeManager) {
                  FROM tbl_account_account
                  LEFT JOIN tbl_account_type
                  ON tbl_account_account.id_type = tbl_account_type.id
+                 WHERE 1=1
                  ";
 
         if (!empty($filter)) {
             $sql .= " AND (tbl_account_account.account_fullname LIKE '%" . $filter . "%' OR account_username LIKE '%" . $filter . "%' OR account_phone LIKE '%" . $filter . "%')";
+        }
+        if (!empty($id_account)) {
+            $sql .= " AND tbl_account_account.id = '$id_account'";
         }
 
         $sql .= " ORDER BY tbl_account_account.id DESC  LIMIT $start,$limit";

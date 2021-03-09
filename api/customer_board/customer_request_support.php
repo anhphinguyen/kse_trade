@@ -44,9 +44,12 @@ switch ($type_manager) {
         } 
 
         $sql = "INSERT INTO tbl_support_info SET 
-                id_category = '$id_support_category',
-                support_request = '$support_request'
+                id_category = '$id_support_category'
                 ";
+        if (isset($_REQUEST['support_request']) && !empty($_REQUEST['support_request'])) {
+            $sql .= ", support_request = '$support_request'";
+        }
+                
         if(db_qr($sql)){
             $id_support_info = mysqli_insert_id($conn);
             $support_date = time();
@@ -75,7 +78,7 @@ switch ($type_manager) {
                 $customer_arr['data'] = array();
                 while ($row = db_assoc($result)) {
                     $customer_item = array(
-                        'id_support_category' => $row['id_support_category'],
+                        'id_support_category' => $row['id'],
                         'support_category' => htmlspecialchars_decode($row['support_category']),
                     );
 

@@ -11,34 +11,33 @@ if (isset($_REQUEST['id_customer'])) {
         $id_customer = $_REQUEST['id_customer'];
         $sql .= " AND `id_customer` = '{$id_customer}'";
     }
+}else{
+    returnError("Nhập id_customer");
 }
-returnError("Nhập id_customer");
 
 
 if (isset($_REQUEST['date_begin'])) {
     if ($_REQUEST['date_begin'] == '') {
         unset($_REQUEST['date_begin']);
     } else {
-        $date_begin = $_REQUEST['date_begin'];
-        $sql .= " AND `trading_log` >= '{$date_begin}" . " 00:00:00'";
+        $date_begin = time($_REQUEST['date_begin']. " 00:00:00");
+        $sql .= " AND `trading_log` >= '{$date_begin}'";
     }
 } else {
     $three_month_ago = time() - 3 * 30 * 24 * 60 * 60; //7 776 000
-
-    $month = date("Y-m", $three_month_ago);
-    $sql .= " AND `trading_log` >= '" . $month . "-1 00:00:00'";
+    $sql .= " AND `trading_log` >= '" . $three_month_ago . "'";
 }
 
 if (isset($_REQUEST['date_end'])) {
     if ($_REQUEST['date_end'] == '') {
         unset($_REQUEST['date_end']);
     } else {
-        $date_end = $_REQUEST['date_end'];
-        $sql .= " AND `trading_log` <= '{$date_end}" . " 23:59:59'";
+        $date_begin = time($_REQUEST['date_end']. " 23:59:59");
+        $sql .= " AND `trading_log` <= '{$date_end}'";
     }
 } else {
-    $month = date("Y-m", time());
-    $sql .= " AND `trading_log` <= '" . $month . "-31 23:59:59'";
+    $month = time();
+    $sql .= " AND `trading_log` <= '" . $month . "'";
 }
 
 if (isset($_REQUEST['trading_result'])) {
@@ -84,11 +83,11 @@ if ($nums > 0) {
         $customer_item = array(
             'id_trading' => $row['id'],
             'id_customer' => $row['id_customer'],
-            'trading_log' => $row['trading_log'],
+            'trading_log' => date("d/m/Y - H:i", $row['trading_log']),
             'trading_bet' => $row['trading_bet'],
             'trading_type' => $row['trading_type'],
             'trading_result' => $row['trading_result'],
-            'trading_percent' => ($row['trading_result'] === 'WIN' )?$row['trading_percent']:"",
+            'trading_percent' => ($row['trading_result'] === $row['trading_type'] )?$row['trading_percent']:"",
         );
 
         array_push($customer_arr['data'], $customer_item);

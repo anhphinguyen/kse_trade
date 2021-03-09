@@ -34,6 +34,10 @@ switch ($detect) {
 
     
     /*admin board*/
+    case 'exchange_update':{
+        include_once 'admin_board/exchange_update.php';
+        break;
+    }
     case 'set_open_exchange':{
         include_once 'admin_board/set_open_exchange.php';
         break;
@@ -100,8 +104,13 @@ switch ($detect) {
         break;
     }
     /*customer board*/
-    case 'list_bank':{
-        include_once 'customer_board/list_bank.php';
+    
+    case 'customer_request_support':{
+        include_once 'customer_board/customer_request_support.php';
+        break;
+    }
+    case 'check_exchange_open':{
+        include_once 'customer_board/check_exchange_open.php';
         break;
     }
     case 'demo_trading':{
@@ -132,6 +141,10 @@ switch ($detect) {
         include_once 'customer_board/customer_trading.php';
         break;
     }
+    case 'customer_method_payment':{
+        include_once 'customer_board/customer_method_payment.php';
+        break;
+    }
     case 'customer_trade_one_period':{
         include_once 'customer_board/customer_trade_one_period.php';
         break;
@@ -158,6 +171,10 @@ switch ($detect) {
     }
     /*socket board*/
 
+    case 'auto_creat_session':{
+        include_once 'socket_board/auto_creat_session_tomorrow.php';
+        break;
+    }
     case 'win_lose_trade':{
         include_once 'socket_board/win_lose_trade.php';
         break;
@@ -171,6 +188,10 @@ switch ($detect) {
         break;
     }
     /*viewlist board*/
+    case 'list_bank':{
+        include_once 'viewlist_board/list_bank.php';
+        break;
+    }
     case 'login':{
         include_once 'viewlist_board/login.php';
         break;

@@ -1,7 +1,9 @@
 <?php
 $sql = "SELECT 
-            `tbl_customer_customer`.*
-            `tbl_bank_info`.*
+            `tbl_customer_customer`.*,
+            `tbl_bank_info`.bank_full_name,
+            `tbl_bank_info`.bank_short_name,
+            `tbl_bank_info`.bank_code
             FROM `tbl_customer_customer`
             LEFT JOIN `tbl_bank_info` ON `tbl_bank_info`.`id` = `tbl_customer_customer`.`id_bank`
             WHERE 1=1";
@@ -18,6 +20,8 @@ if (isset($_REQUEST['id_customer'])) {
     returnError("Nhập id_customer");
 }
 
+// echo $sql;
+// exit();
 $customer_arr = array();
 $customer_arr['success'] = 'true';
 
@@ -30,9 +34,9 @@ if ($nums > 0) {
     while ($row = db_assoc($result)) {
         $customer_item = array(
             'id_customer' => $row['id'],
-            'id_bank' => $row['id_bank'],
-            'bank_name' => $row['bank_full_name'],
-            'bank_short_name' => $row['bank_short_name'],
+            'id_bank' => ($row['id_bank'] != 0)?$row['id_bank']:"",
+            'bank_name' => (!empty($row['bank_full_name']))?$row['bank_full_name']:"",
+            'bank_short_name' => (!empty($row['bank_short_name']))?$row['bank_short_name']:"",
             'customer_name' => htmlspecialchars_decode($row['customer_fullname']),
             'customer_code' => htmlspecialchars_decode($row['customer_code']),
             'customer_phone' => htmlspecialchars_decode($row['customer_phone']),

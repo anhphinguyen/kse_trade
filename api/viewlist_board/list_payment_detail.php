@@ -7,11 +7,12 @@ $sql = "SELECT
             tbl_customer_customer.customer_account_img,
             tbl_customer_customer.customer_cert_img,
             tbl_customer_customer.customer_cert_no,
+            tbl_customer_customer.customer_limit_payment,
             tbl_request_payment.*,
             tbl_bank_info.id as id_bank,
             tbl_bank_info.bank_code as bank_code,
             tbl_bank_info.bank_full_name as bank_full_name,
-            tbl_bank_info.bank_short_name as bank_short_name,
+            tbl_bank_info.bank_short_name as bank_short_name
             FROM tbl_customer_customer 
             LEFT JOIN tbl_request_payment ON tbl_request_payment.id_customer = tbl_customer_customer.id
             LEFT JOIN tbl_bank_info ON tbl_customer_customer.id_bank = tbl_bank_info.id
@@ -29,7 +30,8 @@ if (isset($_REQUEST['id_request'])) {
 } else {
     returnError("Nhập id_request");
 }
-
+// echo $sql;
+// exit();
 $request_arr = array();
 $request_arr['success'] = 'true';
 $request_arr['data'] = array();
@@ -41,8 +43,9 @@ if ($nums > 0) {
         $request_item = array(
             'id_request' => $row['id'],
             'id_customer' => $row['id_customer'],
-            'id_bank' => $row['id_bank'],
-            'bank_name' => $row['bank_name'],
+            'id_bank' => ($row['id_bank'] != 0)?$row['id_bank']:"",
+            'bank_name' => (!empty($row['bank_full_name']))?$row['bank_full_name']:"",
+            'bank_short_name' => (!empty($row['bank_short_name']))?$row['bank_short_name']:"",
             'customer_name' => htmlspecialchars_decode($row['customer_fullname']),
             'request_code' => $row['request_code'],
             'request_status' => $row['request_status'],
@@ -50,11 +53,11 @@ if ($nums > 0) {
             'request_comment' => (!empty($row['request_comment']))?$row['request_comment']:"",
             'request_img' => (!empty($row['request_img']))?$row['request_img']:"",
             'request_value' => $row['request_value'],
-            'bank_short_name' => $row['bank_short_name'],
             'customer_account_holder' => $row['customer_account_holder'],
             'customer_account_no' => $row['customer_account_no'],
             'customer_account_img' => $row['customer_account_img'],
             'customer_cert_img' => $row['customer_cert_img'],
+            'customer_limit_payment' => $row['customer_limit_payment'],
         );
 
         array_push($request_arr['data'], $request_item);

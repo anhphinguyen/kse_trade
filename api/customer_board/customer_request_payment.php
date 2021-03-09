@@ -17,28 +17,34 @@ $result = db_qr($sql);
 $nums = db_nums($result);
 if ($nums > 0) {
     while ($row = db_assoc($result)) {
-        if ($request_value > $row['customer_wallet_pet']) {
+
+        if ($row['customer_wallet_bet'] == '0') {
+            returnError("Bạn không có tiền trong ví");
+        } elseif ($request_value > (int)$row['customer_wallet_bet']) {
             returnError("Số tiền bạn rút vượt quá tài khoản trong ví");
-        }
+        } 
+        // so sánh tiền hạn mức
+        // elseif ($request_value > $row['customer_limit_payment']) {
+        //     returnError("Bạn đã vượt quá hạn mức giao dịch trong ngày");
+        // }
 
-        if ($request_value > $row['customer_limit_payment']) {
-            returnError("Bạn đã vượt quá hạn mức giao dịch trong ngày");
-        }
-
-        $customer_wallet_pet_update = $row['customer_wallet_pet'] - $request_value;
+        $customer_wallet_pet_update = (int)$row['customer_wallet_bet'] - $request_value;
+        $customer_wallet_payment_update = (int)$row['customer_wallet_payment'] + $request_value;
 
         $sql = "UPDATE tbl_customer_customer SET 
-                customer_wallet_pet = '$customer_wallet_pet_update',
+                customer_wallet_bet = '$customer_wallet_pet_update',
                 customer_wallet_payment = '$request_value'
                 WHERE id = '$id_customer'
                 ";
         if (db_qr($sql)) {
             $request_code = "RT" . substr(time(), -8);
+            $request_created = time();
             $sql = "INSERT INTO tbl_request_payment SET
                 id_customer = '$id_customer',
                 request_code = '$request_code',
                 request_value = '$request_value',
-                request_status = '1',
+                request_created = '$request_created',
+                request_status = '1'
                 ";
             if (db_qr($sql)) {
                 returnSuccess("Gửi yêu cầu rút tiền thành công");

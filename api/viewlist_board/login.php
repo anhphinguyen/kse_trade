@@ -90,21 +90,22 @@ if ($nums > 0) {
         $user_arr['success'] = 'true';
         $user_arr['data'] = array();
         while ($row = db_assoc($result)) {
-            
+
             $customer_token = md5($username . time());
             $query = "UPDATE tbl_customer_customer SET
                        force_sign_out  = '0',
                        customer_token = '$customer_token', 
-                       WHERE id = '" . $row['id_account'] . "'";
+                       WHERE id = '" . $row['id'] . "'";
             db_qr($query);
 
             $user_item = array(
                 'id' => $row['id'],
                 'id_bank' => $row['id_bank'],
+                'type_account' => "customer",
                 'customer_introduce' => $row['customer_introduce'],
                 'customer_code' => $row['customer_code'],
                 'customer_phone' => $row['customer_phone'],
-                'customer_fullname' => $row['customer_fullname'],
+                'customer_name' => $row['customer_fullname'],
                 'customer_cert_no' => $row['customer_cert_no'],
                 'customer_cert_img' => $row['customer_cert_img'],
                 'customer_account_no' => $row['customer_account_no'],
@@ -112,7 +113,9 @@ if ($nums > 0) {
                 'customer_account_img' => $row['customer_account_img'],
                 'customer_wallet_bet' => $row['customer_wallet_bet'],
                 'customer_wallet_payment' => $row['customer_wallet_payment'],
+                'customer_limit_payment' => $row['customer_limit_payment'],
                 'customer_token' => $row['customer_token'],
+                'customer_active' => $row['customer_active'],
 
             );
 

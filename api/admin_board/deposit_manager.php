@@ -27,15 +27,29 @@ switch ($typeManager) {
                 returnError("Nhập request_value");
             }
 
-            $request_code = "NT".substr(time(), -8);
-            
+            $request_code = "NT" . substr(time(), -8);
+            $request_time_completed = time();
             $sql = "INSERT INTO tbl_request_deposit SET
                     id_customer = '$id_customer',
                     request_value = '$request_value',
+                    request_time_completed = '$request_time_completed',
                     request_code = '$request_code'
                     ";
-            if(db_qr($sql)){
-                returnSuccess("Tạo lệnh nạp tiền thành công");
+            if (db_qr($sql)) {
+                $sql = "SELECT customer_wallet_bet FROM tbl_customer_customer WHERE id = '$id_customer'";
+                $result = db_qr($sql);
+                $nums = db_nums($result);
+                if($nums > 0){
+                    while($row = db_assoc($result)){
+                        $customer_wallet_update = (int)$row['customer_wallet_bet'] + $request_value;
+                    }
+                }
+                $sql = "UPDATE tbl_customer_customer 
+                        SET customer_wallet_bet = '$customer_wallet_update' 
+                        WHERE id = '$id_customer'";
+                if (db_qr($sql)) {
+                    returnSuccess("Tạo lệnh nạp tiền thành công");
+                }
             }
             break;
         }

@@ -36,7 +36,7 @@ if(isset($_REQUEST['customer_cert_no']) && !(empty($_REQUEST['customer_cert_no']
 
 if (isset($_FILES['customer_cert_img'])) { // up product_img
     $customer_cert_img = 'customer_cert_img';
-    $dir_save_customer_cert_img = "images/customer_cert_img/"; // sửa đường dẫn
+    $dir_save_customer_cert_img = "images/customer_customer/"; // sửa đường dẫn
 } else {
     returnError("Nhập customer_cert_img");
 }
@@ -54,10 +54,11 @@ $sql = "INSERT INTO tbl_customer_customer SET
         customer_phone = '$customer_phone', 
         customer_code = '$customer_code', 
         customer_password = '$customer_password', 
-        customer_introduce = '$customer_introduce', 
         customer_cert_img = '$dir_save_cert_img', 
         customer_cert_no = '$customer_cert_no'";
-
+if(isset($customer_introduce) && !empty($customer_introduce)){
+        $sql .= ", customer_introduce = '$customer_introduce'";
+}
 if(db_qr($sql)){
    returnSuccess("Đăng kí tài khoản thành công");
 }
