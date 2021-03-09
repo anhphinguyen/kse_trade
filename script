@@ -89,4 +89,8 @@ Ngay 09-03-2021 :
   - type_manager : finished : id_support_customer
                    processing : id_support_customer
                    list_support
+ * sale_support_customer : 
+ - type_manager : list_customer : 
+                        + type_sort : desc / asc
+                  list_customer_history
                     
