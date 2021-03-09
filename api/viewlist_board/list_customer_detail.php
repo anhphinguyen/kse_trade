@@ -14,8 +14,9 @@ if (isset($_REQUEST['id_customer'])) {
         $id_customer = $_REQUEST['id_customer'];
         $sql .= " AND `tbl_customer_customer`.`id` = '{$id_customer}'";
     }
+}else{
+    returnError("Nhập id_customer");
 }
-returnError("Nhập id_customer");
 
 $customer_arr = array();
 $customer_arr['success'] = 'true';
@@ -41,8 +42,8 @@ if ($nums > 0) {
             'customer_account_no' => htmlspecialchars_decode($row['customer_account_no']),
             'customer_account_holder' => htmlspecialchars_decode($row['customer_account_holder']),
             'customer_account_img' => htmlspecialchars_decode($row['customer_account_img']),
-            // 'customer_wallet_bet' => htmlspecialchars_decode($row['customer_wallet_bet']),
-            // 'customer_wallet_payment' => htmlspecialchars_decode($row['customer_wallet_payment']),
+            'customer_wallet_bet' => htmlspecialchars_decode($row['customer_wallet_bet']),
+            'customer_wallet_payment' => htmlspecialchars_decode($row['customer_wallet_payment']),
         );
 
         array_push($customer_arr['data'], $customer_item);

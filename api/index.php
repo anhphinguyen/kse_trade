@@ -83,8 +83,8 @@ switch ($detect) {
         include_once 'employee_board/sale_update_info.php';
         break;
     }
-    case 'sale_customer':{
-        include_once 'employee_board/sale_customer.php';
+    case 'sale_support_customer':{
+        include_once 'employee_board/sale_support_customer.php';
         break;
     }
     case 'officer_support':{
@@ -100,6 +100,10 @@ switch ($detect) {
         break;
     }
     /*customer board*/
+    case 'list_bank':{
+        include_once 'customer_board/list_bank.php';
+        break;
+    }
     case 'demo_trading':{
         include_once 'customer_board/demo_trading.php';
         break;

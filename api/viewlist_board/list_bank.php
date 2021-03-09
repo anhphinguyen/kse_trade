@@ -14,7 +14,7 @@ if ($nums > 0) {
             'bank_short_name' => $row['bank_short_name'],
             'bank_code' => $row['bank_code'],
         );
-        array_push($result_arr, $result_item);
+        array_push($result_arr['data'], $result_item);
     }
     reJson($result_arr);
 }

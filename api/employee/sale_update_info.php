@@ -10,8 +10,9 @@ if (isset($_REQUEST['id_account'])) {
         $id_account = $_REQUEST['id_account'];
         $sql .= " AND `id_account` = '{$id_account}'";
     }
+}else{
+    returnError("Nhập id_account");
 }
-returnError("Nhập id_account");
 
 if (isset($_REQUEST['account_name']) && !empty($_REQUEST['account_name'])) { //*
     $account_name = htmlspecialchars($_REQUEST['account_name']);
