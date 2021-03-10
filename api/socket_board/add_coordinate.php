@@ -89,6 +89,9 @@ if ($nums > 0) {
                         $result_item = array(
                             'id_session' => $row['id_period'], ///////
                             'status_trade' => 'block',
+                            'period_open' => $row['period_open'],
+                            'period_point_idle' => $row['period_point_idle'],
+                            'period_close' => $row['period_close'],
                             'coordinate_g' => $row['point_map']
                         );
                         array_push($result_arr, $result_item);

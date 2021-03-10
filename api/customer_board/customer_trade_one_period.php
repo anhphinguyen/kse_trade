@@ -21,17 +21,18 @@ if (isset($_REQUEST['id_customer'])) {
     returnError("Nhập id_customer");
 }
 
-if (isset($_REQUEST['id_exchange_period'])) {
-    if ($_REQUEST['id_exchange_period'] == '') {
-        unset($_REQUEST['id_exchange_period']);
-        returnError("Nhập id_exchange_period");
-    } else {
-        $id_exchange_period = $_REQUEST['id_exchange_period'];
-        $sql .= " AND `tbl_trading_log`.`id_exchange_period` = '{$id_exchange_period}'";
+$time = time();
+$sql = "SELECT * FROM tbl_exchange_period WHERE period_open <= '$time' AND period_close > '$time'";
+$result = db_qr($sql);
+$nums = db_nums($result);
+if ($nums > 0) {
+    while ($row = db_assoc($result)) {
+        $id_exchange_period = $row['id'];
     }
 }else{
-    returnError("Nhập id_exchange_period");
+    returnError("Chưa có phiên giao dịch");
 }
+
 $customer_arr = array();
 
 $total = count(db_fetch_array($sql));

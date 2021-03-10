@@ -85,3 +85,5 @@ if (db_qr($sql)) {
 }else{
     returnError("Lỗi truy vấn");
 }
+
+?>

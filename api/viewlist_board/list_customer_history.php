@@ -1,18 +1,32 @@
 <?php 
 
+if (isset($_REQUEST['type_manager'])) {
+    if ($_REQUEST['type_manager'] == '') {
+        unset($_REQUEST['type_manager']);
+        returnError("type_manager");
+    } else {
+        $type_manager = $_REQUEST['type_manager'];
+    }
+}else{
+    returnError("type_manager");
+}
+
+
 $sql = "SELECT * FROM tbl_trading_log
         WHERE 1=1";
 
-if (isset($_REQUEST['id_customer'])) {
-    if ($_REQUEST['id_customer'] == '') {
-        unset($_REQUEST['id_customer']);
-        returnError("Nhập id_customer");
-    } else {
-        $id_customer = $_REQUEST['id_customer'];
-        $sql .= " AND `id_customer` = '{$id_customer}'";
+if($type_manager == 'customer'){
+    if (isset($_REQUEST['id_customer'])) {
+        if ($_REQUEST['id_customer'] == '') {
+            unset($_REQUEST['id_customer']);
+            returnError("type_manager");
+        } else {
+            $id_customer = $_REQUEST['id_customer'];
+            $sql .= " AND `tbl_trading_log`.`id_customer` = '{$id_customer}'";
+        }
+    }else{
+        returnError("id_customer");
     }
-}else{
-    returnError("Nhập id_customer");
 }
 
 
@@ -93,7 +107,9 @@ if ($nums > 0) {
     }
     reJson($customer_arr);
 } else {
-    returnError("Lịch sử trống, hãy làm nên lịch sử nhé");
+    if($type_manager == 'customer'){
+        returnError("Lịch sử trống, hãy làm nên lịch sử nhé");
+    }else{
+        returnError("Lịch sử trống");
+    }
 }
-
-?>

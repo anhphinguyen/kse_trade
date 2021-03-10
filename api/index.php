@@ -105,6 +105,10 @@ switch ($detect) {
     }
     /*customer board*/
     
+    case 'check_customer_balance':{
+        include_once 'customer_board/check_customer_balance.php';
+        break;
+    }
     case 'check_isset_customer':{
         include_once 'customer_board/check_isset_customer.php';
         break;
