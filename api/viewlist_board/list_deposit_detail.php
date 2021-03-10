@@ -20,6 +20,8 @@ if (isset($_REQUEST['id_request'])) {
     returnError("Nhập id_request");
 }
 
+// echo $sql;
+// exit();
 $request_arr = array();
 $request_arr['success'] = 'true';
 $request_arr['data'] = array();
@@ -34,7 +36,7 @@ if ($nums > 0) {
             'customer_name' => htmlspecialchars_decode($row['customer_fullname']),
             'request_code' => $row['request_code'],
             'request_value' => $row['request_value'],
-            'request_time_complete' => date("d/m/Y H:i",$row['request_time_complete']),
+            'request_time_complete' => date("d/m/Y H:i",$row['request_time_completed']),
         );
 
         array_push($request_arr['data'], $request_item);
