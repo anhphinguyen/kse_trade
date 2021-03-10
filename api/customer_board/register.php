@@ -5,11 +5,7 @@ if(isset($_REQUEST['customer_introduce']) && !(empty($_REQUEST['customer_introdu
 }
 
 if(isset($_REQUEST['customer_phone']) && !(empty($_REQUEST['customer_phone']))){
-    if(is_username($_REQUEST['customer_phone'])){
-        $customer_phone = $_REQUEST['customer_phone'];
-    }else{
-        returnError("customer_phone không đúng định dạng");
-    }
+    $customer_phone = $_REQUEST['customer_phone'];
 }else{
     returnError("Nhập customer_phone");
 }

@@ -2,7 +2,7 @@
 
 $sql = "SELECT
             tbl_customer_customer.customer_fullname,
-            tbl_request_deposit.*,
+            tbl_request_deposit.*
             FROM tbl_request_deposit 
             LEFT JOIN tbl_customer_customer ON tbl_request_deposit.id_customer = tbl_customer_customer.id
             WHERE 1=1

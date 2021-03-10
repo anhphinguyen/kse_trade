@@ -34,10 +34,20 @@ switch ($type_manager) {
                     FROM tbl_trading_log
                     LEFT JOIN tbl_customer_customer
                     ON tbl_customer_customer.id = tbl_trading_log.id_customer
-                    GROUP BY tbl_trading_log.id_customer
+                    WHERE 1=1
+                    
                     
                     ";
-            
+            if (isset($_REQUEST['filter'])) {
+                if ($_REQUEST['filter'] == '') {
+                    unset($_REQUEST['filter']);
+                } else {
+                    $filter = htmlspecialchars($_REQUEST['filter']);
+                    $sql .= " AND ( tbl_customer_customer.customer_fullname LIKE '%{$filter}%'";
+                    $sql .= " OR tbl_customer_customer.customer_phone LIKE '%{$filter}%' )";
+                }
+            }
+            $sql .= " GROUP BY tbl_trading_log.id_customer";
             $result_arr = array();
 
             $total = count(db_fetch_array($sql));
