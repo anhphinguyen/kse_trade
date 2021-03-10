@@ -1,8 +1,6 @@
 
 <?php
 
-use Carbon\Carbon;
-
 if (isset($_REQUEST['stock_time_close']) && !empty($_REQUEST['stock_time_close'])) {
     $stock_time_close = $_REQUEST['stock_time_close'];
 } else {
@@ -24,11 +22,12 @@ if ($nums > 0) {
     }
 
 
-    $sql = "SELECT exchange_close FROM tbl_exchange_temporary WHERE id = '$id_exchange'";
+    $sql = "SELECT exchange_close FROM tbl_exchange_temporary WHERE id_exchange = '$id_exchange'";
     $result = db_qr($sql);
     $nums = db_nums($result);
     if ($nums > 0) {
         while ($row = db_assoc($result)) {
+            $id_temporary = $row['id_temporary'];
             if (date("d", $stock_time_close_tomorrow) == date("d", $row['exchange_close'])) {
                 $sql = "UPDATE tbl_exchange_exchange SET 
                     exchange_open = '" . $row['exchange_open'] . "',
@@ -59,4 +58,6 @@ if ($nums > 0) {
     }
     // echo $time_open_tomorrow." Tạo sàn cho ngày hôm sau thành công";
     // exit();
+}else{
+    returnError("Chưa kết thúc sàn");
 }

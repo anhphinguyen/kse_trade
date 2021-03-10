@@ -31,7 +31,6 @@ if(isset($_REQUEST['exchange_close']) && !empty($_REQUEST['exchange_close'])){
 $delta_time = $exchange_close - $exchange_open;
 
 $quantity = $delta_time / $exchange_period;
-
 $time_start = $exchange_open;
 
 $sql = "INSERT INTO tbl_exchange_exchange SET
@@ -39,17 +38,29 @@ $sql = "INSERT INTO tbl_exchange_exchange SET
         exchange_close = '$exchange_close',
         exchange_period = '$exchange_period'
         ";
+        
 if(db_qr($sql)){
     $id_stock = mysqli_insert_id($conn);
+    $sql = "SELECT * FROM tbl_exchange_exchange WHERE id = '$id_stock'";
+    $result = db_qr($sql);
+    $nums = db_nums($result);
+    if($nums > 0){
+        while($row = db_assoc($result)){
+            $exchange_idle = $row['exchange_idle'];
+        }
+    }else{
+        returnError("Lỗi truy vấn exchange_idle");
+    }
 
     for($i = 1; $i <= $quantity; $i++){
         $time_session = $time_start + $exchange_period;
-        $time_break = $time_session - 60;  // mặc đinh thời gian không cho phép đặt cược là 60s
+        $time_break = $time_session - $exchange_idle;  // mặc đinh thời gian không cho phép đặt cược là 60s
         $sql = "INSERT INTO tbl_exchange_period SET 
                 id_exchange = '$id_stock',
                 period_open = '$time_start', 
                 period_point_idle = '$time_break',
                 period_close = '$time_session'";
+                
         if(db_qr($sql)){
             $success = true;
         };
@@ -58,6 +69,8 @@ if(db_qr($sql)){
     if(isset($success)){
         returnSuccess("Tạo sàn thành công");
     }else{
-        returnError("Lỗi truy vấn");
+        returnError("Lỗi truy vấn Phiên");
     }
+}else{
+    returnError("Lỗi truy vấn Sàn");
 }

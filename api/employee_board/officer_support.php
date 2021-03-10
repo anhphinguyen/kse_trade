@@ -104,14 +104,16 @@ switch ($type_manager) {
             if ($nums > 0) {
                 while ($row = db_assoc($result)) {
                     $customer_item = array(
-                        'id_support_customer' => $row['id_support_customer'],
+                        'id_support_customer' => $row['id'],
                         'id_customer' => $row['id_customer'],
                         'id_support_category' => $row['id_support_category'],
                         'id_support_info' => $row['id_support_info'],
                         'customer_name' => $row['customer_fullname'],
+                        'customer_phone' => $row['customer_phone'],
                         'support_date' => $row['support_date'],
                         'support_request' => $row['support_request'],
                         'support_category' => $row['support_category'],
+                        'support_status' => $row['support_status'],
                     );
                     array_push($customer_arr['data'], $customer_item);
                 }

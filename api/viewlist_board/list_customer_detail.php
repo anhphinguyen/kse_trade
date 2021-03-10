@@ -29,9 +29,11 @@ $customer_arr['data'] = array();
 $result = db_qr($sql);
 $nums = db_nums($result);
 
+$customer_paymented = get_customer_paymented_in_day($id_customer);
 
 if ($nums > 0) {
     while ($row = db_assoc($result)) {
+
         $customer_item = array(
             'id_customer' => $row['id'],
             'id_bank' => ($row['id_bank'] != 0)?$row['id_bank']:"",
@@ -48,6 +50,7 @@ if ($nums > 0) {
             'customer_account_img' => htmlspecialchars_decode($row['customer_account_img']),
             'customer_wallet_bet' => htmlspecialchars_decode($row['customer_wallet_bet']),
             'customer_wallet_payment' => htmlspecialchars_decode($row['customer_wallet_payment']),
+            'customer_paymented' => $customer_paymented,
         );
 
         array_push($customer_arr['data'], $customer_item);

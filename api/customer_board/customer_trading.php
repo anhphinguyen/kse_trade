@@ -6,11 +6,6 @@ if (isset($_REQUEST['id_customer']) && !empty($_REQUEST['id_customer'])) {
     returnError("Nhập id_customer");
 }
 
-// if (isset($_REQUEST['id_exchange_period']) && !empty($_REQUEST['id_exchange_period'])) {
-//     $id_exchange_period = $_REQUEST['id_exchange_period'];
-// } else {
-//     returnError("Nhập id_exchange_period");
-// }
 
 $time = time();
 $sql = "SELECT * FROM tbl_exchange_period WHERE period_open <= '$time' AND period_close > '$time'";

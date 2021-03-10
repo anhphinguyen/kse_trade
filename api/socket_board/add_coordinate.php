@@ -5,20 +5,11 @@ if (isset($_REQUEST['session_time_open']) && !empty($_REQUEST['session_time_open
     returnError("Nhập session_time_open");
 }
 
-// $sql =  "UPDATE tbl_trading_session SET
-//             session_status = 'open'
-//             WHERE session_time_open = '$session_time_open'";
-// db_qr($sql);
-// $sql =  "UPDATE tbl_trading_session SET
-//             session_status = 'close'
-//             WHERE session_time_close = '$session_time_open'";
-// db_qr($sql);
-
 
 
 $sql = "SELECT * FROM tbl_exchange_period 
-        WHERE period_open <= '$period_open' 
-        AND period_close > '$period_open'";
+        WHERE period_open <= '$session_time_open' 
+        AND period_close > '$session_time_open'";
 
 $result = db_qr($sql);
 $nums = db_nums($result);
@@ -70,18 +61,27 @@ if ($nums > 0) {
         // echo $sql;
         // exit();
         $result_arr = array();
+        $result_arr['success'] = "true";
+        $result_arr['data'] = array();
 
         if (db_qr($sql)) {
             $sql = "SELECT * FROM tbl_exchange_period 
                     WHERE period_point_idle <= '$session_time_open' 
                     AND period_close > '$session_time_open'";
+
             $result = db_qr($sql);
             $nums = db_nums($result);
             if ($nums > 0) {
 
-                $sql = "SELECT * FROM tbl_graph_info 
+                $sql = "SELECT 
+                        tbl_exchange_period.period_open,
+                        tbl_exchange_period.period_point_idle,
+                        tbl_exchange_period.period_close,
+                        tbl_graph_info.*
+                        FROM tbl_graph_info 
+                        LEFT JOIN tbl_exchange_period ON tbl_exchange_period.id = tbl_graph_info.id_period
                         WHERE id_period = '$id_session'";
-        
+
                 $result = db_qr($sql);
                 $nums = db_nums($result);
                 if ($nums > 0) {
@@ -94,27 +94,37 @@ if ($nums > 0) {
                             'period_close' => $row['period_close'],
                             'coordinate_g' => $row['point_map']
                         );
-                        array_push($result_arr, $result_item);
+                        array_push($result_arr['data'], $result_item);
                     }
                 }
                 reJson($result_arr);
             }
-            $sql = "SELECT * FROM tbl_graph_info 
+            $sql = "SELECT 
+                        tbl_exchange_period.period_open,
+                        tbl_exchange_period.period_point_idle,
+                        tbl_exchange_period.period_close,
+                        tbl_graph_info.*
+                        FROM tbl_graph_info 
+                        LEFT JOIN tbl_exchange_period ON tbl_exchange_period.id = tbl_graph_info.id_period
                         WHERE id_period = '$id_session'";
-        
-                $result = db_qr($sql);
-                $nums = db_nums($result);
-                if ($nums > 0) {
-                    while ($row = db_assoc($result)) {
-                        $result_item = array(
-                            'id_session' => $row['id_period'],
-                            'status_trade' => 'trading',
-                            'coordinate_g' => $row['point_map']
-                        );
-                        array_push($result_arr, $result_item);
-                    }
+            // echo $sql;
+            // exit();
+            $result = db_qr($sql);
+            $nums = db_nums($result);
+            if ($nums > 0) {
+                while ($row = db_assoc($result)) {
+                    $result_item = array(
+                        'id_session' => $row['id_period'],
+                        'status_trade' => 'trading',
+                        'period_open' => $row['period_open'],
+                        'period_point_idle' => $row['period_point_idle'],
+                        'period_close' => $row['period_close'],
+                        'coordinate_g' => $row['point_map']
+                    );
+                    array_push($result_arr['data'], $result_item);
                 }
-                reJson($result_arr);
+            }
+            reJson($result_arr);
         };
     }
 }
@@ -122,22 +132,29 @@ if ($nums > 0) {
 $coordinate_xy_arr = "[" . $coordinate_xy . "]";
 $sql = "INSERT INTO tbl_graph_info SET
         id_exchange = '$id_stock',
-        id_periode = '$id_session',
+        id_period = '$id_session',
         x_y = '$coordinate_xy_arr',
         point_map = '$coordinate_xy'";
-
 
 if (db_qr($sql)) {
     // $id_insert = mysqli_insert_id($conn);
     $result_arr = array();
+    $result_arr['success'] = "true";
+    $result_arr['data'] = array();
 
     $sql = "SELECT * FROM tbl_exchange_period WHERE id = '$id_session' AND period_open = '$session_time_open'";
 
     $result = db_qr($sql);
     $nums = db_nums($result);
     if ($nums > 0) {
-        $sql = "SELECT * FROM tbl_graph_info 
-        WHERE id_period = '$id_session'";
+        $sql = "SELECT 
+                        tbl_exchange_period.period_open,
+                        tbl_exchange_period.period_point_idle,
+                        tbl_exchange_period.period_close,
+                        tbl_graph_info.*
+                        FROM tbl_graph_info 
+                        LEFT JOIN tbl_exchange_period ON tbl_exchange_period.id = tbl_graph_info.id_period
+                        WHERE id_period = '$id_session'";
 
         $result = db_qr($sql);
         $nums = db_nums($result);
@@ -146,11 +163,16 @@ if (db_qr($sql)) {
                 $result_item = array(
                     'id_session' => $row['id_period'],
                     'status_trade' => 'trading',
+                    'period_open' => $row['period_open'],
+                    'period_point_idle' => $row['period_point_idle'],
+                    'period_close' => $row['period_close'],
                     'coordinate_g' => $row['point_map']
                 );
-                array_push($result_arr, $result_item);
+                array_push($result_arr['data'], $result_item);
             }
         }
         reJson($result_arr);
     }
+} else {
+    returnError("Lỗi truy vấn tọa độ");
 }

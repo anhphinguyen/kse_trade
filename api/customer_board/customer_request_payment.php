@@ -23,10 +23,12 @@ if ($nums > 0) {
         } elseif ($request_value > (int)$row['customer_wallet_bet']) {
             returnError("Số tiền bạn rút vượt quá tài khoản trong ví");
         } 
+
+        $customer_paymented = get_customer_paymented_in_day($id_customer);    
         // so sánh tiền hạn mức
-        // elseif ($request_value > $row['customer_limit_payment']) {
-        //     returnError("Bạn đã vượt quá hạn mức giao dịch trong ngày");
-        // }
+        if ($customer_paymented > $row['customer_limit_payment']) {
+            returnError("Bạn đã vượt quá hạn mức giao dịch trong ngày");
+        }
 
         $customer_wallet_pet_update = (int)$row['customer_wallet_bet'] - $request_value;
         $customer_wallet_payment_update = (int)$row['customer_wallet_payment'] + $request_value;

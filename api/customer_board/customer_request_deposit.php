@@ -25,7 +25,6 @@ if ($nums > 0) {
     while ($row = db_assoc($result)) {
         $customer_item = array(
             'id_customer' => $row['id'],
-            'id_bank' => $row['id_bank'],
             'customer_name' => htmlspecialchars_decode($row['customer_fullname']),
             'customer_phone' => htmlspecialchars_decode($row['customer_phone']),
             'request_syntax' => "KSENAPTIEN".$row['customer_phone']

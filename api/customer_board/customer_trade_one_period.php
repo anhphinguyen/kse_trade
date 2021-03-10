@@ -69,7 +69,7 @@ if ($nums > 0) {
             'id_customer' => $row['id_customer'],
             'id_exchange_period' => $row['id_exchange_period'],
             // 'period_open' => $row['period_open'],
-            'trading_log' => $row['trading_log'],
+            'trading_log' => date("H:i:s",$row['trading_log']),
             'trading_bet' => $row['trading_bet'],
             'trading_type' => $row['trading_type'],
             'period_result' => (!empty($row['period_result']))?$row['period_result']:"",

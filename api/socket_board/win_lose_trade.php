@@ -20,8 +20,10 @@ if ($nums > 0) {
 $sql = "SELECT * FROM tbl_exchange_period 
         WHERE period_open <= '$time_break'
         AND period_close > '$time_break'";
+
 $result = db_qr($sql);
 $num = db_nums($result);
+
 if ($num > 0) {
     while ($row = db_assoc($result)) {
         $id_session = $row['id'];
@@ -35,20 +37,23 @@ if ($num > 0) {
 $sql_trade_up = "SELECT SUM(trading_bet) as total_money_up FROM tbl_trading_log 
                  WHERE id_exchange_period = '$id_session' 
                  AND trading_type = 'up'";
+
 $result_trade_up = db_qr($sql_trade_up);
 $nums_trade_up = db_nums($result_trade_up);
+
 if ($nums_trade_up > 0) {
     while ($row_up = db_assoc($result_trade_up)) {
         $total_trade_up = $row_up['total_money_up'];
     }
 }
 
-$sql_trade_down = "SELECT SUM(trading_bet) as total_money_down FROM tbl_trading_playing 
+$sql_trade_down = "SELECT SUM(trading_bet) as total_money_down FROM tbl_trading_log 
                  WHERE id_exchange_period = '$id_session' 
                  AND trading_type = 'down'";
 
 $result_trade_down = db_qr($sql_trade_down);
 $nums_trade_down = db_nums($result_trade_down);
+
 if ($nums_trade_down > 0) {
     while ($row_down = db_assoc($result_trade_down)) {
         $total_trade_down = $row_down['total_money_down'];
@@ -62,22 +67,25 @@ if ($total_trade_up <= $total_trade_down) {
             WHERE id = '$id_session' 
             ";
     db_qr($sql);
+    
     $sql = "UPDATE tbl_trading_log SET 
             trading_result = 'lose'
             WHERE id_exchange_period = '$id_session' 
             AND trading_type = 'down'
             ";
     db_qr($sql);
+    
     $sql = "UPDATE tbl_trading_log SET 
             trading_result = 'win'
             WHERE id_exchange_period = '$id_session' 
             AND trading_type = 'up'
             ";
     db_qr($sql);
+    
     // Cộng tiền cho customer
     if ($time_break >= $session_time_close) {
-        customer_add_money($id_session,'up');
-        demo_add_money($id_session,'up');
+        customer_add_money($id_session, 'up');
+        demo_add_money($id_session, 'up');
     }
 } else {
     $result_trade = "down";
@@ -86,6 +94,7 @@ if ($total_trade_up <= $total_trade_down) {
             WHERE id = '$id_session' 
             ";
     db_qr($sql);
+    
     $sql = "UPDATE tbl_trading_log SET 
             trading_result = 'win'
             WHERE id_exchange_period = '$id_session' 
@@ -100,41 +109,43 @@ if ($total_trade_up <= $total_trade_down) {
     db_qr($sql);
     // Cộng tiền cho customer
     if ($time_break >= $session_time_close) {
-        customer_add_money($id_session,'down');
-        demo_add_money($id_session,'down');
+        customer_add_money($id_session, 'down');
+        demo_add_money($id_session, 'down');
     }
 }
 
-$sql_session = "SELECT id FROM tbl_trading_session 
-                WHERE session_time_open <= '$time_break'
-                AND session_time_close >= '$time_break'";
+$sql_session = "SELECT id FROM tbl_exchange_period 
+                WHERE period_open <= '$time_break'
+                AND period_close >= '$time_break'";
 $result_session = db_qr($sql_session);
 $nums_session = db_nums($result_session);
+
 if ($nums_session > 0) {
     while ($row_session = db_assoc($result_session)) {
         $id_session = $row_session['id'];
     }
 }
 
-$sql_get_coordinate_g = "SELECT coordinate_g FROM tbl_trading_coordinate
-                            WHERE id_session = '$id_session'";
-// echo $sql_get_coordinate_g;
-// exit();
+$sql_get_coordinate_g = "SELECT point_map FROM tbl_graph_info
+                            WHERE id_period = '$id_session'";
+
 $result_get_coordinate_g = db_qr($sql_get_coordinate_g);
 $nums_get_coordinate_g = db_nums($result_get_coordinate_g);
 
 if ($nums_get_coordinate_g > 0) {
     while ($row_get_coordinate_g = db_assoc($result_get_coordinate_g)) {
-        $coordinate_g = $row_get_coordinate_g['coordinate_g'];
+        $coordinate_g = $row_get_coordinate_g['point_map'];
     }
 }
 $result_arr = array();
+$result_arr['success'] = "true";
+$result_arr['data'] = array();
 $result_item = array(
     'result_trade' => $result_trade,
     'coordinate_g' => isset($coordinate_g) ? $coordinate_g : "null",
-    'time_close' => $session_time_close - 1
+    'time_close' => strval($session_time_close - 1)
 );
-array_push($result_arr, $result_item);
+array_push($result_arr['data'], $result_item);
 
 
 reJson($result_arr);

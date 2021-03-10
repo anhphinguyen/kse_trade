@@ -24,7 +24,7 @@ if (isset($_REQUEST['page']) && !empty($_REQUEST['page'])) {
 
 $total_page = ceil($total / $limit);
 $start = ($page - 1) * $limit;
-$sql .= " ORDER BY `tbl_exchange_period`.`id` ASC LIMIT {$start},{$limit}";
+$sql .= " ORDER BY `tbl_exchange_period`.`id` DESC LIMIT {$start},{$limit}";
 
 $customer_arr['success'] = 'true';
 
@@ -44,8 +44,8 @@ if ($nums > 0) {
             'id_exchange' => $row['id_exchange'],
             'exchange_open' => $row['exchange_open'],
             'period_open' => $row['period_open'],
+            'period_close' => $row['period_close'],
             'period_result' => $row['period_result'],
-            
         );
         array_push($customer_arr['data'], $customer_item);
     }

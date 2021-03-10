@@ -23,12 +23,14 @@ for ($i = 0; $i < $stock_quantity; $i++) {
                     tbl_exchange_period.id_exchange as id_exchange,
                     tbl_exchange_period.period_open as period_open,
                     tbl_exchange_period.period_now as period_now,
+                    tbl_exchange_period.period_point_idle as period_point_idle,
+                    tbl_exchange_period.period_close as period_close,
 
                     tbl_graph_info.id as id_graph,
                     tbl_graph_info.x_y as coordinate_xy,
                     tbl_graph_info.point_map as point_map
-                    FROM tbl_exchange_period 
-                    LEFT JOIN tbl_graph_info ON tbl_graph_info.id_exchange_period = tbl_exchange_period.id
+                    FROM  tbl_graph_info
+                    LEFT JOIN tbl_exchange_period ON tbl_graph_info.id_period = tbl_exchange_period.id
                     WHERE 
                     tbl_exchange_period.period_open <= '$day_today'
                     ";
