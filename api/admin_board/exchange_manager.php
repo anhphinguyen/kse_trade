@@ -58,6 +58,8 @@ switch ($typeManager) {
                 ";
             if (db_qr($sql)) {
                 returnSuccess("Sàn mới sẽ bắt đầu từ lúc " . date("d/m/Y H:i:s", $time_open));
+            }else{
+                returnError("Lỗi truy vấn");
             }
 
             break;

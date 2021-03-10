@@ -1,4 +1,14 @@
 <?php
+if (isset($_REQUEST['type_manager'])) {
+    if ($_REQUEST['type_manager'] == '') {
+        unset($_REQUEST['type_manager']);
+        returnError("type_manager");
+    } else {
+        $type_manager = $_REQUEST['type_manager'];
+    }
+}else{
+    returnError("type_manager");
+}
 
 $sql = "SELECT 
             tbl_request_payment.*,
@@ -8,12 +18,17 @@ $sql = "SELECT
             ON tbl_customer_customer.id = tbl_request_payment.id_customer
             WHERE 1=1";
 
-if (isset($_REQUEST['id_customer'])) {
-    if ($_REQUEST['id_customer'] == '') {
-        unset($_REQUEST['id_customer']);
-    } else {
-        $id_customer = $_REQUEST['id_customer'];
-        $sql .= " AND `tbl_request_payment`.`id_customer` = '{$id_customer}'";
+if($type_manager == 'customer'){
+    if (isset($_REQUEST['id_customer'])) {
+        if ($_REQUEST['id_customer'] == '') {
+            unset($_REQUEST['id_customer']);
+            returnError("type_manager");
+        } else {
+            $id_customer = $_REQUEST['id_customer'];
+            $sql .= " AND `tbl_request_payment`.`id_customer` = '{$id_customer}'";
+        }
+    }else{
+        returnError("id_customer");
     }
 }
 
@@ -24,6 +39,7 @@ if (isset($_REQUEST['filter'])) {
         $filter = htmlspecialchars($_REQUEST['filter']);
         $sql .= " AND ( tbl_customer_customer.customer_code LIKE '%{$filter}%'";
         $sql .= " OR tbl_customer_customer.customer_fullname LIKE '%{$filter}%'";
+        $sql .= " OR tbl_request_payment.request_code LIKE '%{$filter}%'";
         $sql .= " OR tbl_customer_customer.customer_phone LIKE '%{$filter}%' )";
     }
 }
@@ -53,7 +69,7 @@ if (isset($_REQUEST['date_end'])) {
     if ($_REQUEST['date_end'] == '') {
         unset($_REQUEST['date_end']);
     } else {
-        $date_begin = strtotime($_REQUEST['date_end']. " 23:59:59");
+        $date_end = strtotime($_REQUEST['date_end']. " 23:59:59");
         $sql .= " AND `request_created` <= '{$date_end}'";
     }
 } else {
@@ -100,12 +116,13 @@ if ($nums > 0) {
             'request_status' => $row['request_status'],
             'request_code' => $row['request_code'],
             'request_value' => $row['request_value'],
-            'request_created' => $row['request_created'],
+            'request_created' => date("d/m/Y H:i",$row['request_created']),
+            'type'=>'payment'
         );
 
         array_push($customer_arr['data'], $customer_item);
     }
     reJson($customer_arr);
 } else {
-    returnSuccess("Không tìm thấy yêu cầu");
+    returnError("Không tìm thấy yêu cầu");
 }

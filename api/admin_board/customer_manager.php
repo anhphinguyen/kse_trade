@@ -181,7 +181,7 @@ switch ($type_manager) {
             if (!empty($success)) {
                 returnSuccess("Cập nhật thành công");
             } else {
-                returnSuccess("Không có thông tin cập nhật");
+                returnError("Không có thông tin cập nhật");
             }
             break;
         }
@@ -268,7 +268,7 @@ switch ($type_manager) {
             $result = db_qr($sql);
             $nums = db_nums($result);
             if ($nums > 0) {
-                returnSuccess("Đã tồn tại khách hàng này");
+                returnError("Đã tồn tại khách hàng này");
             }
             // Tạo mã khách hàng
             $customer_code ="KH" . substr(time(), -8);

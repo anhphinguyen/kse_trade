@@ -49,5 +49,5 @@ if (isset($_REQUEST['account_phone']) && !empty($_REQUEST['account_phone'])) { /
 if (!empty($success)) {
     returnSuccess("Cập nhật thành công");
 } else {
-    returnSuccess("Không có thông tin cập nhật");
+    returnError("Không có thông tin cập nhật");
 }

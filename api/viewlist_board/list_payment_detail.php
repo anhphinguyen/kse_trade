@@ -30,8 +30,7 @@ if (isset($_REQUEST['id_request'])) {
 } else {
     returnError("Nhập id_request");
 }
-// echo $sql;
-// exit();
+
 $request_arr = array();
 $request_arr['success'] = 'true';
 $request_arr['data'] = array();
@@ -49,7 +48,7 @@ if ($nums > 0) {
             'customer_name' => htmlspecialchars_decode($row['customer_fullname']),
             'request_code' => $row['request_code'],
             'request_status' => $row['request_status'],
-            'request_created' => $row['request_created'],
+            'request_created' => date("d/m/Y H:i",$row['request_created']),
             'request_comment' => (!empty($row['request_comment']))?$row['request_comment']:"",
             'request_img' => (!empty($row['request_img']))?$row['request_img']:"",
             'request_value' => $row['request_value'],
@@ -64,5 +63,5 @@ if ($nums > 0) {
     }
     reJson($request_arr);
 } else {
-    returnSuccess("Không tìm thấy yêu cầu");
+    returnError("Không tìm thấy yêu cầu");
 }

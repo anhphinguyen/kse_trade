@@ -117,7 +117,7 @@ switch ($type_manager) {
                 }
                 reJson($customer_arr);
             } else {
-                returnSuccess("Không có yêu cầu nào");
+                returnError("Không có yêu cầu nào");
             }
             break;
         }

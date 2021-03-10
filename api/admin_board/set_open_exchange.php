@@ -57,5 +57,7 @@ if(db_qr($sql)){
     }
     if(isset($success)){
         returnSuccess("Tạo sàn thành công");
+    }else{
+        returnError("Lỗi truy vấn");
     }
 }

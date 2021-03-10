@@ -49,6 +49,8 @@ switch ($typeManager) {
                         WHERE id = '$id_customer'";
                 if (db_qr($sql)) {
                     returnSuccess("Tạo lệnh nạp tiền thành công");
+                }else{
+                    returnError("Lỗi truy vấn");
                 }
             }
             break;
@@ -110,7 +112,7 @@ switch ($typeManager) {
                     }
                     reJson($customer_arr);
                 } else {
-                    returnSuccess("Không có khách hàng");
+                    returnError("Không có khách hàng");
                 }
             }
 

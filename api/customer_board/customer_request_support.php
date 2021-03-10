@@ -61,6 +61,8 @@ switch ($type_manager) {
                     ";
             if(db_qr($sql)){
                 returnSuccess("Gửi yêu cầu thành công");
+            }else{
+                returnError("Lỗi truy vấn");
             }
         }
 
@@ -86,7 +88,7 @@ switch ($type_manager) {
                 }
                 reJson($customer_arr);
             } else {
-                returnSuccess("Không tìm thấy yêu cầu");
+                returnError("Không tìm thấy yêu cầu");
             }
             break;
         }

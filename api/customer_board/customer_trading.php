@@ -6,11 +6,24 @@ if (isset($_REQUEST['id_customer']) && !empty($_REQUEST['id_customer'])) {
     returnError("Nhập id_customer");
 }
 
-if (isset($_REQUEST['id_exchange_period']) && !empty($_REQUEST['id_exchange_period'])) {
-    $id_exchange_period = $_REQUEST['id_exchange_period'];
-} else {
-    returnError("Nhập id_exchange_period");
+// if (isset($_REQUEST['id_exchange_period']) && !empty($_REQUEST['id_exchange_period'])) {
+//     $id_exchange_period = $_REQUEST['id_exchange_period'];
+// } else {
+//     returnError("Nhập id_exchange_period");
+// }
+
+$time = time();
+$sql = "SELECT * FROM tbl_exchange_period WHERE period_open <= '$time' AND period_close > '$time'";
+$result = db_qr($sql);
+$nums = db_nums($result);
+if ($nums > 0) {
+    while ($row = db_assoc($result)) {
+        $id_exchange_period = $row['id'];
+    }
+}else{
+    returnError("Chưa có phiên giao dịch");
 }
+
 
 if (isset($_REQUEST['trading_log']) && !empty($_REQUEST['play_trading_logtime'])) {
     $trading_log = $_REQUEST['trading_log'];
@@ -68,22 +81,7 @@ $sql = "INSERT INTO tbl_trading_log SET
             trading_percent = '$exchange_percent',
             trading_type = '$trading_type'";
 if (db_qr($sql)) {
-    // $id_insert = mysqli_insert_id($conn);
-    // $sql = "SELECT * FROM tbl_trading_log WHERE id = '$id_insert'";
-    // $result = db_qr($sql);
-    // if (db_nums($result)) {
-    //     while ($row = db_assoc($result)) {
-    //         $result_arr = array(
-    //             'id_playing' => $row['id'],
-    //             'id_user' => $row['id_user'],
-    //             'id_session' => $row['id_session'],
-    //             'bet_money' => $row['play_bet_money'],
-    //             'play_status_trade' => $row['play_status_trade'],
-    //             'play_result' => (!empty($row['play_status_bet'])) ? $row['play_status_bet'] : "",
-    //         );
-    //     }
-    //     reJson($result_arr);
-    // }
-
     returnSuccess("Bạn đã đặt " . $trading_type);
+}else{
+    returnError("Lỗi truy vấn");
 }

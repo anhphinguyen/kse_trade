@@ -49,4 +49,6 @@ if(db_qr($sql)){
     if(isset($success)){
         returnSuccess("Cập nhật thông tin sàn thành công");
     }
+}else{
+    returnError("Lỗi truy vấn");
 }

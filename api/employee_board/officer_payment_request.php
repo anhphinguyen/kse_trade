@@ -13,7 +13,29 @@ if (!isset($_REQUEST['type_manager'])) {
 $typeManager = $_REQUEST['type_manager'];
 
 switch ($typeManager) {
+    case 'confirm_request_payment':{
+        if (isset($_REQUEST['id_request'])) {   //*
+            if ($_REQUEST['id_request'] == '') {
+                unset($_REQUEST['id_request']);
+                returnError("Nhap id_request");
+            } else {
+                $id_request = $_REQUEST['id_request'];
+            }
+        } else {
+            returnError("Nhap id_request");
+        }
 
+        $sql = "UPDATE tbl_request_payment SET
+                request_status = '3'
+                WHERE id = '$id_request'
+                ";
+            if(db_qr($sql)){
+                returnSuccess("Xác nhận yêu cầu thành công");
+            }else{
+                returnError("Lỗi truy vấn");
+            }
+
+    }
     case 'cancel_request_payment': {
             if (isset($_REQUEST['id_request'])) {   //*
                 if ($_REQUEST['id_request'] == '') {

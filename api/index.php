@@ -188,6 +188,10 @@ switch ($detect) {
         break;
     }
     /*viewlist board*/
+    case 'list_period_history':{
+        include_once 'viewlist_board/list_period_history.php';
+        break;
+    }
     case 'list_bank':{
         include_once 'viewlist_board/list_bank.php';
         break;

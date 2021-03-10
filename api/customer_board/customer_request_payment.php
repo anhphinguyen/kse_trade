@@ -48,6 +48,8 @@ if ($nums > 0) {
                 ";
             if (db_qr($sql)) {
                 returnSuccess("Gửi yêu cầu rút tiền thành công");
+            }else{
+                returnError("Lỗi truy vấn");
             }
         }
     }

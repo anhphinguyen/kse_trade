@@ -14,6 +14,14 @@ if(isset($_REQUEST['customer_phone']) && !(empty($_REQUEST['customer_phone']))){
     returnError("Nhập customer_phone");
 }
 
+if(isset($_REQUEST['customer_name']) && !(empty($_REQUEST['customer_name']))){
+        $customer_name = $_REQUEST['customer_name'];
+}else{
+    returnError("Nhập customer_name");
+}
+
+
+
 if(isset($_REQUEST['customer_password']) && !(empty($_REQUEST['customer_password']))){
     if(is_password($_REQUEST['customer_password'])){
         $customer_password = md5($_REQUEST['customer_password']);
@@ -52,6 +60,7 @@ $dir_save_cert_img = handing_file_img($customer_cert_img, $dir_save_customer_cer
 $customer_code ="KH" . substr(time(), -8);
 $sql = "INSERT INTO tbl_customer_customer SET 
         customer_phone = '$customer_phone', 
+        customer_fullname = '$customer_name', 
         customer_code = '$customer_code', 
         customer_password = '$customer_password', 
         customer_cert_img = '$dir_save_cert_img', 
@@ -61,4 +70,7 @@ if(isset($customer_introduce) && !empty($customer_introduce)){
 }
 if(db_qr($sql)){
    returnSuccess("Đăng kí tài khoản thành công");
+}else{
+   returnError("Đăng kí không thành công");
+
 }

@@ -69,22 +69,7 @@ $sql = "INSERT INTO tbl_customer_demo_log SET
             trading_percent = '$exchange_percent',
             trading_type = '$trading_type'";
 if (db_qr($sql)) {
-    // $id_insert = mysqli_insert_id($conn);
-    // $sql = "SELECT * FROM tbl_trading_log WHERE id = '$id_insert'";
-    // $result = db_qr($sql);
-    // if (db_nums($result)) {
-    //     while ($row = db_assoc($result)) {
-    //         $result_arr = array(
-    //             'id_playing' => $row['id'],
-    //             'id_user' => $row['id_user'],
-    //             'id_session' => $row['id_session'],
-    //             'bet_money' => $row['play_bet_money'],
-    //             'play_status_trade' => $row['play_status_trade'],
-    //             'play_result' => (!empty($row['play_status_bet'])) ? $row['play_status_bet'] : "",
-    //         );
-    //     }
-    //     reJson($result_arr);
-    // }
-
     returnSuccess("Bạn đã đặt " . $trading_type);
+}else{
+    returnError("Lỗi truy vấn");
 }

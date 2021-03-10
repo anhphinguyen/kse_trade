@@ -54,5 +54,5 @@ if ($nums > 0) {
     }
     reJson($customer_arr);
 } else {
-    returnSuccess("Không có khách hàng");
+    returnError("Không có khách hàng");
 }

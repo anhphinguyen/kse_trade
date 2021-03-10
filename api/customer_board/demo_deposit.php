@@ -5,13 +5,15 @@ if (isset($_REQUEST['id_demo'])) {
         unset($_REQUEST['id_demo']);
         returnError("Nhập id_demo");
     } else {
-        $demo_name = $_REQUEST['id_demo'];
+        $id_demo = $_REQUEST['id_demo'];
     }
 } else {
     returnError("Nhập id_demo");
 }
 
 $sql = "SELECT demo_wallet_payment FROM tbl_customer_demo WHERE id = '$id_demo'";
+// echo $sql;
+// exit();
 $result = db_qr($sql);
 $nums = db_nums($result);
 if($nums > 0){
@@ -26,4 +28,6 @@ $sql = "UPDATE tbl_customer_demo SET
         ";
 if(db_qr($sql)){
     returnSuccess("Nạp tiền thành công");
+}else{
+    returnError("Lỗi truy vấn");
 }

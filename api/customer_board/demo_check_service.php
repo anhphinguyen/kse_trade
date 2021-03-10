@@ -28,5 +28,5 @@ if ($nums > 0) {
     }
     reJson($customer_arr);
 } else {
-    returnSuccess("Không tồn tại khách hàng này");
+    returnError("Không tồn tại khách hàng này");
 }

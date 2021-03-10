@@ -79,5 +79,5 @@ if ($nums > 0) {
     }
     reJson($customer_arr);
 } else {
-    returnSuccess("Không có thông tin thao tác");
+    returnError("Không có thông tin thao tác");
 }

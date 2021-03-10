@@ -274,29 +274,29 @@ switch ($typeManager) {
 
         $check = 0;
 
-        if (isset($_REQUEST['username']) && !empty($_REQUEST['username'])) {
+        // if (isset($_REQUEST['username']) && !empty($_REQUEST['username'])) {
 
-            $username = $_REQUEST['username'];
-            //check username exists
-            $sql_check_username_exists = "SELECT *
-                FROM tbl_account_account 
-                WHERE account_username = '" . $username . "'";
+        //     $username = $_REQUEST['username'];
+        //     //check username exists
+        //     $sql_check_username_exists = "SELECT *
+        //         FROM tbl_account_account 
+        //         WHERE account_username = '" . $username . "'";
 
-            $result_check_username_exists = mysqli_query($conn, $sql_check_username_exists);
-            $num_result_check_username_exists = mysqli_num_rows($result_check_username_exists);
-            if ($num_result_check_username_exists > 0) {
-                returnError("Tên đăng nhập đã tồn tại!");
-            }
+        //     $result_check_username_exists = mysqli_query($conn, $sql_check_username_exists);
+        //     $num_result_check_username_exists = mysqli_num_rows($result_check_username_exists);
+        //     if ($num_result_check_username_exists > 0) {
+        //         returnError("Tên đăng nhập đã tồn tại!");
+        //     }
 
-            $check++;
-            $query = "UPDATE tbl_account_account SET ";
-            $query .= " account_username  = '" . $username . "' ";
-            $query .= " WHERE id = '" . $idUser . "'";
-            // Create post
-            if ($conn->query($query)) {
-                $check--;
-            }
-        }
+        //     $check++;
+        //     $query = "UPDATE tbl_account_account SET ";
+        //     $query .= " account_username  = '" . $username . "' ";
+        //     $query .= " WHERE id = '" . $idUser . "'";
+        //     // Create post
+        //     if ($conn->query($query)) {
+        //         $check--;
+        //     }
+        // }
 
         if (isset($_REQUEST['id_type']) && !empty($_REQUEST['id_type'])) {
             $id_type = $_REQUEST['id_type'];

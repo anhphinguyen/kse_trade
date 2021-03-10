@@ -93,7 +93,7 @@ if ($nums > 0) {
     }
     reJson($customer_arr);
 } else {
-    returnSuccess("Lịch sử trống, hãy làm nên lịch sử nhé");
+    returnError("Lịch sử trống, hãy làm nên lịch sử nhé");
 }
 
 ?>

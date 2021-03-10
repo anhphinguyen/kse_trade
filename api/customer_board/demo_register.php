@@ -21,6 +21,11 @@ $sql = "INSERT INTO tbl_customer_demo SET
 if(db_qr($sql)){
     $id_demo = mysqli_insert_id($conn);
     $sql = "SELECT * FROM tbl_customer_demo WHERE id = '$id_demo'";
+
+    $result_arr = array();
+    $result_arrp['success'] = "true";
+    $result_arr['data'] = array();
+    
     $result = db_qr($sql);
     $nums = db_nums($result);
     if($nums > 0){
@@ -32,5 +37,9 @@ if(db_qr($sql)){
                 'demo_token' => $row['demo_token'],
             );
         }
+        array_push($result_arr['data'],$result_item);
     }
+    reJson($result_arr);
+}else{
+    returnError("Đăng kí tài khoản demo thất bại");
 }

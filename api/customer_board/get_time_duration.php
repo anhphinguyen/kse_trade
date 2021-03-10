@@ -43,9 +43,9 @@ for ($i = 0; $i < $stock_quantity; $i++) {
                 'id_graph' => $row['id_graph'],
                 'id_exchange' => $row['id_exchange'],
                 'id_exchange_period' => $row['id_exchange_period'],
-                'period_open' => $row['period_open'],
-                'period_point_idle' => $row['period_point_idle'],
-                'period_close' => strval((int)$row['period_close'] - 1),
+                'period_open' => date("H:i",$row['period_open']),
+                'period_point_idle' => date("H:i",$row['period_point_idle']),
+                'period_close' => date("H:i",strval((int)$row['period_close'] - 1)),
                 'period_now' => $row['period_now'],
                 'time_duration' => strval((int)$row['period_now'] - (int)$row['period_open']),
             );

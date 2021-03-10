@@ -34,12 +34,12 @@ if ($nums > 0) {
             'customer_name' => htmlspecialchars_decode($row['customer_fullname']),
             'request_code' => $row['request_code'],
             'request_value' => $row['request_value'],
-            'request_time_complete' => $row['request_time_complete'],
+            'request_time_complete' => date("d/m/Y H:i",$row['request_time_complete']),
         );
 
         array_push($request_arr['data'], $request_item);
     }
     reJson($request_arr);
 } else {
-    returnSuccess("Không tìm thấy yêu cầu");
+    returnError("Không tìm thấy yêu cầu");
 }
