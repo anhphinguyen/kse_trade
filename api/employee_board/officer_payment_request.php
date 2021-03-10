@@ -38,7 +38,8 @@ switch ($typeManager) {
             }
 
             $sql = "UPDATE tbl_request_payment SET
-                    request_comment = '$request_comment'
+                    request_comment = '$request_comment',
+                    request_status = '4'
                     WHERE id = '$id_request'
                     ";
             if(db_qr($sql)){

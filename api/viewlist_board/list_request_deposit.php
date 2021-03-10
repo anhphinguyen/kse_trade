@@ -15,7 +15,7 @@ if (isset($_REQUEST['id_customer'])) {
         unset($_REQUEST['id_customer']);
     } else {
         $id_customer = $_REQUEST['id_customer'];
-        $sql .= " AND `id_customer` = '{$id_customer}'";
+        $sql .= " AND `tbl_request_deposit`.`id_customer` = '{$id_customer}'";
     }
 }
 
@@ -23,7 +23,7 @@ if (isset($_REQUEST['date_begin'])) {
     if ($_REQUEST['date_begin'] == '') {
         unset($_REQUEST['date_begin']);
     } else {
-        $date_begin = time($_REQUEST['date_begin']. " 00:00:00");
+        $date_begin = strtotime($_REQUEST['date_begin']. " 00:00:00");
         $sql .= " AND `request_time_completed` >= '{$date_begin}'";
     }
 } else {
@@ -35,7 +35,7 @@ if (isset($_REQUEST['date_end'])) {
     if ($_REQUEST['date_end'] == '') {
         unset($_REQUEST['date_end']);
     } else {
-        $date_begin = time($_REQUEST['date_end']. " 23:59:59");
+        $date_begin = strtotime($_REQUEST['date_end']. " 23:59:59");
         $sql .= " AND `request_time_completed` <= '{$date_end}'";
     }
 } else {

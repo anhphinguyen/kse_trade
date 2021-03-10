@@ -62,6 +62,18 @@ if ($total_trade_up <= $total_trade_down) {
             WHERE id = '$id_session' 
             ";
     db_qr($sql);
+    $sql = "UPDATE tbl_trading_log SET 
+            trading_result = 'lose'
+            WHERE id_exchange_period = '$id_session' 
+            AND trading_type = 'down'
+            ";
+    db_qr($sql);
+    $sql = "UPDATE tbl_trading_log SET 
+            trading_result = 'win'
+            WHERE id_exchange_period = '$id_session' 
+            AND trading_type = 'up'
+            ";
+    db_qr($sql);
     // Cộng tiền cho customer
     if ($time_break >= $session_time_close) {
         customer_add_money($id_session,'up');
@@ -72,6 +84,18 @@ if ($total_trade_up <= $total_trade_down) {
     $sql = "UPDATE tbl_exchange_period SET 
             period_result = 'down'
             WHERE id = '$id_session' 
+            ";
+    db_qr($sql);
+    $sql = "UPDATE tbl_trading_log SET 
+            trading_result = 'win'
+            WHERE id_exchange_period = '$id_session' 
+            AND trading_type = 'down'
+            ";
+    db_qr($sql);
+    $sql = "UPDATE tbl_trading_log SET 
+            trading_result = 'lose'
+            WHERE id_exchange_period = '$id_session' 
+            AND trading_type = 'up'
             ";
     db_qr($sql);
     // Cộng tiền cho customer

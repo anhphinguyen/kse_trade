@@ -26,6 +26,16 @@ switch ($typeManager) {
                 returnError("Nhap id_request");
             }
 
+            $sql = "SELECT * FROM tbl_request_payment 
+                    WHERE id = '$id_request'
+                    AND request_status = '2'
+                    ";
+            $result = db_qr($sql);
+            $nums = db_nums($result);
+            if($nums > 0){
+                returnError("Không phải trạng thái chờ xử lý");
+            }
+
             if (isset($_FILES['request_img'])) { // up product_img
                 $request_img = 'request_img';
                 $dir_save_request_img = "images/request_payment/"; // sửa đường dẫn
@@ -35,7 +45,8 @@ switch ($typeManager) {
 
             $dir_save_request = handing_file_img($request_img, $dir_save_request_img);
             $sql = "UPDATE `tbl_request_payment`
-                    SET `request_img` = '{$dir_save_request}' 
+                    SET `request_img` = '{$dir_save_request}',
+                        `request_status` = '3'
                     WHERE `id` = '{$id_request}'";
             
             if(db_qr($sql)){

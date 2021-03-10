@@ -20,7 +20,7 @@ if (isset($_REQUEST['date_begin'])) {
     if ($_REQUEST['date_begin'] == '') {
         unset($_REQUEST['date_begin']);
     } else {
-        $date_begin = time($_REQUEST['date_begin']. " 00:00:00");
+        $date_begin = strtotime($_REQUEST['date_begin']. " 00:00:00");
         $sql .= " AND `trading_log` >= '{$date_begin}'";
     }
 } else {
@@ -32,7 +32,7 @@ if (isset($_REQUEST['date_end'])) {
     if ($_REQUEST['date_end'] == '') {
         unset($_REQUEST['date_end']);
     } else {
-        $date_begin = time($_REQUEST['date_end']. " 23:59:59");
+        $date_end = strtotime($_REQUEST['date_end']. " 23:59:59");
         $sql .= " AND `trading_log` <= '{$date_end}'";
     }
 } else {
@@ -43,7 +43,6 @@ if (isset($_REQUEST['date_end'])) {
 if (isset($_REQUEST['trading_result'])) {
     if ($_REQUEST['trading_result'] == '') {
         unset($_REQUEST['trading_result']);
-        returnError("Nhập trading_result");
     } else {
         $trading_result = $_REQUEST['trading_result'];
         $sql .= " AND `trading_result` = '{$trading_result}'";
@@ -87,7 +86,7 @@ if ($nums > 0) {
             'trading_bet' => $row['trading_bet'],
             'trading_type' => $row['trading_type'],
             'trading_result' => $row['trading_result'],
-            'trading_percent' => ($row['trading_result'] === $row['trading_type'] )?$row['trading_percent']:"",
+            'trading_percent' => ($row['trading_result'] === 'win' )?$row['trading_percent']:"",
         );
 
         array_push($customer_arr['data'], $customer_item);
