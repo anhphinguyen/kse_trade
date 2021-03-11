@@ -344,20 +344,14 @@ function handing_file_img($myfile, $dir_save)
     }
 }
 
-// function check_img_name($target_save_file, $img_info, $target_dir, $target_dir_4_upload){
-//     if (file_exists($target_save_file)) {
-//         $k = 0;
-//         $name_copy = $img_info['filename'] . "_Copy_" . $k;
-//         $target_file = $target_dir . $name_copy . "." . $img_info['extension'];
-//         $target_save_file = $target_dir_4_upload . $name_copy . "." . $img_info['extension'];
-//         while (file_exists($target_save_file)) {
-//             $k++;
-//             $name_copy = $img_info['filename'] . "_Copy_" . $k;
-//             $target_file = $target_dir . $name_copy . "." . $img_info['extension'];
-//             $target_save_file = $target_dir_4_upload . $name_copy . "." . $img_info['extension'];
-//         }
-//     }
-// }
+function returnEmptyData($msg){
+    echo json_encode(array(
+        'success' => 'true',
+        'message' => $msg,
+        'data' => array(),
+    ));
+    exit();
+}
 
 function db_assoc($result)
 {

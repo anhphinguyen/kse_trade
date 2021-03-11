@@ -1,6 +1,14 @@
 <?php
-
-$sql = "SELECT * FROM `tbl_customer_customer` WHERE 1=1";
+if (isset($_REQUEST['type_customer'])) {
+    if ($_REQUEST['type_customer'] == '') {
+        unset($_REQUEST['type_customer']);
+        returnError("Nhập type_customer");
+    } else {
+        $type_customer = $_REQUEST['type_customer'];
+    }
+} else {
+    returnError("Nhập type_customer");
+}
 
 if (isset($_REQUEST['id_customer'])) {
     if ($_REQUEST['id_customer'] == '') {
@@ -8,11 +16,33 @@ if (isset($_REQUEST['id_customer'])) {
         returnError("Nhập id_customer");
     } else {
         $id_customer = $_REQUEST['id_customer'];
-        $sql .= " AND `tbl_customer_customer`.`id` = '{$id_customer}'";
     }
-}else{
+} else {
     returnError("Nhập id_customer");
 }
+
+if ($type_customer === 'demo') {
+    $sql = "SELECT demo_wallet_payment FROM tbl_customer_demo WHERE id = '$id_customer'";
+    $result = db_qr($sql);
+    $nums = db_nums($result);
+    if ($nums > 0) {
+        while ($row = db_assoc($result)) {
+            $demo_wallet_payment = $row['demo_wallet_payment']; // value default is 100.000
+        }
+    }
+
+    $sql = "UPDATE tbl_customer_demo SET
+        demo_wallet_bet = '$demo_wallet_payment'
+        WHERE id = '$id_customer'
+        ";
+    if (db_qr($sql)) {
+        returnEmptyData("Nạp tiền thành công");
+    } else {
+        returnError("Lỗi truy vấn");
+    }
+}
+
+$sql = "SELECT * FROM `tbl_customer_customer` WHERE `id` = '{$id_customer}'";
 
 $customer_arr = array();
 $customer_arr['success'] = 'true';
@@ -27,7 +57,7 @@ if ($nums > 0) {
             'id_customer' => $row['id'],
             'customer_name' => htmlspecialchars_decode($row['customer_fullname']),
             'customer_phone' => htmlspecialchars_decode($row['customer_phone']),
-            'request_syntax' => "KSENAPTIEN".$row['customer_phone']
+            'request_syntax' => "KSENAPTIEN" . $row['customer_phone']
         );
 
         array_push($customer_arr['data'], $customer_item);

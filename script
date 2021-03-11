@@ -96,4 +96,14 @@ Ngay 09-03-2021 :
 
 Ngay 11-03-2021
  * bug : lúc admin update sàn, socket chạy auto update sàn chưa xóa thông tin sàn trong tbl_exchange_temporary 
+ * home work : update các api (chưa up lên host) : 
+                    - check_customer_balance : thêm - type_customer : + customer/ + demo 
+                    - customer_check_service : thêm - type_customer : + customer/ + demo 
+                    - customer_request_deposit : thêm - type_customer : + customer/ + demo 
+                    - customer_trade_one_period : thêm - type_customer : + customer/ + demo 
+                    - register : thêm - type_customer : + customer/ + demo 
+                    - customer_trading : thêm - type_customer : + customer/ + demo 
+              Cần bổ sung chỉnh sửa api customer_request_deposit -> info 
+              Cần bổ sung chỉnh sửa api service_exchange, active_exchange, customer_check_service
+
                     

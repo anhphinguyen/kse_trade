@@ -133,14 +133,7 @@ switch ($detect) {
         include_once 'customer_board/demo_register.php';
         break;
     }
-    case 'demo_deposit':{
-        include_once 'customer_board/demo_deposit.php';
-        break;
-    }
-    case 'demo_check_service':{
-        include_once 'customer_board/demo_check_service.php';
-        break;
-    }
+
     case 'get_time_duration':{
         include_once 'customer_board/get_time_duration.php';
         break;

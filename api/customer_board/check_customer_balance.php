@@ -1,7 +1,5 @@
 <?php
 
-// $sql = "SELECT * FROM tbl_customer_customer
-//         WHERE 1=1";
 
 if (isset($_REQUEST['type_customer'])) {
     if ($_REQUEST['type_customer'] == '') {
@@ -20,7 +18,6 @@ if (isset($_REQUEST['id_customer'])) {
         returnError("Nhập id_customer");
     } else {
         $id_customer = $_REQUEST['id_customer'];
-        // $sql .= " AND `id` = '{$id_customer}'";
     }
 } else {
     returnError("Nhập id_customer");
@@ -33,6 +30,8 @@ switch($type_customer){
         break;
     }
     case 'demo':{
+        $sql = "SELECT * FROM tbl_customer_demo
+                WHERE `id` = '{$id_customer}'";
         break;
     }
 }
@@ -49,8 +48,8 @@ if ($nums > 0) {
     while ($row = db_assoc($result)) {
         $customer_item = array(
             'id_customer' => $row['id'],
-            'customer_wallet_bet' => htmlspecialchars_decode($row['customer_wallet_bet']),
-            'customer_wallet_payment' => htmlspecialchars_decode($row['customer_wallet_payment']),
+            'customer_wallet_bet' => htmlspecialchars_decode((isset($row['customer_wallet_bet']))?$row['customer_wallet_bet']:$row['demo_wallet_bet']),
+            'customer_wallet_payment' => htmlspecialchars_decode((isset($row['customer_wallet_payment']) && !empty($row['customer_wallet_payment']))?$row['customer_wallet_payment']:"0"),
         );
         array_push($customer_arr['data'], $customer_item);
     }
