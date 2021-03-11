@@ -1,20 +1,41 @@
 <?php
 
-$sql = "SELECT * FROM tbl_customer_customer
-        WHERE 1=1";
+// $sql = "SELECT * FROM tbl_customer_customer
+//         WHERE 1=1";
+
+if (isset($_REQUEST['type_customer'])) {
+    if ($_REQUEST['type_customer'] == '') {
+        unset($_REQUEST['type_customer']);
+        returnError("Nhập type_customer");
+    } else {
+        $type_customer = $_REQUEST['type_customer'];
+    }
+} else {
+    returnError("Nhập type_customer");
+}
 
 if (isset($_REQUEST['id_customer'])) {
     if ($_REQUEST['id_customer'] == '') {
         unset($_REQUEST['id_customer']);
-        returnError("type_manager");
+        returnError("Nhập id_customer");
     } else {
         $id_customer = $_REQUEST['id_customer'];
-        $sql .= " AND `id` = '{$id_customer}'";
+        // $sql .= " AND `id` = '{$id_customer}'";
     }
 } else {
-    returnError("id_customer");
+    returnError("Nhập id_customer");
 }
 
+switch($type_customer){
+    case 'customer':{
+        $sql = "SELECT * FROM tbl_customer_customer
+                WHERE `id` = '{$id_customer}'";
+        break;
+    }
+    case 'demo':{
+        break;
+    }
+}
 
 $customer_arr = array();
 $customer_arr['success'] = 'true';

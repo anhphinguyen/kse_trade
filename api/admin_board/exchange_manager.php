@@ -28,39 +28,63 @@ switch ($typeManager) {
                 return ("Nhập id_account");
             }
 
-            if (isset($_REQUEST['time_open']) && !empty($_REQUEST['time_open'])) {
-                if (date("d", $_REQUEST['time_open']) <= date("d", time())) {
+            if (isset($_REQUEST['exchange_open']) && !empty($_REQUEST['exchange_open'])) {
+                if (date("d", strtotime($_REQUEST['exchange_open'])) <= date("d", time())) {
                     returnError("Chỉ được cập nhật thời gian mở sàn cho ngày hôm sau");
                 }
-                $time_open = $_REQUEST['time_open'];
+                $time_open = strtotime($_REQUEST['exchange_open']);
             }
 
 
-            if (isset($_REQUEST['time_close']) && !empty($_REQUEST['time_close'])) {
-                if (date("d", $_REQUEST['time_close']) <= date("d", time())) {
+            if (isset($_REQUEST['exchange_close']) && !empty($_REQUEST['exchange_close'])) {
+                if (date("d", strtotime($_REQUEST['exchange_close'])) <= date("d", time())) {
                     returnError("Chỉ được cập nhật thời gian đóng sàn cho ngày hôm sau");
-                } elseif ($_REQUEST['time_close'] == $_REQUEST['time_open']) {
+                } elseif (strtotime($_REQUEST['exchange_close']) == strtotime($_REQUEST['exchange_open'])) {
                     returnError("Thời gian đóng sàn không được trùng với thời gian mở sàn");
                 }
-                $time_close = $_REQUEST['time_close'];
+                $time_close = strtotime($_REQUEST['exchange_close']);
             }
 
-            if (isset($_REQUEST['time_living']) && !empty($_REQUEST['time_living'])) {
-                $time_living = $_REQUEST['time_living'];
+            if (isset($_REQUEST['exchange_period']) && !empty($_REQUEST['exchange_period'])) {
+                $time_living = $_REQUEST['exchange_period'];
             }
 
-            $sql = "INSERT INTO tbl_exchange_temporary SET
+            $sql = "SELECT * FROM tbl_exchange_temporary";
+            $result = db_qr($sql);
+            $nums = db_nums($result);
+            if ($nums > 0) {
+                while ($row = db_assoc($result)) {
+                    if (date("d", $row['exchange_open']) == date("d", $time_open)) {
+                        $sql = "UPDATE tbl_exchange_temporary SET
+                                id_exchange = '$id_exchange',
+                                exchange_open = '$time_open',
+                                exchange_close = '$time_close',
+                                exchange_period = '$time_living',
+                                exchange_updated_by = '$id_account'
+                                WHERE id = '" . $row['id'] . "'
+                                ";
+                        if (db_qr($sql)) {
+                            returnSuccess("Sàn mới sẽ bắt đầu từ lúc " . date("d/m/Y H:i:s", $time_open));
+                        } else {
+                            returnError("Lỗi truy vấn");
+                        }
+                    }
+                }
+            } else {
+                $sql = "INSERT INTO tbl_exchange_temporary SET
                 id_exchange = '$id_exchange',
                 exchange_open = '$time_open',
                 exchange_close = '$time_close',
                 exchange_period = '$time_living',
-                exchange_update_by = '$id_account'
+                exchange_updated_by = '$id_account'
                 ";
-            if (db_qr($sql)) {
-                returnSuccess("Sàn mới sẽ bắt đầu từ lúc " . date("d/m/Y H:i:s", $time_open));
-            } else {
-                returnError("Lỗi truy vấn");
+                if (db_qr($sql)) {
+                    returnSuccess("Sàn mới sẽ bắt đầu từ lúc " . date("d/m/Y H:i:s", $time_open));
+                } else {
+                    returnError("Lỗi truy vấn");
+                }
             }
+
 
             break;
         }
@@ -79,6 +103,7 @@ switch ($typeManager) {
                     $result_item = array(
                         'id_exchange' => $row['id'],
                         'exchange_name' => $row['exchange_name'],
+                        'exchange_active' => $row['exchange_active'],
                         'exchange_open' => date("H:i", $row['exchange_open']),
                         'exchange_close' => date("H:i", $row['exchange_close']),
                         'exchange_quantity' => strval($exchange_quantity),
@@ -120,10 +145,10 @@ switch ($typeManager) {
         }
 
 
-        $total_people_up = "";
-        $total_people_down = "";
-        $total_money_up = "";
-        $total_money_down = "";
+        $total_people_up = "0";
+        $total_people_down = "0";
+        $total_money_up = "0";
+        $total_money_down = "0";
 
         $sql_people_up = "SELECT SUM(id_customer) as total_people_up FROM tbl_trading_log
                 WHERE trading_type = 'UP'

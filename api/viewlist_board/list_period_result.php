@@ -1,11 +1,11 @@
 <?php
-
+$time = time();
 $sql = "SELECT 
         tbl_exchange_period.*,
         tbl_exchange_exchange.exchange_open
         FROM tbl_exchange_period
         LEFT JOIN tbl_exchange_exchange ON tbl_exchange_exchange.id = tbl_exchange_period.id_exchange
-        WHERE 1=1
+        WHERE tbl_exchange_period.period_close < $time
         ";
 
 $customer_arr = array();
@@ -45,7 +45,7 @@ if ($nums > 0) {
             'exchange_open' => date("d/m/Y", $row['exchange_open']),
             'period_open' => date("H:i", $row['period_open']),
             'period_close' => date("H:i", $row['period_close']),
-            'period_result' => $row['period_result'],
+            'period_result' => (isset($row['period_result']) && !empty($row['period_result']))?$row['period_result']:"",
         );
         array_push($customer_arr['data'], $customer_item);
     }

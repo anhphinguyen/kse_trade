@@ -24,12 +24,28 @@ switch ($type_manager) {
                 returnError("Nhập id_support_customer");
             }
 
+            $sql = "SELECT * FROM tbl_support_customer 
+                    WHERE id = '$id_support_customer'
+                    AND support_status != 'processing'
+                    ";
+            $result = db_qr($sql);
+            $nums = db_nums($result);
+            if($nums > 0){
+                while($row = db_assoc($result)){
+                    returnError("Không phải trạng thái đang xử lý");
+                }
+            }
+
             $sql = "UPDATE tbl_support_customer 
-                SET support_status = 3 
-                WHERE id = '$id_support_customer'";
+                SET support_status = 'finished' 
+                WHERE id = '$id_support_customer'
+                AND support_status = 'processing'
+                ";
 
             if (db_qr($sql)) {
                 returnSuccess("Xử lý thành công");
+            }else{
+                returnError("Lỗi truy vấn finished");
             }
             break;
         }
@@ -47,12 +63,28 @@ switch ($type_manager) {
                 returnError("Nhập id_support_customer");
             }
 
+            $sql = "SELECT * FROM tbl_support_customer 
+                    WHERE id = '$id_support_customer'
+                    AND support_status != 'begin'
+                    ";
+            $result = db_qr($sql);
+            $nums = db_nums($result);
+            if($nums > 0){
+                while($row = db_assoc($result)){
+                    returnError("Không phải trạng thái bắt đầu");
+                }
+            }
+
             $sql = "UPDATE tbl_support_customer 
-                SET support_status = 2 
-                WHERE id = '$id_support_customer'";
+                SET support_status = 'processing' 
+                WHERE id = '$id_support_customer'
+                AND support_status = 'begin'
+                ";
 
             if (db_qr($sql)) {
                 returnSuccess("Cập nhật trạng thái đang xử lý thành công");
+            }else{
+                returnError("Lỗi truy vấn processing");
             }
             break;
         }

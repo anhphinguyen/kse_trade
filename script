@@ -93,4 +93,7 @@ Ngay 09-03-2021 :
  - type_manager : list_customer : 
                         + type_sort : desc / asc
                   list_customer_history
+
+Ngay 11-03-2021
+ * bug : lúc admin update sàn, socket chạy auto update sàn chưa xóa thông tin sàn trong tbl_exchange_temporary 
                     

@@ -45,8 +45,6 @@ if (isset($_FILES['customer_cert_img'])) { // up product_img
     returnError("Nhập customer_cert_img");
 }
 
-
-
 $sql = "SELECT * FROM tbl_customer_customer WHERE customer_phone = '$customer_phone'";
 $result = db_qr($sql);
 if((db_nums($result)) > 0){
@@ -54,8 +52,10 @@ if((db_nums($result)) > 0){
 }
 $dir_save_cert_img = handing_file_img($customer_cert_img, $dir_save_customer_cert_img);
 $customer_code ="KH" . substr(time(), -8);
+$customer_token = md5($username . time());
 $sql = "INSERT INTO tbl_customer_customer SET 
         customer_phone = '$customer_phone', 
+        customer_token = '$customer_token', 
         customer_fullname = '$customer_name', 
         customer_code = '$customer_code', 
         customer_password = '$customer_password', 
@@ -64,9 +64,10 @@ $sql = "INSERT INTO tbl_customer_customer SET
 if(isset($customer_introduce) && !empty($customer_introduce)){
         $sql .= ", customer_introduce = '$customer_introduce'";
 }
+
+
 if(db_qr($sql)){
    returnSuccess("Đăng kí tài khoản thành công");
 }else{
    returnError("Đăng kí không thành công");
-
 }

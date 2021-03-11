@@ -1,7 +1,7 @@
 <?php
 
 if(isset($_REQUEST['exchange_open']) && !empty($_REQUEST['exchange_open'])){
-    $exchange_open = $_REQUEST['exchange_open'];
+    $exchange_open = strtotime($_REQUEST['exchange_open']);
     $sql = "SELECT exchange_open FROM tbl_exchange_exchange";
     $result = db_qr($sql);
     $num = db_nums($result);
@@ -16,6 +16,12 @@ if(isset($_REQUEST['exchange_open']) && !empty($_REQUEST['exchange_open'])){
     returnError("Nhập exchange_open");
 }
 
+if(isset($_REQUEST['exchange_name']) && !empty($_REQUEST['exchange_name'])){
+    $exchange_name = $_REQUEST['exchange_name'];
+}else{
+    returnError("Nhập exchange_name");
+}
+
 if(isset($_REQUEST['exchange_period']) && !empty($_REQUEST['exchange_period'])){
     $exchange_period = $_REQUEST['exchange_period'];
 }else{
@@ -23,9 +29,13 @@ if(isset($_REQUEST['exchange_period']) && !empty($_REQUEST['exchange_period'])){
 }
 
 if(isset($_REQUEST['exchange_close']) && !empty($_REQUEST['exchange_close'])){
-    $exchange_close = $_REQUEST['exchange_close'];
+    $exchange_close = strtotime($_REQUEST['exchange_close']);
 }else{
     returnError("Nhập exchange_close");
+}
+
+if($exchange_close < $exchange_open){
+	returnError("Thời gian đóng sàn không thể thấp hơn thời gian mở sàn!");
 }
 
 $delta_time = $exchange_close - $exchange_open;
@@ -35,6 +45,7 @@ $time_start = $exchange_open;
 
 $sql = "INSERT INTO tbl_exchange_exchange SET
         exchange_open = '$exchange_open',
+        exchange_name = '$exchange_name',
         exchange_close = '$exchange_close',
         exchange_period = '$exchange_period'
         ";

@@ -13,29 +13,41 @@ if (!isset($_REQUEST['type_manager'])) {
 $typeManager = $_REQUEST['type_manager'];
 
 switch ($typeManager) {
-    case 'confirm_request_payment':{
-        if (isset($_REQUEST['id_request'])) {   //*
-            if ($_REQUEST['id_request'] == '') {
-                unset($_REQUEST['id_request']);
-                returnError("Nhap id_request");
+    case 'confirm_request_payment': {
+            if (isset($_REQUEST['id_request'])) {   //*
+                if ($_REQUEST['id_request'] == '') {
+                    unset($_REQUEST['id_request']);
+                    returnError("Nhap id_request");
+                } else {
+                    $id_request = $_REQUEST['id_request'];
+                }
             } else {
-                $id_request = $_REQUEST['id_request'];
+                returnError("Nhap id_request");
             }
-        } else {
-            returnError("Nhap id_request");
-        }
 
-        $sql = "UPDATE tbl_request_payment SET
-                request_status = '3'
+
+            $sql = "SELECT * FROM tbl_request_payment 
+                    WHERE id = '$id_request'
+                    AND request_status != '1'
+                    ";
+            $result = db_qr($sql);
+            $nums = db_nums($result);
+            if($nums > 0){
+                while($row = db_assoc($result)){
+                    returnError("Không phải trạng thái tạo lệnh");
+                }
+            }
+            $sql = "UPDATE tbl_request_payment SET
+                request_status = '2'
                 WHERE id = '$id_request'
+                AND request_status = '1'
                 ";
-            if(db_qr($sql)){
+            if (db_qr($sql)) {
                 returnSuccess("Xác nhận yêu cầu thành công");
-            }else{
+            } else {
                 returnError("Lỗi truy vấn");
             }
-
-    }
+        }
     case 'cancel_request_payment': {
             if (isset($_REQUEST['id_request'])) {   //*
                 if ($_REQUEST['id_request'] == '') {
@@ -64,9 +76,9 @@ switch ($typeManager) {
                     request_status = '4'
                     WHERE id = '$id_request'
                     ";
-            if(db_qr($sql)){
+            if (db_qr($sql)) {
                 returnSuccess("Cập nhât thành công");
-            }else{
+            } else {
                 returnError("Lỗi truy vấn");
             }
 
