@@ -58,7 +58,7 @@ switch ($typeManager) {
                 ";
             if (db_qr($sql)) {
                 returnSuccess("Sàn mới sẽ bắt đầu từ lúc " . date("d/m/Y H:i:s", $time_open));
-            }else{
+            } else {
                 returnError("Lỗi truy vấn");
             }
 
@@ -74,13 +74,16 @@ switch ($typeManager) {
                 $result_arr['success'] = 'true';
                 $result_arr['data'] = array();
                 while ($row = db_assoc($result)) {
+
+                    $exchange_quantity = get_exchange_quantity($row['id']);
                     $result_item = array(
                         'id_exchange' => $row['id'],
                         'exchange_name' => $row['exchange_name'],
-                        'exchange_open' => $row['exchange_open'],
-                        'exchange_close' => $row['exchange_close'],
-                        'exchange_quantity' => $row['exchange_quantity'],
-                        'exchange_update_by' => $row['exchange_update_by'],
+                        'exchange_open' => date("H:i", $row['exchange_open']),
+                        'exchange_close' => date("H:i", $row['exchange_close']),
+                        'exchange_quantity' => strval($exchange_quantity),
+                        'exchange_period' => strval($row['exchange_period'] / 60),
+                        'exchange_updated_by' => (isset($row['exchange_updated_by']) && !empty($row['exchange_updated_by'])) ? $row['exchange_updated_by'] : "0",
                     );
                     array_push($result_arr['data'], $result_item);
                 }
@@ -90,11 +93,18 @@ switch ($typeManager) {
         }
 
     case 'detail_exchange_trade':
-        // if (isset($_REQUEST['time_present']) && !empty($_REQUEST['time_present'])) {
-        // $time_present = $_REQUEST['time_present'];
-        // } else {
+        if (isset($_REQUEST['id_exchange'])) {
+            if ($_REQUEST['id_exchange'] == '') {
+                unset($_REQUEST['id_exchange']);
+                returnError("Nhập id_exchange");
+            } else {
+                $id_exchange = $_REQUEST['id_exchange'];
+            }
+        } else {
+            returnError("Nhập id_exchange");
+        }
+
         $time_present = time();
-        // }
 
         $sql = "SELECT * FROM tbl_exchange_period 
                 WHERE period_open <= '$time_present'
@@ -104,7 +114,6 @@ switch ($typeManager) {
         if ($num > 0) {
             while ($row = db_assoc($result)) {
                 $id_session = $row['id'];
-                // $session_time_close = $row['session_time_close'];
             }
         } else {
             returnError('Chưa có phiên được tạo');
@@ -166,17 +175,32 @@ switch ($typeManager) {
         }
 
         $result_arr = array();
-        $result_arr['success'] = 'true';
-        $result_arr['data'] = array();
-        $result_item = array(
-            'total_people_up' => $total_people_up,
-            'total_people_down' => $total_people_down,
-            'total_money_up' => $total_money_up,
-            'total_money_down' => $total_money_down,
-        );
+        $sql = "SELECT * FROM tbl_exchange_exchange WHERE id = '$id_exchange'";
+        $result = db_qr($sql);
+        $nums = db_nums($result);
+        if ($nums > 0) {
+            $result_arr['success'] = 'true';
+            $result_arr['data'] = array();
+            while ($row = db_assoc($result)) {
 
-        array_push($result_arr, $result_item);
-        reJson($result_arr);
+                $exchange_quantity = get_exchange_quantity($row['id']);
+                $result_item = array(
+                    'id_exchange' => $row['id'],
+                    'exchange_name' => $row['exchange_name'],
+                    'exchange_open' => date("H:i", $row['exchange_open']),
+                    'exchange_close' => date("H:i", $row['exchange_close']),
+                    'exchange_quantity' => strval($exchange_quantity),
+                    'exchange_period' => strval($row['exchange_period'] / 60),
+                    'exchange_updated_by' => (isset($row['exchange_updated_by']) && !empty($row['exchange_updated_by'])) ? $row['exchange_updated_by'] : "0",
+                    'total_people_up' => $total_people_up,
+                    'total_people_down' => $total_people_down,
+                    'total_money_up' => $total_money_up,
+                    'total_money_down' => $total_money_down,
+                );
+                array_push($result_arr['data'], $result_item);
+            }
+            reJson($result_arr);
+        }
         break;
 
     default:

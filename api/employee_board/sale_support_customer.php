@@ -1,13 +1,13 @@
 <?php
-if (isset($_REQUEST['type_manager'])) {
-    if ($_REQUEST['type_manager'] == '') {
-        unset($_REQUEST['type_manager']);
-        returnError("Nhập type_manager");
+if (isset($_REQUEST['type_target'])) {
+    if ($_REQUEST['type_target'] == '') {
+        unset($_REQUEST['type_target']);
+        returnError("Nhập type_target");
     } else {
-        $type_manager = $_REQUEST['type_manager'];
+        $type_manager = $_REQUEST['type_target'];
     }
 } else {
-    returnError("Nhập type_manager");
+    returnError("Nhập type_target");
 }
 
 switch ($type_manager) {

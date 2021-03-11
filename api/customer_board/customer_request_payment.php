@@ -35,7 +35,7 @@ if ($nums > 0) {
 
         $sql = "UPDATE tbl_customer_customer SET 
                 customer_wallet_bet = '$customer_wallet_pet_update',
-                customer_wallet_payment = '$request_value'
+                customer_wallet_payment = '$customer_wallet_payment_update'
                 WHERE id = '$id_customer'
                 ";
         if (db_qr($sql)) {

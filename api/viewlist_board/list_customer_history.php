@@ -8,7 +8,7 @@ if (isset($_REQUEST['type_manager'])) {
         $type_manager = $_REQUEST['type_manager'];
     }
 }else{
-    returnError("type_manager");
+    returnError("Nhập type_manager");
 }
 
 
@@ -99,7 +99,7 @@ if ($nums > 0) {
             'trading_log' => date("d/m/Y - H:i", $row['trading_log']),
             'trading_bet' => $row['trading_bet'],
             'trading_type' => $row['trading_type'],
-            'trading_result' => $row['trading_result'],
+            'trading_result' => (isset(($row['trading_result'])) && !empty(($row['trading_result'])))?$row['trading_result']:"",
             'trading_percent' => ($row['trading_result'] === 'win' )?$row['trading_percent']:"",
         );
 

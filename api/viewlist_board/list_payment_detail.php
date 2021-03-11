@@ -39,6 +39,7 @@ $nums = db_nums($result);
 
 if ($nums > 0) {
     while ($row = db_assoc($result)) {
+        $customer_paymented = get_customer_paymented_in_day($row['id_customer']);
         $request_item = array(
             'id_request' => $row['id'],
             'id_customer' => $row['id_customer'],
@@ -57,6 +58,7 @@ if ($nums > 0) {
             'customer_account_img' => $row['customer_account_img'],
             'customer_cert_img' => $row['customer_cert_img'],
             'customer_limit_payment' => $row['customer_limit_payment'],
+            'customer_paymented' => (isset($customer_paymented) && !empty($customer_paymented))?$customer_paymented:"0",
         );
 
         array_push($request_arr['data'], $request_item);

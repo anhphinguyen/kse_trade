@@ -1,10 +1,24 @@
 <?php
-function get_customer_paymented_in_day($id_customer){
-    $time = date("d-m-Y",time());
-        $time_begin = strtotime($time." 00:00:00");
-        $time_end = strtotime($time." 23:59:59");
-        
-        $sql_check_money_used = "SELECT 
+function get_exchange_quantity($id_exchange)
+{
+    $time = date("d-m-Y", time());
+    $time_begin = strtotime($time . " 00:00:00");
+    $time_end = strtotime($time . " 23:59:59");
+    $sql = "SELECT * FROM tbl_exchange_period 
+                            WHERE period_open >= '$time_begin'
+                            AND period_open <= '$time_end'
+                            AND id_exchange = '" . $id_exchange . "'
+                            ";
+    $total = count(db_fetch_array($sql));
+    return $total;
+}
+function get_customer_paymented_in_day($id_customer)
+{
+    $time = date("d-m-Y", time());
+    $time_begin = strtotime($time . " 00:00:00");
+    $time_end = strtotime($time . " 23:59:59");
+
+    $sql_check_money_used = "SELECT 
                                  SUM(tbl_request_payment.request_value) as money_used
                                  FROM tbl_request_payment
                                  LEFT JOIN tbl_customer_customer ON tbl_customer_customer.id = tbl_request_payment.id_customer
@@ -13,16 +27,18 @@ function get_customer_paymented_in_day($id_customer){
                                  AND tbl_request_payment.request_created <= '$time_end'
                                  GROUP BY tbl_request_payment.id_customer
                                 ";
-        $result_check_money_used  = db_qr($sql_check_money_used);           
-        $nums_check_money_used  = db_nums($result_check_money_used);    
-        if($nums_check_money_used > 0){
-            while($row_check_money_used = db_assoc($result_check_money_used)){
-                $customer_paymented = $row_check_money_used['money_used'];
-                return $customer_paymented;
-            }
-        } else{
-            returnError("Lỗi truy vấn get_customer_paymented_in_day");
-        }  
+
+    $result_check_money_used  = db_qr($sql_check_money_used);
+    $nums_check_money_used  = db_nums($result_check_money_used);
+    if ($nums_check_money_used > 0) {
+        while ($row_check_money_used = db_assoc($result_check_money_used)) {
+            $customer_paymented = $row_check_money_used['money_used'];
+            return $customer_paymented;
+        }
+    }
+    // else{
+    //     returnError("Lỗi truy vấn get_customer_paymented_in_day");
+    // }  
 }
 function demo_add_money($id_session, $trading_type = "")
 {

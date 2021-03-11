@@ -15,16 +15,11 @@ if ($nums > 0) {
     while ($row = db_assoc($result)) {
         $id_exchange_period = $row['id'];
     }
-}else{
+} else {
     returnError("Chưa có phiên giao dịch");
 }
 
-
-if (isset($_REQUEST['trading_log']) && !empty($_REQUEST['play_trading_logtime'])) {
-    $trading_log = $_REQUEST['trading_log'];
-} else {
-    $trading_log = time();
-}
+$trading_log = time();
 
 if (isset($_REQUEST['trading_bet']) && !empty($_REQUEST['trading_bet'])) {
     $trading_bet = $_REQUEST['trading_bet'];
@@ -77,8 +72,6 @@ $sql = "INSERT INTO tbl_trading_log SET
             trading_type = '$trading_type'";
 if (db_qr($sql)) {
     returnSuccess("Bạn đã đặt " . $trading_type);
-}else{
+} else {
     returnError("Lỗi truy vấn");
 }
-
-?>

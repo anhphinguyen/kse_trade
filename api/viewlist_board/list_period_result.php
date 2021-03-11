@@ -42,9 +42,9 @@ if ($nums > 0) {
         $customer_item = array(
             'id_period' => $row['id'],
             'id_exchange' => $row['id_exchange'],
-            'exchange_open' => $row['exchange_open'],
-            'period_open' => $row['period_open'],
-            'period_close' => $row['period_close'],
+            'exchange_open' => date("d/m/Y", $row['exchange_open']),
+            'period_open' => date("H:i", $row['period_open']),
+            'period_close' => date("H:i", $row['period_close']),
             'period_result' => $row['period_result'],
         );
         array_push($customer_arr['data'], $customer_item);

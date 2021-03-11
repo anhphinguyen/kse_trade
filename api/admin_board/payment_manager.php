@@ -26,9 +26,20 @@ switch ($typeManager) {
                 returnError("Nhap id_request");
             }
 
+            if (isset($_REQUEST['id_customer'])) {   //*
+                if ($_REQUEST['id_customer'] == '') {
+                    unset($_REQUEST['id_customer']);
+                    returnError("Nhap id_customer");
+                } else {
+                    $id_customer = $_REQUEST['id_customer'];
+                }
+            } else {
+                returnError("Nhap id_customer");
+            }
+
             $sql = "SELECT * FROM tbl_request_payment 
                     WHERE id = '$id_request'
-                    AND request_status = '2'
+                    AND request_status != '2'
                     ";
             $result = db_qr($sql);
             $nums = db_nums($result);
@@ -50,7 +61,12 @@ switch ($typeManager) {
                     WHERE `id` = '{$id_request}'";
             
             if(db_qr($sql)){
-                returnSuccess("Cập nhật thành công");
+                $sql = "UPDATE tbl_customer_customer SET customer_wallet_payment = '0' WHERE id = '$id_customer'"; 
+                if(db_qr($sql)){
+                    returnSuccess("Cập nhật thành công");
+                }else{
+                    returnError("Lỗi truy vấn hoàn thành rút tiền");
+                }              
             }else{
                 returnError("Lỗi truy vấn");
             }
