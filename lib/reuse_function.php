@@ -1,4 +1,30 @@
 <?php
+function trading_result_by_trading_type($id_session, $trading_type = '', $trading_result = ''){
+    $sql = "UPDATE tbl_trading_log SET trading_result = '$trading_result' WHERE id_exchange_period = '$id_session' AND trading_type = '$trading_type'";db_qr($sql);
+}
+function update_period_result($id_session,$result = '')
+{
+    $sql = "UPDATE tbl_exchange_period SET period_result = '$result' WHERE id = '$id_session'";db_qr($sql);
+}
+
+function get_total_money($id_session, $trading_type = '')
+{
+    $total_trade = 0;
+    $sql_trade_up = "SELECT SUM(trading_bet) as total_money FROM tbl_trading_log 
+                 WHERE id_exchange_period = '$id_session' 
+                 AND trading_type = '$trading_type'";
+
+    $result_trade_up = db_qr($sql_trade_up);
+    $nums_trade_up = db_nums($result_trade_up);
+
+    if ($nums_trade_up > 0) {
+        while ($row_up = db_assoc($result_trade_up)) {
+            return $total_trade = $row_up['total_money'];
+        }
+    } else {
+        returnError("Lỗi tính tổng tiền đặt lên");
+    }
+}
 function get_exchange_quantity($id_exchange)
 {
     $time = date("Y-m-d", time());
@@ -43,7 +69,7 @@ function get_customer_paymented_in_day($id_customer)
 function demo_add_money($id_session, $trading_type = "")
 {
     $sql_win = "SELECT * FROM tbl_customer_demo_log WHERE id_exchange_period = '$id_session' AND trading_type = '$trading_type'";
-    
+
     $result_win = db_qr($sql_win);
     $num_win = db_nums($result_win);
     if ($num_win > 0) {
@@ -52,13 +78,13 @@ function demo_add_money($id_session, $trading_type = "")
             $trading_percent = (int)$row_win['trading_percent'];
             $id_demo = $row_win['id_demo'];
             $sql_wallet = "SELECT demo_wallet_bet FROM tbl_customer_demo WHERE id = '$id_demo'";
-  
+
             $result_wallet = db_qr($sql_wallet);
             $num_wallet = db_nums($result_wallet);
             if ($num_wallet > 0) {
                 while ($row_wallet = db_assoc($result_wallet)) {
                     $customer_wallet_add = $row_wallet['demo_wallet_bet'] + $trading_bet + ($trading_percent * $trading_bet) / 100;
-                    
+
                     $sql_add_money = "UPDATE tbl_customer_demo SET demo_wallet_bet = '$customer_wallet_add' WHERE id = '$id_demo'";
                     db_qr($sql_add_money);
                 }
@@ -69,7 +95,7 @@ function demo_add_money($id_session, $trading_type = "")
 function customer_add_money($id_session, $trading_type = "")
 {
     $sql_win = "SELECT * FROM tbl_trading_log WHERE id_exchange_period = '$id_session' AND trading_type = '$trading_type'";
-    
+
     $result_win = db_qr($sql_win);
     $num_win = db_nums($result_win);
     if ($num_win > 0) {
@@ -78,7 +104,7 @@ function customer_add_money($id_session, $trading_type = "")
             $trading_percent = (int)$row_win['trading_percent'];
             $id_customer = $row_win['id_customer'];
             $sql_wallet = "SELECT customer_wallet_bet FROM tbl_customer_customer WHERE id = '$id_customer'";
-            
+
             $result_wallet = db_qr($sql_wallet);
             $num_wallet = db_nums($result_wallet);
             if ($num_wallet > 0) {
@@ -86,7 +112,7 @@ function customer_add_money($id_session, $trading_type = "")
                     $customer_wallet_add = $row_wallet['customer_wallet_bet'] + $trading_bet + ($trading_percent * $trading_bet) / 100;
 
                     $sql_add_money = "UPDATE tbl_customer_customer SET customer_wallet_bet = '$customer_wallet_add' WHERE id = '$id_customer'";
-                    
+
                     db_qr($sql_add_money);
                 }
             }
@@ -344,7 +370,8 @@ function handing_file_img($myfile, $dir_save)
     }
 }
 
-function returnEmptyData($msg){
+function returnEmptyData($msg)
+{
     echo json_encode(array(
         'success' => 'true',
         'message' => $msg,
@@ -373,7 +400,8 @@ function db_qr($sql)
     return false;
 }
 
-function errorCode($error_code, $msg = ""){
+function errorCode($error_code, $msg = "")
+{
     echo json_encode(array(
         'success' => 'false',
         'error_code' => $error_code,

@@ -105,5 +105,12 @@ Ngay 11-03-2021
                     - customer_trading : thêm - type_customer : + customer/ + demo 
               Cần bổ sung chỉnh sửa api customer_request_deposit -> info 
               Cần bổ sung chỉnh sửa api service_exchange, active_exchange, customer_check_service
+Ngay 12-03-2021
+ * update :- customer_request_deposit -> info momo
+           - login : kết quả trả thêm type_customer => customer
+           - list_customer_history : kết quả trading_bet, type_manager thêm value demo cho khách hàng demo >>
+           - register : chung model
+ * chưa update : - bảo trì
+
 
                     

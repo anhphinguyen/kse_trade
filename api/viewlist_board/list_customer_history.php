@@ -11,18 +11,31 @@ if (isset($_REQUEST['type_manager'])) {
     returnError("Nhập type_manager");
 }
 
+switch($type_manager){
+    case 'customer':
+        $tbl_log = 'tbl_trading_log';
+        $id = 'id_customer';
+        break;
+    case 'admin':
+        $tbl_log = 'tbl_trading_log';
+        break;
+    case 'demo':
+        $tbl_log = 'tbl_customer_demo_log';
+        $id = 'id_demo';
+        break;
+}
 
-$sql = "SELECT * FROM tbl_trading_log
+$sql = "SELECT * FROM $tbl_log
         WHERE 1=1";
 
-if($type_manager == 'customer'){
+if($type_manager != 'admin'){
     if (isset($_REQUEST['id_customer'])) {
         if ($_REQUEST['id_customer'] == '') {
             unset($_REQUEST['id_customer']);
             returnError("type_manager");
         } else {
             $id_customer = $_REQUEST['id_customer'];
-            $sql .= " AND `tbl_trading_log`.`id_customer` = '{$id_customer}'";
+            $sql .= " AND `$tbl_log`.`$id` = '{$id_customer}'";
         }
     }else{
         returnError("id_customer");
@@ -79,7 +92,7 @@ if (isset($_REQUEST['page']) && !empty($_REQUEST['page'])) {
 
 $total_page = ceil($total / $limit);
 $start = ($page - 1) * $limit;
-$sql .= " ORDER BY `tbl_trading_log`.`id` DESC LIMIT {$start},{$limit}";
+$sql .= " ORDER BY `$tbl_log`.`id` DESC LIMIT {$start},{$limit}";
 
 $customer_arr['success'] = 'true';
 
@@ -93,14 +106,15 @@ $nums = db_nums($result);
 
 if ($nums > 0) {
     while ($row = db_assoc($result)) {
+        
         $customer_item = array(
             'id_trading' => $row['id'],
-            'id_customer' => $row['id_customer'],
+            'id_customer' => (isset($row['id_customer']) && !empty($row['id_customer']))?$row['id_customer']:$row['id_demo'],
             'trading_log' => date("d/m/Y - H:i", $row['trading_log']),
-            'trading_bet' => $row['trading_bet'],
+            'trading_bet' => strval(($row['trading_bet']*(($row['trading_result'] == 'win')?$row['trading_percent']:100))/100),
             'trading_type' => $row['trading_type'],
             'trading_result' => (isset(($row['trading_result'])) && !empty(($row['trading_result'])))?$row['trading_result']:"",
-            'trading_percent' => ($row['trading_result'] === 'win' )?$row['trading_percent']:"",
+            'trading_percent' => ($row['trading_result'] == 'win')?$row['trading_percent']:"",
         );
 
         array_push($customer_arr['data'], $customer_item);

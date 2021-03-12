@@ -12,7 +12,8 @@ if ($nums > 0) {
         // $stock_quantity = $row['stock_quantity'];
     }
 } else {
-    errorCode('101', "Sàn giao dịch sẽ đóng cửa update cho ngày ".date("d/m/Y", time() + 86400).". Xin quý khách hàng chú ý !");
+    errorCode('101', "Quý khách vui lòng đợi đến khi sàn mở lại");
+    // errorCode('101', "Sàn giao dịch sẽ đóng cửa update cho ngày ".date("d/m/Y", time() + 86400).". Xin quý khách hàng chú ý !");
 }
 $stock_quantity = get_exchange_quantity($id_stock);
 for ($i = 0; $i < $stock_quantity; $i++) {
@@ -57,7 +58,7 @@ for ($i = 0; $i < $stock_quantity; $i++) {
                 'period_point_idle_int' => $row['period_point_idle'],
                 'period_close_int' => $row['period_close'],//strval((int)$row['period_close'] - 1)
 
-                // 'period_now' => $row['period_now'],
+                'period_now' => $row['period_now'],
                 
                 'exchange_percent' => $exchange_percent,
                 

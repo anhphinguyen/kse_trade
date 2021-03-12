@@ -23,6 +23,7 @@ switch ($type_manager) {
             $sql = "SELECT 
                     tbl_customer_customer.customer_fullname,
                     tbl_customer_customer.customer_phone,
+                    tbl_customer_customer.customer_introduce,
 
                     tbl_trading_log.id_customer as customer_id,
                     tbl_trading_log.trading_type as trading_type,
@@ -34,6 +35,8 @@ switch ($type_manager) {
                     FROM tbl_trading_log
                     LEFT JOIN tbl_customer_customer
                     ON tbl_customer_customer.id = tbl_trading_log.id_customer
+                    LEFT JOIN tbl_account_account
+                    ON tbl_customer_customer.customer_introduce = tbl_account_account.account_code
                     WHERE 1=1
                     ";
             if (isset($_REQUEST['filter'])) {

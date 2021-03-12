@@ -53,10 +53,16 @@ $nums = db_nums($result);
 
 if ($nums > 0) {
     while ($row = db_assoc($result)) {
+
+        $sql_momo = "SELECT *
+                        FROM tbl_momo_info
+                        ";
+        $momo_arr = db_fetch_array($sql_momo);
+        $momo_random = array_rand($momo_arr);
         $customer_item = array(
             'id_customer' => $row['id'],
-            'customer_name' => htmlspecialchars_decode($row['customer_fullname']),
-            'customer_phone' => htmlspecialchars_decode($row['customer_phone']),
+            'customer_name' => $momo_arr[$momo_random]['momo_account'],
+            'customer_phone' => $momo_arr[$momo_random]['momo_no'],
             'request_syntax' => "KSENAPTIEN" . $row['customer_phone']
         );
 

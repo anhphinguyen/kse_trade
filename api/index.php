@@ -105,6 +105,7 @@ switch ($detect) {
     }
     /*customer board*/
     
+
     case 'check_method_payment':{
         include_once 'customer_board/customer_check_method_payment.php';
         break;
@@ -176,6 +177,10 @@ switch ($detect) {
     }
     /*socket board*/
 
+    case 'trading_block_result':{
+        include_once 'socket_board/trading_block_result.php';
+        break;
+    }
     case 'auto_creat_session':{
         include_once 'socket_board/auto_creat_session_tomorrow.php';
         break;
