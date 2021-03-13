@@ -33,7 +33,7 @@ switch ($type_customer) {
                     ";
             break;
         }
-    case 'demo': {
+    case 'trainghiem': {
             $sql = "SELECT 
                     tbl_customer_demo_log.*,
                     tbl_exchange_period.period_open,

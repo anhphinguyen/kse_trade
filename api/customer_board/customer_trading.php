@@ -17,8 +17,7 @@ if (isset($_REQUEST['id_customer']) && !empty($_REQUEST['id_customer'])) {
 }
 
 
-// $time = time();
-$time = 1615379220;
+$time = time();
 $sql = "SELECT * FROM tbl_exchange_period WHERE period_open <= '$time' AND period_close > '$time'";
 $result = db_qr($sql);
 $nums = db_nums($result);
@@ -49,7 +48,7 @@ switch($type_customer){
         $sql = "SELECT * FROM tbl_customer_customer WHERE id = '$id_customer'";
         break;
     }
-    case 'demo':{
+    case 'trainghiem':{
         $sql = "SELECT * FROM tbl_customer_demo WHERE id = '$id_customer'";
         break;
     }
@@ -66,7 +65,7 @@ if ($nums > 0) {
         }
         $sub_money = $wallet_bet - $trading_bet;
 
-        if($type_customer == 'demo'){
+        if($type_customer == 'trainghiem'){
             $sql = "UPDATE tbl_customer_demo SET demo_wallet_bet = '$sub_money' WHERE id = '$id_customer'";
         }else{
             $sql = "UPDATE tbl_customer_customer SET customer_wallet_bet = '$sub_money' WHERE id = '$id_customer'";
@@ -98,7 +97,7 @@ switch($type_customer){
             ";
         break;
     }
-    case 'demo':{
+    case 'trainghiem':{
         $sql = "INSERT INTO tbl_customer_demo_log SET
             id_demo = '$id_customer'
             ";

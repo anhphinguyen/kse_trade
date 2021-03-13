@@ -27,7 +27,7 @@ switch($type_customer){
                 WHERE `id` = '{$id_customer}'";
         break;
     }
-    case 'demo':{
+    case 'trainghiem':{
         $sql = "SELECT * FROM tbl_customer_demo
                 WHERE `id` = '{$id_customer}'";
         break;

@@ -19,6 +19,12 @@ if (db_qr($sql)) {
         $sql = "UPDATE tbl_customer_demo 
             SET demo_active = '$exchange_active'";
         if (db_qr($sql)) {
+            $title = "Thông báo đăng nhập!!!";
+            $bodyMessage = "Sàn giao dịch đã bảo trì, vui lòng đăng nhập lại sau!";
+            $action = "service_exchange";
+            $type_send = 'topic';
+            $to = 'KSE_service_exchange';
+            pushNotification($title, $bodyMessage, $action, $to, $type_send);
             returnSuccess("Cập nhật thành công");
         }
     }

@@ -101,10 +101,10 @@ if ($nums > 0) {
             db_qr($query);
 
             $user_item = array(
-                'id' => $row['id'],
+                'id_customer' => $row['id'],
                 'id_bank' => ($row['id_bank'] != 0) ? $row['id_bank'] : "",
                 'type_account' => "customer",
-                'customer_introduce' => $row['customer_introduce'],
+                'customer_introduce' => (!empty($row['customer_introduce']))?$row['customer_introduce']:"",
                 'customer_code' => $row['customer_code'],
                 'customer_phone' => $row['customer_phone'],
                 'customer_name' => $row['customer_fullname'],

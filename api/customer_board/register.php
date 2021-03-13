@@ -10,7 +10,7 @@ if (isset($_REQUEST['type_customer'])) {
     returnError("Nhập type_customer");
 }
 
-if ($type_customer == 'demo') {
+if ($type_customer == 'trainghiem') {
     $str = "ABCDEFGHIJKLMNOPQRTUVXYZWabcdefghijklmnopqrtuvxyzw1234567890";
 
     if (isset($_REQUEST['customer_name'])) {
@@ -46,10 +46,21 @@ if ($type_customer == 'demo') {
             while ($row = db_assoc($result)) {
                 $result_item = array(
                     'id_customer' => $row['id'],
+                    'type_account' => "trainghiem",
                     'customer_name' => $row['demo_name'],
                     'customer_wallet_bet' => $row['demo_wallet_bet'],
                     'customer_token' => $row['demo_token'],
-                    'type_customer' => 'demo'
+                    'type_customer' => 'trainghiem',
+                    'id_bank' => "",
+                    'customer_introduce' => "",
+                    'customer_code' => "",
+                    'customer_phone' => "",
+                    'customer_cert_no' => "",
+                    'customer_cert_img' => "",
+                    'customer_account_no' => "",
+                    'customer_account_img' => "",
+                    'customer_wallet_payment' => "",
+                    'customer_limit_payment' => "",
                 );
             }
             array_push($result_arr['data'], $result_item);
@@ -142,17 +153,17 @@ if (db_qr($sql)) {
         while ($row = db_assoc($result)) {
             $result_item = array(
                 'id' => $row['id'],
-                'id_bank' => ($row['id_bank'] != 0)?$row['id_bank']:"",
+                'id_bank' => ($row['id_bank'] != 0) ? $row['id_bank'] : "",
                 'type_account' => "customer",
-                'customer_introduce' => (!empty($row['customer_introduce']))?$row['customer_introduce']:"",
+                'customer_introduce' => (!empty($row['customer_introduce'])) ? $row['customer_introduce'] : "",
                 'customer_code' => $row['customer_code'],
                 'customer_phone' => $row['customer_phone'],
                 'customer_name' => $row['customer_fullname'],
                 'customer_cert_no' => $row['customer_cert_no'],
                 'customer_cert_img' => $row['customer_cert_img'],
-                'customer_account_no' => (!empty($row['customer_account_no']))?$row['customer_account_no']:"",
-                'customer_account_holder' => (!empty($row['customer_account_holder']))?$row['customer_account_holder']:"",
-                'customer_account_img' => (!empty($row['customer_account_img']))?$row['customer_account_img']:"",
+                'customer_account_no' => (!empty($row['customer_account_no'])) ? $row['customer_account_no'] : "",
+                'customer_account_holder' => (!empty($row['customer_account_holder'])) ? $row['customer_account_holder'] : "",
+                'customer_account_img' => (!empty($row['customer_account_img'])) ? $row['customer_account_img'] : "",
                 'customer_wallet_bet' => $row['customer_wallet_bet'],
                 'customer_wallet_payment' => $row['customer_wallet_payment'],
                 'customer_limit_payment' => $row['customer_limit_payment'],

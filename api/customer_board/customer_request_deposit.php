@@ -21,7 +21,7 @@ if (isset($_REQUEST['id_customer'])) {
     returnError("Nhập id_customer");
 }
 
-if ($type_customer === 'demo') {
+if ($type_customer === 'trainghiem') {
     $sql = "SELECT demo_wallet_payment FROM tbl_customer_demo WHERE id = '$id_customer'";
     $result = db_qr($sql);
     $nums = db_nums($result);

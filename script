@@ -112,5 +112,8 @@ Ngay 12-03-2021
            - register : chung model
  * chưa update : - bảo trì
 
+Ngay 12-03-2021
+ * bug : Khi officer hủy lệnh, số tiền yêu cầu rút sẽ được trả lại về ví đặt cược
+       : officer_payment_request : đã update trả lại số tiền cho khách nếu như hủy yêu cầu
 
                     

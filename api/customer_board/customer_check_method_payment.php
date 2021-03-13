@@ -13,7 +13,7 @@ $nums = db_nums($result);
 if ($nums > 0) {
     while ($row = db_assoc($result)) {
         if($row['id_bank'] == 0){
-            returnError("Quy khách chưa tạo phương thức thanh toán. Xin vui lòng liên kết đến hạng mục phương thức thanh toán để hoàn thành !");
+            returnError("Quý khách chưa tạo phương thức thanh toán. Xin vui lòng liên kết đến hạng mục phương thức thanh toán để hoàn thành !");
         }else{
             returnSuccess("Quý khách đã tạo phương thức thanh toán");
         }

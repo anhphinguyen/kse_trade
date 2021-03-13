@@ -1,14 +1,14 @@
 <?php 
 
-if (isset($_REQUEST['type_manager'])) {
-    if ($_REQUEST['type_manager'] == '') {
-        unset($_REQUEST['type_manager']);
-        returnError("type_manager");
+if (isset($_REQUEST['type_target'])) {
+    if ($_REQUEST['type_target'] == '') {
+        unset($_REQUEST['type_target']);
+        returnError("type_target");
     } else {
-        $type_manager = $_REQUEST['type_manager'];
+        $type_manager = $_REQUEST['type_target'];
     }
 }else{
-    returnError("Nhập type_manager");
+    returnError("Nhập type_target");
 }
 
 switch($type_manager){
@@ -19,7 +19,7 @@ switch($type_manager){
     case 'admin':
         $tbl_log = 'tbl_trading_log';
         break;
-    case 'demo':
+    case 'trainghiem':
         $tbl_log = 'tbl_customer_demo_log';
         $id = 'id_demo';
         break;

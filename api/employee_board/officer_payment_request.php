@@ -32,8 +32,8 @@ switch ($typeManager) {
                     ";
             $result = db_qr($sql);
             $nums = db_nums($result);
-            if($nums > 0){
-                while($row = db_assoc($result)){
+            if ($nums > 0) {
+                while ($row = db_assoc($result)) {
                     returnError("Không phải trạng thái tạo lệnh");
                 }
             }
@@ -77,9 +77,38 @@ switch ($typeManager) {
                     WHERE id = '$id_request'
                     ";
             if (db_qr($sql)) {
-                returnSuccess("Cập nhât thành công");
+                $sql = "SELECT id_customer FROM tbl_request_payment WHERE id = '$id_request'";
+                $result = db_qr($sql);
+                $nums = db_nums($result);
+                if ($nums > 0) {
+                    while ($row = db_assoc($sql)) {
+                        $id_customer = $row['id_customer'];
+                        $sql = "SELECT * FROM tbl_customer_customer WHERE id = '$id_customer'";
+                        $result = db_qr($sql);
+                        $nums = db_nums($result);
+                        if ($nums > 0) {
+                            while ($row = db_assoc($sql)) {
+                                $money_update = $row['customer_wallet_bet'] + $row['customer_wallet_payment'];
+                                $sql_update = "UPDATE tbl_customer_customer SET 
+                                                customer_wallet_bet = '$money_update',
+                                                customer_wallet_payment = '0'
+                                                WHERE id = '$id_customer'
+                                                ";
+                                if (db_qr($sql_update)) {
+                                    returnSuccess("Cập nhât thành công");
+                                } else {
+                                    returnError("Lỗi truy vấn hoàn trả tiền");
+                                }
+                            }
+                        }else{
+                            returnError("Lỗi truy vấn tính tiền hoàn trả");
+                        }
+                    }
+                }else{
+                    returnError("Lỗi truy vấn get id_customer");
+                }
             } else {
-                returnError("Lỗi truy vấn");
+                returnError("Lỗi truy vấn hủy yêu cầu");
             }
 
             break;

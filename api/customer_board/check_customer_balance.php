@@ -25,11 +25,17 @@ if (isset($_REQUEST['id_customer'])) {
 
 switch($type_customer){
     case 'customer':{
-        $sql = "SELECT * FROM tbl_customer_customer
-                WHERE `id` = '{$id_customer}'";
+        $sql = "SELECT 
+                tbl_customer_customer.id as id,
+                tbl_customer_customer.customer_wallet_bet as customer_wallet_bet,
+                tbl_customer_customer.customer_wallet_payment as customer_wallet_payment,
+                tbl_bank_info.id as id_bank 
+                FROM tbl_customer_customer
+                LEFT JOIN tbl_bank_info ON tbl_customer_customer.id_bank = tbl_bank_info.id
+                WHERE tbl_customer_customer.id = '{$id_customer}'";
         break;
     }
-    case 'demo':{
+    case 'trainghiem':{
         $sql = "SELECT * FROM tbl_customer_demo
                 WHERE `id` = '{$id_customer}'";
         break;
@@ -48,6 +54,7 @@ if ($nums > 0) {
     while ($row = db_assoc($result)) {
         $customer_item = array(
             'id_customer' => $row['id'],
+            'id_bank' => (isset($row['id_bank']) && !empty($row['id_bank']))?$row['id_bank']:"",
             'customer_wallet_bet' => htmlspecialchars_decode((isset($row['customer_wallet_bet']))?$row['customer_wallet_bet']:$row['demo_wallet_bet']),
             'customer_wallet_payment' => htmlspecialchars_decode((isset($row['customer_wallet_payment']) && !empty($row['customer_wallet_payment']))?$row['customer_wallet_payment']:"0"),
         );

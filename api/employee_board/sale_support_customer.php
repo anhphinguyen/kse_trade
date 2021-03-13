@@ -12,11 +12,30 @@ if (isset($_REQUEST['type_target'])) {
 
 switch ($type_manager) {
     case 'list_customer': {
+            if (isset($_REQUEST['id_account'])) {
+                if ($_REQUEST['id_account'] == '') {
+                    unset($_REQUEST['id_account']);
+                    returnError("Nhập id_account");
+                } else {
+                    $id_account = $_REQUEST['id_account'];
+                }
+            }else{
+                returnError("Nhập id_account");
+            }
+
             if (isset($_REQUEST['type_sort'])) {
                 if ($_REQUEST['type_sort'] == '') {
                     unset($_REQUEST['type_sort']);
                 } else {
                     $type_sort = $_REQUEST['type_sort'];
+                }
+            }
+            $sql = "SELECT account_code FROM tbl_account_account WHERE id = '$id_account' ";
+            $result = db_qr($sql);
+            $nums = db_nums($result);
+            if($nums > 0){
+                while($row = db_assoc($result)){
+                    $customer_introduce = $row['account_code'];
                 }
             }
 
@@ -27,17 +46,20 @@ switch ($type_manager) {
 
                     tbl_trading_log.id_customer as customer_id,
                     tbl_trading_log.trading_type as trading_type,
-                    MAX(tbl_trading_log.trading_log) as trading_log,
-                    COUNT(tbl_trading_log.id_customer) as count,
+                    (SELECT MAX(tbl_trading_log.trading_log) FROM tbl_trading_log WHERE tbl_trading_log.id_customer = customer_id) as trading_log,
+                    (SELECT COUNT(tbl_trading_log.id_customer) FROM tbl_trading_log WHERE tbl_trading_log.id_customer = customer_id) as count,
+                    
+                    
                     (SELECT COUNT(tbl_trading_log.id_customer) FROM tbl_trading_log WHERE tbl_trading_log.id_customer = customer_id) as total_trade,
                     ROUND((SELECT COUNT(tbl_trading_log.id_customer) FROM tbl_trading_log WHERE trading_result = 'win' AND tbl_trading_log.id_customer = customer_id) / (SELECT COUNT(tbl_trading_log.id_customer) FROM tbl_trading_log WHERE tbl_trading_log.id_customer = customer_id)*100) as percent_win
-
-                    FROM tbl_trading_log
-                    LEFT JOIN tbl_customer_customer
+                    FROM  tbl_customer_customer
+                    
+                    LEFT JOIN tbl_trading_log
                     ON tbl_customer_customer.id = tbl_trading_log.id_customer
-                    LEFT JOIN tbl_account_account
+                    
+                    LEFT JOIN tbl_account_account 
                     ON tbl_customer_customer.customer_introduce = tbl_account_account.account_code
-                    WHERE 1=1
+                    WHERE  tbl_customer_customer.customer_introduce = '$customer_introduce'
                     ";
             if (isset($_REQUEST['filter'])) {
                 if ($_REQUEST['filter'] == '') {

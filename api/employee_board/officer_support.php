@@ -102,7 +102,7 @@ switch ($type_manager) {
                 ON tbl_support_info.id = tbl_support_customer.id_support_info
                 LEFT JOIN tbl_customer_customer 
                 ON tbl_customer_customer.id = tbl_support_customer.id_customer
-                WHERE tbl_support_customer.support_status < 3
+                WHERE tbl_support_customer.support_status != 'finished'
                 ";
 
             $customer_arr = array();
