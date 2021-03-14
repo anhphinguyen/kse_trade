@@ -99,6 +99,17 @@ switch ($type_manager) {
                     $success['customer_introduce'] = "true";
                 }
             }
+		
+		if (isset($_REQUEST['customer_limit_payment']) && !empty($_REQUEST['customer_limit_payment'])) {
+                $customer_limit_payment = htmlspecialchars($_REQUEST['customer_limit_payment']);
+                $sql = "UPDATE `tbl_customer_customer` SET";
+                $sql .= " `customer_limit_payment` = '{$customer_limit_payment}'";
+                $sql .= " WHERE `id` = '{$id_customer}'";
+
+                if (mysqli_query($conn, $sql)) {
+                    $success['customer_limit_payment'] = "true";
+                }
+            }
 
             if (isset($_FILES['customer_cert_img'])) {
                 $sql = "SELECT * FROM `tbl_customer_customer` WHERE `id` = '{$id_customer}'";
@@ -210,6 +221,17 @@ switch ($type_manager) {
                 returnError("Nhap customer_phone");
             }
 
+		if (isset($_REQUEST['customer_password'])) {  //*
+                if ($_REQUEST['customer_password'] == '') {
+                    unset($_REQUEST['customer_password']);
+                    returnError("Nhap customer_password");
+                } else {
+                    $customer_password = md5($_REQUEST['customer_password']);
+                }
+            } else {
+                returnError("Nhap customer_password");
+            }
+		
             if (isset($_REQUEST['customer_introduce'])) {
                 if ($_REQUEST['customer_introduce'] == '') {
                     unset($_REQUEST['customer_introduce']);
@@ -278,7 +300,8 @@ switch ($type_manager) {
             $sql = "INSERT INTO `tbl_customer_customer` SET 
                                                 `customer_fullname` = '{$customer_name}',
                                                 `customer_code` = '{$customer_code}',
-                                                `customer_phone` = '{$customer_phone}'
+                                                `customer_phone` = '{$customer_phone}',
+												`customer_password` = '{$customer_password}'
                                                 ";
             if (isset($customer_introduce) && !empty($customer_introduce)) {
                 $sql .= " ,`customer_introduce` = '{$customer_introduce}'";
@@ -302,6 +325,7 @@ switch ($type_manager) {
                 $sql .= " ,`customer_account_img` = '{$dir_save_account_img}'";
             }
 
+	
             if (mysqli_query($conn, $sql)) {
                 returnSuccess("Tạo khách hàng thành công");
             } else {

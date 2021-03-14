@@ -50,6 +50,7 @@ if ($nums > 0) {
             'customer_account_img' => (!empty($row['customer_account_img'])) ? $row['customer_account_img'] : "",
             'customer_wallet_bet' => htmlspecialchars_decode($row['customer_wallet_bet']),
             'customer_wallet_payment' => htmlspecialchars_decode($row['customer_wallet_payment']),
+            'customer_limit_payment' => htmlspecialchars_decode($row['customer_limit_payment']),
             'customer_paymented' => (!empty($customer_paymented)) ? $customer_paymented : "0",
 
         );

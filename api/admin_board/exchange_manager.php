@@ -49,25 +49,22 @@ switch ($typeManager) {
                 $time_living = $_REQUEST['exchange_period'];
             }
 
-            $sql = "SELECT * FROM tbl_exchange_temporary";
+            $sql = "SELECT * FROM tbl_exchange_temporary WHERE id_exchange = '$id_exchange'";
             $result = db_qr($sql);
             $nums = db_nums($result);
             if ($nums > 0) {
                 while ($row = db_assoc($result)) {
-                    if (date("d", $row['exchange_open']) == date("d", $time_open)) {
-                        $sql = "UPDATE tbl_exchange_temporary SET
-                                id_exchange = '$id_exchange',
+                    $sql = "UPDATE tbl_exchange_temporary SET
                                 exchange_open = '$time_open',
                                 exchange_close = '$time_close',
                                 exchange_period = '$time_living',
                                 exchange_updated_by = '$id_account'
-                                WHERE id = '" . $row['id'] . "'
+                                WHERE id_exchange = '$id_exchange'
                                 ";
-                        if (db_qr($sql)) {
-                            returnSuccess("Sàn mới sẽ bắt đầu từ lúc " . date("d/m/Y H:i:s", $time_open));
-                        } else {
-                            returnError("Lỗi truy vấn");
-                        }
+                    if (db_qr($sql)) {
+                        returnSuccess("Sàn mới sẽ bắt đầu từ lúc " . date("d/m/Y H:i:s", $time_open));
+                    } else {
+                        returnError("Lỗi truy vấn");
                     }
                 }
             } else {
@@ -99,6 +96,18 @@ switch ($typeManager) {
                 $result_arr['data'] = array();
                 while ($row = db_assoc($result)) {
 
+                    $sql_temporary = "SELECT * FROM tbl_exchange_temporary WHERE id_exchange = '".$row['id']."'";
+                    $result_temporary = db_qr($sql_temporary);
+                    $nums_temporary = db_nums($result_temporary);
+                    if($nums_temporary > 0){
+                        while($row_temporary = db_assoc($result_temporary)){
+                            $temporary_exchange_open = $row_temporary['exchange_open'];
+                            $temporary_exchange_close = $row_temporary['exchange_close'];
+                            $temporary_exchange_period = $row_temporary['exchange_period'];
+                            $temporary_exchange_updated_by = $row_temporary['exchange_updated_by'];
+                            $temporary_exchange_quantity = strval(floor(((int)$row_temporary['exchange_close'] - (int)$row_temporary['exchange_open'])/(int)$row_temporary['exchange_period']));
+                        }
+                    }
                     $exchange_quantity = get_exchange_quantity($row['id']);
                     $result_item = array(
                         'id_exchange' => $row['id'],
@@ -109,6 +118,12 @@ switch ($typeManager) {
                         'exchange_quantity' => strval($exchange_quantity),
                         'exchange_period' => strval($row['exchange_period'] / 60),
                         'exchange_updated_by' => (isset($row['exchange_updated_by']) && !empty($row['exchange_updated_by'])) ? $row['exchange_updated_by'] : "0",
+
+                        'temporary_exchange_open' =>  (isset($temporary_exchange_open)&&!empty($temporary_exchange_open))?date("H:i",$temporary_exchange_open):"",
+                        'temporary_exchange_close' => (isset($temporary_exchange_close)&&!empty($temporary_exchange_close))?date("H:i",$temporary_exchange_close):"",
+                        'temporary_exchange_quantity' => (isset($temporary_exchange_quantity)&&!empty($temporary_exchange_quantity))?$temporary_exchange_quantity:"",
+                        'temporary_exchange_period' => (isset($temporary_exchange_period)&&!empty($temporary_exchange_period))?$temporary_exchange_period:"",
+                        'temporary_exchange_updated_by' => (isset($temporary_exchange_updated_by)&&!empty($temporary_exchange_updated_by))?$temporary_exchange_updated_by:"",
                     );
                     array_push($result_arr['data'], $result_item);
                 }

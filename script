@@ -114,6 +114,7 @@ Ngay 12-03-2021
 
 Ngay 12-03-2021
  * bug : Khi officer hủy lệnh, số tiền yêu cầu rút sẽ được trả lại về ví đặt cược
-       : officer_payment_request : đã update trả lại số tiền cho khách nếu như hủy yêu cầu
+       : officer_payment_request : đã update trả lại số tiền cho khách nếu như hủy yêu cầu => đã check -> thành công
+       : SALES : sale_support_customer : Lọc theo khách hàng giao dịch nhiều ít CHƯA TÌM ĐÚNG (KH giao dịch ít là khách hàng trong 1 tháng không phát sinh giao dịch)
 
                     

@@ -95,7 +95,7 @@ if (isset($_REQUEST['page']) && !empty($_REQUEST['page'])) {
 
 $total_page = ceil($total / $limit);
 $start = ($page - 1) * $limit;
-$sql .= " ORDER BY `tbl_customer_customer`.`id` DESC LIMIT {$start},{$limit}";
+$sql .= " ORDER BY `tbl_request_payment`.`id` DESC LIMIT {$start},{$limit}";
 
 $customer_arr['success'] = 'true';
 

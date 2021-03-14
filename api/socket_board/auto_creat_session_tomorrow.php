@@ -22,7 +22,7 @@ if ($nums > 0) {
     }
 
 
-    $sql = "SELECT exchange_close FROM tbl_exchange_temporary WHERE id_exchange = '$id_exchange'";
+    $sql = "SELECT * FROM tbl_exchange_temporary WHERE id_exchange = '$id_exchange'";
     $result = db_qr($sql);
     $nums = db_nums($result);
     if ($nums > 0) {
@@ -38,7 +38,14 @@ if ($nums > 0) {
                     WHERE id = '$id_exchange'
                     ";
                 if (db_qr($sql)) {
-                    returnSuccess("Sàn tiếp theo sẽ mở vào lúc " . date("d/m/Y H:i:s",$time_open_tomorrow) . " Thành công");
+                    $sql = "DELETE FROM tbl_exchange_temporary WHERE id_exchange = '$id_exchange'";
+                    if(db_qr($sql)){
+                        returnSuccess("Sàn tiếp theo sẽ mở vào lúc " . date("d/m/Y H:i:s",$time_open_tomorrow) . " Thành công");
+                    }else{
+                        returnError("Lỗi truy vấn xóa sàn temporary");
+                    }
+                }else{
+                    returnError("Lỗi truy vấn xóa cập nhật sàn cho hôm sau thông qua temporary");
                 }
             }
         }
@@ -56,8 +63,7 @@ if ($nums > 0) {
     if (db_qr($sql)) {
         returnSuccess("Tạo sàn cho ngày " . date("d/m/Y H:i:s",$time_open_tomorrow) . " Thành công");
     }
-    // echo $time_open_tomorrow." Tạo sàn cho ngày hôm sau thành công";
-    // exit();
+
 }else{
     returnError("Chưa kết thúc sàn");
 }
