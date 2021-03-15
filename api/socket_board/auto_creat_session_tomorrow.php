@@ -43,34 +43,34 @@ if ($nums > 0) {
                 $exchange_period = $row['exchange_period'];
                 $exchange_idle = $row['exchange_idle'];
                 if (db_qr($sql)) {
-                    $sql = "DELETE FROM tbl_exchange_temporary WHERE id_exchange = '$id_exchange'";
-                    if (db_qr($sql)) {
 
-                        $delta_time = $exchange_close - $exchange_open;
-                        $quantity = $delta_time / $exchange_period;
-                        $time_start = $exchange_open;
+                    $delta_time = $exchange_close - $exchange_open;
+                    $quantity = $delta_time / $exchange_period;
+                    $time_start = $exchange_open;
 
-                        for ($i = 1; $i <= $quantity; $i++) {
-                            $time_session = $time_start + $exchange_period;
-                            $time_break = $time_session - $exchange_idle;  // mặc đinh thời gian không cho phép đặt cược là 60s
-                            $sql = "INSERT INTO tbl_exchange_period SET 
+                    for ($i = 1; $i <= $quantity; $i++) {
+                        $time_session = $time_start + $exchange_period;
+                        $time_break = $time_session - $exchange_idle;  // mặc đinh thời gian không cho phép đặt cược là 60s
+                        $sql = "INSERT INTO tbl_exchange_period SET 
                                     id_exchange = '$id_exchange',
                                     period_open = '$time_start', 
                                     period_point_idle = '$time_break',
                                     period_close = '$time_session'";
 
-                            if (db_qr($sql)) {
-                                $success = true;
-                            };
-                            $time_start = $time_session;
-                        }
-                        if (isset($success)) {
+                        if (db_qr($sql)) {
+                            $success = true;
+                        };
+                        $time_start = $time_session;
+                    }
+                    if (isset($success)) {
+                        $sql = "DELETE FROM tbl_exchange_temporary WHERE id_exchange = '$id_exchange'";
+                        if (db_qr($sql)) {
                             returnSuccess("Sàn tiếp theo sẽ mở vào lúc " . date("d/m/Y H:i:s", $time_open_tomorrow) . " Thành công");
                         } else {
-                            returnError("Lỗi truy vấn Phiên");
+                            returnError("Lỗi truy vấn xóa sàn temporary");
                         }
                     } else {
-                        returnError("Lỗi truy vấn xóa sàn temporary");
+                        returnError("Lỗi truy vấn Phiên");
                     }
                 } else {
                     returnError("Lỗi truy vấn xóa cập nhật sàn cho hôm sau thông qua temporary");
@@ -81,7 +81,6 @@ if ($nums > 0) {
 
     $time_open_tomorrow = $time_open + 86400;
     $time_close_tomorrow = $time_close + 86400;
-    $quantity = ($time_close_tomorrow - $time_open_tomorrow) / $time_living;
 
     $sql = "UPDATE tbl_exchange_exchange SET 
             exchange_open = '$time_open_tomorrow',
@@ -97,10 +96,10 @@ if ($nums > 0) {
             $time_session = $time_start + $exchange_period;
             $time_break = $time_session - $time_idle;  // mặc đinh thời gian không cho phép đặt cược là 60s
             $sql = "INSERT INTO tbl_exchange_period SET 
-                                    id_exchange = '$id_exchange',
-                                    period_open = '$time_start', 
-                                    period_point_idle = '$time_break',
-                                    period_close = '$time_session'";
+                    id_exchange = '$id_exchange',
+                    period_open = '$time_start', 
+                    period_point_idle = '$time_break',
+                    period_close = '$time_session'";
 
             if (db_qr($sql)) {
                 $success = true;
@@ -112,7 +111,6 @@ if ($nums > 0) {
         } else {
             returnError("Lỗi truy vấn Phiên");
         }
-        
     }
 } else {
     returnError("Chưa kết thúc sàn");
