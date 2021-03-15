@@ -106,6 +106,10 @@ switch ($detect) {
     /*customer board*/
     
 
+    case 'forgot_password':{
+        include_once 'customer_board/forgot_password.php';
+        break;
+    }
     case 'check_method_payment':{
         include_once 'customer_board/customer_check_method_payment.php';
         break;
@@ -198,6 +202,10 @@ switch ($detect) {
         break;
     }
     /*viewlist board*/
+    case 'check_sign_out':{
+        include_once 'viewlist_board/check_sign_out.php';
+        break;
+    }
     case 'list_period_history':{
         include_once 'viewlist_board/list_period_history.php';
         break;

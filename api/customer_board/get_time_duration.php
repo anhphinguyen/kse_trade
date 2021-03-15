@@ -1,7 +1,8 @@
 <?php
 $day_today = time();
 
-$sql = "SELECT * FROM tbl_exchange_exchange WHERE exchange_open <= '$day_today' AND exchange_close >= '$day_today'";
+$sql = "SELECT * FROM tbl_exchange_exchange WHERE exchange_open <= '$day_today' AND exchange_close >= '$day_today'
+        ";
 
 $result = db_qr($sql);
 $nums = db_nums($result);
@@ -26,11 +27,14 @@ for ($i = 0; $i < $stock_quantity; $i++) {
                     tbl_exchange_period.period_point_idle as period_point_idle,
                     tbl_exchange_period.period_close as period_close,
 
+                    tbl_exchange_exchange.exchange_active as exchange_active,
+
                     tbl_graph_info.id as id_graph,
                     tbl_graph_info.x_y as coordinate_xy,
                     tbl_graph_info.point_map as point_map
                     FROM tbl_exchange_period 
                     LEFT JOIN tbl_graph_info ON tbl_graph_info.id_period = tbl_exchange_period.id
+                    LEFT JOIN tbl_exchange_exchange ON tbl_exchange_exchange.id = tbl_exchange_period.id_exchange
                     WHERE 
                     tbl_exchange_period.period_open <= '$day_today' 
                     AND tbl_exchange_period.period_close > '$day_today'
@@ -47,7 +51,7 @@ for ($i = 0; $i < $stock_quantity; $i++) {
     if ($nums > 0) {
         while ($row = db_assoc($result)) {
             $result_item = array(
-                // 'id_graph' => $row['id_graph'],
+                'exchange_active' => $row['exchange_active'],
                 'id_exchange' => $row['id_exchange'],
                 'id_exchange_period' => $row['id_exchange_period'],
                 'period_open' => date("H:i",$row['period_open']),

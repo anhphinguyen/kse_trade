@@ -152,7 +152,7 @@ if (db_qr($sql)) {
     if ($nums > 0) {
         while ($row = db_assoc($result)) {
             $result_item = array(
-                'id' => $row['id'],
+                'id_customer' => $row['id'],
                 'id_bank' => ($row['id_bank'] != 0) ? $row['id_bank'] : "",
                 'type_account' => "customer",
                 'customer_introduce' => (!empty($row['customer_introduce'])) ? $row['customer_introduce'] : "",

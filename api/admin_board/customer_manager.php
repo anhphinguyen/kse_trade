@@ -12,6 +12,51 @@ if (isset($_REQUEST['type_manager'])) {
 }
 
 switch ($type_manager) {
+    case 'resset_password_account': {
+            $idUser = '';
+            if (isset($_REQUEST['id_user'])) {
+                if ($_REQUEST['id_user'] == '') {
+                    unset($_REQUEST['id_user']);
+                    returnError("Nhập id_user");
+                }
+            } else {
+                returnError("Nhập id_user");
+            }
+
+            if (isset($_REQUEST['password_reset'])) {
+                if ($_REQUEST['password_reset'] == '') {
+                    unset($_REQUEST['password_reset']);
+                    returnError("Nhập password_reset");
+                }
+            } else {
+                returnError("Nhập password_reset");
+            }
+
+            $id_account = $_REQUEST['id_user'];
+            $password_reset = $_REQUEST['password_reset'];
+
+            $sql_check_account_exists = "SELECT * FROM tbl_customer_customer WHERE id = '" . $id_account . "'";
+
+            $result_check = mysqli_query($conn, $sql_check_account_exists);
+            $num_result_check = mysqli_num_rows($result_check);
+
+            if ($num_result_check > 0) {
+
+                $query = "UPDATE tbl_customer_customer SET ";
+                $query .= "customer_password  = '" . md5(mysqli_real_escape_string($conn, $password_reset)) . "' ";
+                $query .= "WHERE id = '" . $id_account . "'";
+                // check execute query
+                if ($conn->query($query)) {
+                    returnSuccess("Cập nhật mật khẩu thành công!");
+                } else {
+                    returnError("Cập nhật mật khẩu không thành công!");
+                }
+            } else {
+                returnError("Không tìm thấy tài khoản!");
+            }
+            exit();
+            break;
+        }
     case 'delete': {
             if (isset($_REQUEST['id_customer'])) {
                 if ($_REQUEST['id_customer'] == '') {
@@ -48,6 +93,33 @@ switch ($type_manager) {
                 if (file_exists("../" . $customer_account_img)) {
                     @unlink("../" . $customer_account_img);
                 }
+            }
+
+            $sql = "SELECT * FROM tbl_request_payment WHERE id_customer = '$id_customer'";
+            $result = mysqli_query($conn, $sql);
+            $nums = mysqli_num_rows($result);
+            if ($nums > 0) {
+                returnError("Không thể xóa khách hàng này");
+            }
+            $sql = "SELECT * FROM tbl_request_deposit WHERE id_customer = '$id_customer'";
+            $result = mysqli_query($conn, $sql);
+            $nums = mysqli_num_rows($result);
+            if ($nums > 0) {
+                returnError("Không thể xóa khách hàng này");
+            }
+
+            $sql = "SELECT * FROM tbl_trading_log WHERE id_customer = '$id_customer'";
+            $result = mysqli_query($conn, $sql);
+            $nums = mysqli_num_rows($result);
+            if ($nums > 0) {
+                returnError("Không thể xóa khách hàng này");
+            }
+
+            $sql = "SELECT * FROM tbl_support_customer WHERE id_customer = '$id_customer'";
+            $result = mysqli_query($conn, $sql);
+            $nums = mysqli_num_rows($result);
+            if ($nums > 0) {
+                returnError("Không thể xóa khách hàng này");
             }
 
             $sql = "DELETE FROM `tbl_customer_customer` WHERE `id` = '{$id_customer}'";
@@ -99,8 +171,8 @@ switch ($type_manager) {
                     $success['customer_introduce'] = "true";
                 }
             }
-		
-		if (isset($_REQUEST['customer_limit_payment']) && !empty($_REQUEST['customer_limit_payment'])) {
+
+            if (isset($_REQUEST['customer_limit_payment']) && !empty($_REQUEST['customer_limit_payment'])) {
                 $customer_limit_payment = htmlspecialchars($_REQUEST['customer_limit_payment']);
                 $sql = "UPDATE `tbl_customer_customer` SET";
                 $sql .= " `customer_limit_payment` = '{$customer_limit_payment}'";
@@ -221,7 +293,7 @@ switch ($type_manager) {
                 returnError("Nhap customer_phone");
             }
 
-		if (isset($_REQUEST['customer_password'])) {  //*
+            if (isset($_REQUEST['customer_password'])) {  //*
                 if ($_REQUEST['customer_password'] == '') {
                     unset($_REQUEST['customer_password']);
                     returnError("Nhap customer_password");
@@ -231,7 +303,7 @@ switch ($type_manager) {
             } else {
                 returnError("Nhap customer_password");
             }
-		
+
             if (isset($_REQUEST['customer_introduce'])) {
                 if ($_REQUEST['customer_introduce'] == '') {
                     unset($_REQUEST['customer_introduce']);
@@ -279,9 +351,10 @@ switch ($type_manager) {
             if (isset($_FILES['customer_account_img'])) { // up product_img
                 $customer_account_img = 'customer_account_img';
                 $dir_save_customer_account_img = "images/customer_customer/"; // sửa đường dẫn
-            } else {
-                returnError("Nhập customer_account_img");
             }
+            // else {
+            //     returnError("Nhập customer_account_img");
+            // }
 
 
             $sql = "SELECT * FROM `tbl_customer_customer` 
@@ -293,7 +366,7 @@ switch ($type_manager) {
                 returnError("Đã tồn tại khách hàng này");
             }
             // Tạo mã khách hàng
-            $customer_code ="KH" . substr(time(), -8);
+            $customer_code = "KH" . substr(time(), -8);
 
             $dir_save_cert_img = handing_file_img($customer_cert_img, $dir_save_customer_cert_img);
             $dir_save_account_img = handing_file_img($customer_account_img, $dir_save_customer_account_img);
@@ -325,7 +398,7 @@ switch ($type_manager) {
                 $sql .= " ,`customer_account_img` = '{$dir_save_account_img}'";
             }
 
-	
+
             if (mysqli_query($conn, $sql)) {
                 returnSuccess("Tạo khách hàng thành công");
             } else {

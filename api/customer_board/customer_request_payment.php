@@ -22,9 +22,9 @@ if ($nums > 0) {
             returnError("Bạn không có tiền trong ví");
         } elseif ($request_value > (int)$row['customer_wallet_bet']) {
             returnError("Số tiền bạn rút vượt quá tài khoản trong ví");
-        } 
+        }
 
-        $customer_paymented = get_customer_paymented_in_day($id_customer);    
+        $customer_paymented = get_customer_paymented_in_day($id_customer);
         // so sánh tiền hạn mức
         if ($customer_paymented > $row['customer_limit_payment']) {
             returnError("Bạn đã vượt quá hạn mức giao dịch trong ngày");
@@ -49,8 +49,14 @@ if ($nums > 0) {
                 request_status = '1'
                 ";
             if (db_qr($sql)) {
+                $title = "Thông báo có yêu cầu rút tiền!!!";
+                $bodyMessage = "Có yêu cầu rút tiền từ khách hàng!";
+                $action = "officer_payment";
+                $type_send = 'topic';
+                $to = 'KSE_officer_payment';
+                pushNotification($title, $bodyMessage, $action, $to, $type_send);
                 returnSuccess("Gửi yêu cầu rút tiền thành công");
-            }else{
+            } else {
                 returnError("Lỗi truy vấn");
             }
         }

@@ -19,11 +19,15 @@ if (db_qr($sql)) {
         $sql = "UPDATE tbl_customer_demo 
             SET demo_active = '$exchange_active'";
         if (db_qr($sql)) {
-            $title = "Thông báo đăng nhập!!!";
-            $bodyMessage = "Sàn giao dịch đã bảo trì, vui lòng đăng nhập lại sau!";
+            $title = "Thông báo bảo trì!!!";
+            if($exchange_active == 'N'){
+                $bodyMessage = "Sàn giao dịch đã bảo trì, vui lòng quay lại sau!";
+            }else{
+                $bodyMessage = "Sàn giao dịch đã hoàn tất bảo trì!";
+            }
             $action = "service_exchange";
             $type_send = 'topic';
-            $to = 'KSE_service_exchange';
+            
             pushNotification($title, $bodyMessage, $action, $to, $type_send);
             returnSuccess("Cập nhật thành công");
         }

@@ -51,6 +51,7 @@ function get_customer_paymented_in_day($id_customer)
                                  WHERE tbl_request_payment.id_customer = '$id_customer'
                                  AND tbl_request_payment.request_created >= '$time_begin'
                                  AND tbl_request_payment.request_created <= '$time_end'
+                                 AND tbl_request_payment.request_status = 3
                                  GROUP BY tbl_request_payment.id_customer
                                 ";
 

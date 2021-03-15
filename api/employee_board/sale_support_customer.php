@@ -70,9 +70,10 @@ switch ($type_manager) {
                     $sql .= " OR tbl_customer_customer.customer_phone LIKE '%{$filter}%' )";
                 }
             }
+		
             $sql .= " GROUP BY tbl_trading_log.id_customer";
             $result_arr = array();
-
+		
             $total = count(db_fetch_array($sql));
             $limit = 20;
             $page = 1;
@@ -117,16 +118,18 @@ switch ($type_manager) {
             if ($nums > 0) {
                 while ($row = db_assoc($result)) {
                     $result_item = array(
-                        'id_customer' => $row['customer_id'],
+                        'id_customer' => (isset($row['customer_id']) && !empty($row['customer_id']))?$row['customer_id']:"",
                         'customer_name' => $row['customer_fullname'],
                         'customer_phone' => $row['customer_phone'],
-                        'percent_win' => $row['percent_win'],
+                        'percent_win' => (isset($row['percent_win']) && !empty($row['percent_win']))?$row['percent_win']:"0",
                         'total_trade' => $row['total_trade'],
                         'trading_log' => date("d/m/Y", $row['trading_log']),
                     );
                     array_push($result_arr['data'], $result_item);
                 }
                 reJson($result_arr);
+            }else{
+                returnError("Danh sách trống");
             }
             break;
         }

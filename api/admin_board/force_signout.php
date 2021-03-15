@@ -19,11 +19,11 @@ $action = "check_sign_out";
 $type_send = 'topic';
 $to = 'KSE_notification';
 switch ($target) {
-    case 'customer':
+    case 'admin':
         $to = "KSE_notification_customer";
         
-        $query = "UPDATE tbl_customer_customer SET ";
-        $query .= " force_sign_out  = '1'";
+        $query = "UPDATE tbl_account_account SET ";
+        $query .= " force_sign_out  = '1'  WHERE id_type = '1'";
         $conn->query($query);
         
         break;

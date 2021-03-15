@@ -117,4 +117,7 @@ Ngay 12-03-2021
        : officer_payment_request : đã update trả lại số tiền cho khách nếu như hủy yêu cầu => đã check -> thành công
        : SALES : sale_support_customer : Lọc theo khách hàng giao dịch nhiều ít CHƯA TÌM ĐÚNG (KH giao dịch ít là khách hàng trong 1 tháng không phát sinh giao dịch)
 
-                    
+Ngay 13-03-2021
+ * push notify : gửi req rút tiền, support    
+ * bug : sale_support_customer : chưa lọc theo đc khách hàng giao dịch nhiều, giao dịch ít 
+       : kiểm tra sàn bảo trì k cho trade              

@@ -209,13 +209,15 @@ switch ($typeManager) {
 
         $fullname = $_REQUEST['full_name'];
 
-        // if($id_type == 3){
-        //     $account_code = "MGT".substr(time(), -8);
-        // }
+        $sql_check_account_code = "SELECT * FROM tbl_account_account WHERE account_code = '$account_code'";
+        $result_check_account_code = db_qr($sql_check_account_code);
+        if(db_nums($result_check_account_code) > 0){
+            returnError("Mã giới thiệu đã tồn tại");
+        }
 
         $sql_create_user = "INSERT INTO tbl_account_account SET
               account_username = '" . $username . "'
-              , account_password = '" . md5($password) . "'
+              , account_password = '" . $password . "'
               , account_fullname = '" . $fullname . "'
               , account_phone = '" . $phone_number . "'
               , account_email = '" . $email . "'

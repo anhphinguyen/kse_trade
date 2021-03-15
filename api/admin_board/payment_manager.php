@@ -43,7 +43,7 @@ switch ($typeManager) {
                     ";
             $result = db_qr($sql);
             $nums = db_nums($result);
-            if($nums > 0){
+            if ($nums > 0) {
                 returnError("Không phải trạng thái chờ xử lý");
             }
 
@@ -59,15 +59,21 @@ switch ($typeManager) {
                     SET `request_img` = '{$dir_save_request}',
                         `request_status` = '3'
                     WHERE `id` = '{$id_request}'";
-            
-            if(db_qr($sql)){
-                $sql = "UPDATE tbl_customer_customer SET customer_wallet_payment = '0' WHERE id = '$id_customer'"; 
-                if(db_qr($sql)){
+
+            if (db_qr($sql)) {
+                $sql = "UPDATE tbl_customer_customer SET customer_wallet_payment = '0' WHERE id = '$id_customer'";
+                if (db_qr($sql)) {
+                    $title = "Thông báo xác nhận yêu cầu rút tiền!!!";
+                    $bodyMessage = "Yêu cầu rút tiền của bạn đã được xác nhận!";
+                    $action = "customer_hasbeen_confirm_request_payment";
+                    $type_send = 'topic';
+                    $to = 'KSE_customer_hasbeen_confirm_request_payment';
+                    pushNotification($title, $bodyMessage, $action, $to, $type_send);
                     returnSuccess("Cập nhật thành công");
-                }else{
+                } else {
                     returnError("Lỗi truy vấn hoàn thành rút tiền");
-                }              
-            }else{
+                }
+            } else {
                 returnError("Lỗi truy vấn");
             }
         }

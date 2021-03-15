@@ -17,6 +17,7 @@ if ($nums > 0) {
         $time_open = $row['exchange_open'];
         $time_close = $row['exchange_close'];
         $time_living = $row['exchange_period'];
+        $time_idle = $row['exchange_idle'];
         $id_exchange = $row['id'];
         // $quantity = ($time_close - $time_open)/$time_living;
     }
@@ -37,14 +38,41 @@ if ($nums > 0) {
                     exchange_updated_by = '" . $row['exchange_updated_by'] . "'
                     WHERE id = '$id_exchange'
                     ";
+                $exchange_close = $row['exchange_close'];
+                $exchange_open = $row['exchange_open'];
+                $exchange_period = $row['exchange_period'];
+                $exchange_idle = $row['exchange_idle'];
                 if (db_qr($sql)) {
                     $sql = "DELETE FROM tbl_exchange_temporary WHERE id_exchange = '$id_exchange'";
-                    if(db_qr($sql)){
-                        returnSuccess("Sàn tiếp theo sẽ mở vào lúc " . date("d/m/Y H:i:s",$time_open_tomorrow) . " Thành công");
-                    }else{
+                    if (db_qr($sql)) {
+
+                        $delta_time = $exchange_close - $exchange_open;
+                        $quantity = $delta_time / $exchange_period;
+                        $time_start = $exchange_open;
+
+                        for ($i = 1; $i <= $quantity; $i++) {
+                            $time_session = $time_start + $exchange_period;
+                            $time_break = $time_session - $exchange_idle;  // mặc đinh thời gian không cho phép đặt cược là 60s
+                            $sql = "INSERT INTO tbl_exchange_period SET 
+                                    id_exchange = '$id_exchange',
+                                    period_open = '$time_start', 
+                                    period_point_idle = '$time_break',
+                                    period_close = '$time_session'";
+
+                            if (db_qr($sql)) {
+                                $success = true;
+                            };
+                            $time_start = $time_session;
+                        }
+                        if (isset($success)) {
+                            returnSuccess("Sàn tiếp theo sẽ mở vào lúc " . date("d/m/Y H:i:s", $time_open_tomorrow) . " Thành công");
+                        } else {
+                            returnError("Lỗi truy vấn Phiên");
+                        }
+                    } else {
                         returnError("Lỗi truy vấn xóa sàn temporary");
                     }
-                }else{
+                } else {
                     returnError("Lỗi truy vấn xóa cập nhật sàn cho hôm sau thông qua temporary");
                 }
             }
@@ -61,9 +89,31 @@ if ($nums > 0) {
             WHERE id = '$id_exchange'
             ";
     if (db_qr($sql)) {
-        returnSuccess("Tạo sàn cho ngày " . date("d/m/Y H:i:s",$time_open_tomorrow) . " Thành công");
-    }
+        $delta_time = $time_close_tomorrow - $time_open_tomorrow;
+        $quantity = $delta_time / $time_living;
+        $time_start = $time_open_tomorrow;
 
-}else{
+        for ($i = 1; $i <= $quantity; $i++) {
+            $time_session = $time_start + $exchange_period;
+            $time_break = $time_session - $time_idle;  // mặc đinh thời gian không cho phép đặt cược là 60s
+            $sql = "INSERT INTO tbl_exchange_period SET 
+                                    id_exchange = '$id_exchange',
+                                    period_open = '$time_start', 
+                                    period_point_idle = '$time_break',
+                                    period_close = '$time_session'";
+
+            if (db_qr($sql)) {
+                $success = true;
+            };
+            $time_start = $time_session;
+        }
+        if (isset($success)) {
+            returnSuccess("Tạo sàn cho ngày " . date("d/m/Y H:i:s", $time_open_tomorrow) . " Thành công");
+        } else {
+            returnError("Lỗi truy vấn Phiên");
+        }
+        
+    }
+} else {
     returnError("Chưa kết thúc sàn");
 }

@@ -19,13 +19,13 @@ switch ($typeManager) {
             if (isset($_REQUEST['id_exchange']) && !empty($_REQUEST['id_exchange'])) {
                 $id_exchange = $_REQUEST['id_exchange'];
             } else {
-                return ("Nhập id_exchange");
+                returnError("Nhập id_exchange");
             }
 
             if (isset($_REQUEST['id_account']) && !empty($_REQUEST['id_account'])) {
                 $id_account = $_REQUEST['id_account'];
             } else {
-                return ("Nhập id_account");
+                returnError("Nhập id_account");
             }
 
             if (isset($_REQUEST['exchange_open']) && !empty($_REQUEST['exchange_open'])) {
@@ -33,6 +33,8 @@ switch ($typeManager) {
                     returnError("Chỉ được cập nhật thời gian mở sàn cho ngày hôm sau");
                 }
                 $time_open = strtotime($_REQUEST['exchange_open']);
+            }else {
+                returnError("Nhập exchange_open");
             }
 
 
@@ -43,10 +45,14 @@ switch ($typeManager) {
                     returnError("Thời gian đóng sàn không được trùng với thời gian mở sàn");
                 }
                 $time_close = strtotime($_REQUEST['exchange_close']);
+            }else {
+                returnError("Nhập exchange_close");
             }
 
             if (isset($_REQUEST['exchange_period']) && !empty($_REQUEST['exchange_period'])) {
                 $time_living = $_REQUEST['exchange_period'];
+            }else {
+                returnError("Nhập exchange_period");
             }
 
             $sql = "SELECT * FROM tbl_exchange_temporary WHERE id_exchange = '$id_exchange'";
@@ -160,15 +166,10 @@ switch ($typeManager) {
         }
 
 
-        $total_people_up = "0";
-        $total_people_down = "0";
-        $total_money_up = "0";
-        $total_money_down = "0";
 
-        $sql_people_up = "SELECT SUM(id_customer) as total_people_up FROM tbl_trading_log
-                WHERE trading_type = 'UP'
-                AND id_session = '$id_session'
-                GROUP BY id_customer
+        $sql_people_up = "SELECT COUNT(id) as total_people_up FROM tbl_trading_log
+                WHERE trading_type = 'up'
+                AND id_exchange_period = '$id_session'
                 ";
         $result_people_up = db_qr($sql_people_up);
         $nums_people_up = db_nums($result_people_up);
@@ -179,21 +180,20 @@ switch ($typeManager) {
         }
 
         $sql_money_up = "SELECT SUM(trading_bet) as total_money_up FROM tbl_trading_log
-                WHERE trading_type = 'UP'
-                AND id_session = '$id_session'
+                WHERE trading_type = 'up'
+                AND id_exchange_period = '$id_session'
                 ";
         $result_money_up = db_qr($sql_money_up);
         $nums_money_up = db_nums($result_money_up);
         if ($nums_money_up > 0) {
             while ($row_money_up = db_assoc($result_money_up)) {
-                $total_money_up = $row_money_up['total_people_up'];
+                $total_money_up = $row_money_up['total_money_up'];
             }
         }
 
-        $sql_people_down = "SELECT SUM(id_customer) as total_people_down FROM tbl_trading_log
-                WHERE trading_type = 'DOWN'
-                AND id_session = '$id_session'
-                GROUP BY id_customer
+        $sql_people_down = "SELECT COUNT(id) as total_people_down FROM tbl_trading_log
+                WHERE trading_type = 'down'
+                AND id_exchange_period = '$id_session'
                 ";
         $result_people_down = db_qr($sql_people_down);
         $nums_people_down = db_nums($result_people_down);
@@ -203,8 +203,8 @@ switch ($typeManager) {
             }
         }
         $sql_money_down = "SELECT SUM(trading_bet) as total_money_down FROM tbl_trading_log
-                WHERE trading_type = 'DOWN'
-                AND id_session = '$id_session'
+                WHERE trading_type = 'down'
+                AND id_exchange_period = '$id_session'
                 ";
         $result_money_down = db_qr($sql_money_down);
         $nums_money_down = db_nums($result_money_down);
@@ -232,10 +232,10 @@ switch ($typeManager) {
                     'exchange_quantity' => strval($exchange_quantity),
                     'exchange_period' => strval($row['exchange_period'] / 60),
                     'exchange_updated_by' => (isset($row['exchange_updated_by']) && !empty($row['exchange_updated_by'])) ? $row['exchange_updated_by'] : "0",
-                    'total_people_up' => $total_people_up,
-                    'total_people_down' => $total_people_down,
-                    'total_money_up' => $total_money_up,
-                    'total_money_down' => $total_money_down,
+                    'total_people_up' => (isset($total_people_up)&& !empty($total_people_up))?$total_people_up:"0",
+                    'total_people_down' => (isset($total_people_down)&& !empty($total_people_down))?$total_people_down:"0",
+                    'total_money_up' => (isset($total_money_up)&& !empty($total_money_up))?$total_money_up:"0",
+                    'total_money_down' =>(isset($total_money_down)&& !empty($total_money_down))?$total_money_down:"0", 
                 );
                 array_push($result_arr['data'], $result_item);
             }
