@@ -77,6 +77,7 @@ switch ($typeManager) {
                 `tbl_account_account`.`account_email` as `account_email`,
                 `tbl_account_account`.`account_phone` as `account_phone`,
                 `tbl_account_account`.`account_status` as `account_status`,
+                `tbl_account_account`.`account_code` as `account_code`,
                 -- `tbl_account_account`.`account_token` as `account_token`, -- chưa bổ sung vào DB
                 `tbl_account_account`.`force_sign_out` as `force_sign_out`,
 
@@ -119,6 +120,7 @@ switch ($typeManager) {
                     'username' => $row['account_username'],
                     'id_type' => $row['id_type'],
                     'type_account' => $row['type_account'],
+                    'account_code' => (!empty($row['account_code']))?$row['account_code']:"",
                     'email' => $row['account_email'],
                     'full_name' => $row['account_fullname'],
                     'phone_number' => $row['account_phone'],

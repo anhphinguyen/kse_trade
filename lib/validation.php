@@ -4,7 +4,7 @@
 //@Trả về: True nếu đúng định dạng username
 function is_username($username)
 {
-    $parttern = "/^[A-Za-z0-9_\.]{6,32}$/";
+    $parttern = "/^[A-Za-z0-9_\.]{1,32}$/";
     if (preg_match($parttern, $username))
         return true;
 }

@@ -61,4 +61,6 @@ if ($nums > 0) {
             }
         }
     }
+}else{
+    returnError("Không tồn tại khách hàng này");
 }

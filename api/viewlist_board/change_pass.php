@@ -59,6 +59,8 @@ if (isset($_REQUEST['old_pass']) && !empty($_REQUEST['old_pass'])) {
     } else {
         $old_pass = md5($_REQUEST['old_pass']);
     }
+}else{
+    returnError("Nhập old_pass");
 }
 
 if (isset($_REQUEST['new_pass'])) {
@@ -69,6 +71,8 @@ if (isset($_REQUEST['new_pass'])) {
     } else {
         $new_pass = md5($_REQUEST['new_pass']);
     }
+}else{
+    returnError("Nhập new_pass");
 }
 
 switch ($type_account) {

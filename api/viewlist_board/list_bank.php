@@ -1,6 +1,19 @@
 <?php
 
+
 $sql = "SELECT * FROM tbl_bank_info";
+
+if (isset($_REQUEST['filter'])) {
+    if ($_REQUEST['filter'] == '') {
+        unset($_REQUEST['filter']);
+    } else {
+        $filter = htmlspecialchars($_REQUEST['filter']);
+        $sql .= " AND ( `bank_full_name` LIKE '%{$filter}%'";
+        $sql .= " OR `bank_short_name` LIKE '%{$filter}%')";
+    }
+}
+
+
 $result = db_qr($sql);
 $nums = db_nums($result);
 $result_arr = array();
