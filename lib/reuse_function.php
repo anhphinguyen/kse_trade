@@ -17,6 +17,7 @@ function result_down($id_session)
     db_qr($sql);
     customer_add_money($id_session, 'down');
     demo_add_money($id_session, 'down');
+   
 }
 function result_up($id_session)
 {
@@ -412,12 +413,12 @@ function handing_file_img($myfile, $dir_save)
     }
 }
 
-function returnEmptyData($msg)
+function returnEmptyData($msg, $data = array())
 {
     echo json_encode(array(
         'success' => 'true',
         'message' => $msg,
-        'data' => array(),
+        'data' => $data,
     ));
     exit();
 }

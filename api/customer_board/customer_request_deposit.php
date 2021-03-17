@@ -29,6 +29,8 @@ if ($type_customer === 'trainghiem') {
         while ($row = db_assoc($result)) {
             $demo_wallet_payment = $row['demo_wallet_payment']; // value default is 100.000
         }
+    }else{
+        returnError("Không tồn tại khách hàng này");
     }
 
     $sql = "UPDATE tbl_customer_demo SET
@@ -36,7 +38,27 @@ if ($type_customer === 'trainghiem') {
         WHERE id = '$id_customer'
         ";
     if (db_qr($sql)) {
-        returnEmptyData("Nạp tiền thành công");
+        $customer_arr = array();
+        $sql = "SELECT * FROM tbl_customer_demo
+                WHERE `id` = '{$id_customer}'";
+        $result = db_qr($sql);
+        $nums = db_nums($result);
+        if ($nums > 0) {
+            while ($row = db_assoc($result)) {
+                $customer_item = array(
+                    'id_customer' => $row['id'],
+                    'id_bank' => "",
+                    'customer_wallet_bet' =>$row['demo_wallet_bet'],
+                    'customer_wallet_payment' => "0",
+                );
+                array_push($customer_arr, $customer_item);
+            }
+            returnEmptyData("Nạp tiền thành công",$customer_arr);
+        } else {
+            returnError("Không có khách hàng");
+        }   
+
+        // returnEmptyData("Nạp tiền thành công");
     } else {
         returnError("Lỗi truy vấn");
     }

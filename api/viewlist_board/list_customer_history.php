@@ -121,7 +121,7 @@ if ($nums > 0) {
     }
     reJson($customer_arr);
 } else {
-    if($type_manager == 'customer'){
+    if($type_manager != 'admin'){
         returnError("Lịch sử trống, hãy làm nên lịch sử nhé");
     }else{
         returnError("Lịch sử trống");

@@ -83,21 +83,25 @@ switch ($typeManager) {
                     WHERE id = '$id_request'
                     ";
             if (db_qr($sql)) {
-                $sql = "SELECT id_customer FROM tbl_request_payment WHERE id = '$id_request'";
+                $sql = "SELECT id_customer, request_value FROM tbl_request_payment WHERE id = '$id_request'";
                 $result = db_qr($sql);
                 $nums = db_nums($result);
                 if ($nums > 0) {
                     while ($row = db_assoc($result)) {
+                        $request_value = $row['request_value'];
+                        echo $request_value;
+                        exit();
                         $id_customer = $row['id_customer'];
                         $sql = "SELECT * FROM tbl_customer_customer WHERE id = '$id_customer'";
                         $result = db_qr($sql);
                         $nums = db_nums($result);
                         if ($nums > 0) {
                             while ($row = db_assoc($result)) {
-                                $money_update = $row['customer_wallet_bet'] + $row['customer_wallet_payment'];
+                                $money_bet_update = $row['customer_wallet_bet'] + $request_value;
+                                $money_payment_update = $row['customer_wallet_payment'] - $request_value;
                                 $sql_update = "UPDATE tbl_customer_customer SET 
                                                 customer_wallet_bet = '$money_update',
-                                                customer_wallet_payment = '0'
+                                                customer_wallet_payment = '$money_payment_update'
                                                 WHERE id = '$id_customer'
                                                 ";
                                 if (db_qr($sql_update)) {

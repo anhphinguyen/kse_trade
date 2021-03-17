@@ -253,7 +253,7 @@ switch ($type_manager) {
                 }
                 $customer_account_img = 'customer_account_img';
                 $dir_save_customer_account_img = "images/customer_customer/";
-                $dir_save_account_img = handing_file_img($customer_account_img, $customer_account_img);
+                $dir_save_account_img = handing_file_img($customer_account_img, $dir_save_customer_account_img);
                 $sql = "UPDATE `tbl_customer_customer`
                     SET `customer_account_img` = '{$dir_save_account_img}' 
                     WHERE `id` = '{$id_customer}'";
@@ -273,35 +273,35 @@ switch ($type_manager) {
             if (isset($_REQUEST['customer_name'])) {   //*
                 if ($_REQUEST['customer_name'] == '') {
                     unset($_REQUEST['customer_name']);
-                    returnError("Nhap customer_name");
+                    returnError("Nhập tên khách hàng");
                 } else {
                     $customer_name = htmlspecialchars($_REQUEST['customer_name']);
                 }
             } else {
-                returnError("Nhap customer_name");
+                returnError("Nhập tên khách hàng");
             }
 
 
             if (isset($_REQUEST['customer_phone'])) {  //*
                 if ($_REQUEST['customer_phone'] == '') {
                     unset($_REQUEST['customer_phone']);
-                    returnError("Nhap customer_phone");
+                    returnError("Nhập số điện thoại");
                 } else {
                     $customer_phone = htmlspecialchars($_REQUEST['customer_phone']);
                 }
             } else {
-                returnError("Nhap customer_phone");
+                returnError("Nhập số điện thoại");
             }
 
             if (isset($_REQUEST['customer_password'])) {  //*
                 if ($_REQUEST['customer_password'] == '') {
                     unset($_REQUEST['customer_password']);
-                    returnError("Nhap customer_password");
+                    returnError("Nhập số mật khẩu");
                 } else {
                     $customer_password = md5($_REQUEST['customer_password']);
                 }
             } else {
-                returnError("Nhap customer_password");
+                returnError("Nhập số mật khẩu");
             }
 
             if (isset($_REQUEST['customer_introduce'])) {
@@ -317,13 +317,23 @@ switch ($type_manager) {
                 } else {
                     $customer_cert_no = htmlspecialchars($_REQUEST['customer_cert_no']);
                 }
+            }else {
+                returnError("Nhập số CMND");
+            }
+
+            if (isset($_REQUEST['customer_limit_payment'])) {
+                if ($_REQUEST['customer_limit_payment'] == '') {
+                    unset($_REQUEST['customer_limit_payment']);
+                } else {
+                    $customer_limit_payment = htmlspecialchars($_REQUEST['customer_limit_payment']);
+                }
             }
 
             if (isset($_FILES['customer_cert_img'])) { // up product_img
                 $customer_cert_img = 'customer_cert_img';
                 $dir_save_customer_cert_img = "images/customer_customer/"; // sửa đường dẫn
             } else {
-                returnError("Nhập customer_cert_img");
+                returnError("Chụp ảnh CMND mặt trước");
             }
 
             if (isset($_REQUEST['id_bank'])) {
@@ -351,6 +361,7 @@ switch ($type_manager) {
             if (isset($_FILES['customer_account_img'])) { // up product_img
                 $customer_account_img = 'customer_account_img';
                 $dir_save_customer_account_img = "images/customer_customer/"; // sửa đường dẫn
+                $dir_save_account_img = handing_file_img($customer_account_img, $dir_save_customer_account_img);
             }
             // else {
             //     returnError("Nhập customer_account_img");
@@ -369,7 +380,7 @@ switch ($type_manager) {
             $customer_code = "KH" . substr(time(), -8);
 
             $dir_save_cert_img = handing_file_img($customer_cert_img, $dir_save_customer_cert_img);
-            $dir_save_account_img = handing_file_img($customer_account_img, $dir_save_customer_account_img);
+            
             $sql = "INSERT INTO `tbl_customer_customer` SET 
                                                 `customer_fullname` = '{$customer_name}',
                                                 `customer_code` = '{$customer_code}',
@@ -378,6 +389,9 @@ switch ($type_manager) {
                                                 ";
             if (isset($customer_introduce) && !empty($customer_introduce)) {
                 $sql .= " ,`customer_introduce` = '{$customer_introduce}'";
+            }
+            if (isset($customer_limit_payment) && !empty($customer_limit_payment)) {
+                $sql .= " ,`customer_limit_payment` = '{$customer_limit_payment}'";
             }
             if (isset($customer_cert_no) && !empty($customer_cert_no)) {
                 $sql .= " ,`customer_cert_no` = '{$customer_cert_no}'";

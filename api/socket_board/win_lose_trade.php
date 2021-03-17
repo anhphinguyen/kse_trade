@@ -74,7 +74,7 @@ if ($total_trade_up < $total_trade_down) {
     }
 } else {
     $result_trade = array('up', 'down');
-    $result_random = array_rand($momo_arr);
+    $result_random = array_rand($result_trade);
     if ($time_break >= $session_time_close) {
         if ($result_trade[$result_random] == 'up') {
             result_up($id_session);

@@ -43,8 +43,8 @@ switch ($type_manager) {
                     tbl_customer_customer.customer_fullname,
                     tbl_customer_customer.customer_phone,
                     tbl_customer_customer.customer_introduce,
+                    tbl_customer_customer.id as customer_id,
 
-                    tbl_trading_log.id_customer as customer_id,
                     tbl_trading_log.trading_type as trading_type,
                     (SELECT MAX(tbl_trading_log.trading_log) FROM tbl_trading_log WHERE tbl_trading_log.id_customer = customer_id) as trading_log,
                     (SELECT COUNT(tbl_trading_log.id_customer) FROM tbl_trading_log WHERE tbl_trading_log.id_customer = customer_id) as count,
@@ -71,7 +71,7 @@ switch ($type_manager) {
                 }
             }
 		
-            $sql .= " GROUP BY tbl_trading_log.id_customer";
+            $sql .= " GROUP BY tbl_customer_customer.id";
             $result_arr = array();
 		
             $total = count(db_fetch_array($sql));

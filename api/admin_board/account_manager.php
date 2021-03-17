@@ -144,10 +144,10 @@ switch ($typeManager) {
             if (is_username($_REQUEST['username'])) {
                 $username = $_REQUEST['username'];
             } else {
-                returnError("username không đúng định dạng");
+                returnError("Tên đăng nhập không đúng định dạng");
             }
         } else {
-            returnError("Nhập username");
+            returnError("Điền tên đăng nhập");
         }
 
         //check username exists
@@ -164,10 +164,10 @@ switch ($typeManager) {
             if (is_password($_REQUEST['password'])) {
                 $password = md5($_REQUEST['password']);
             } else {
-                returnError("password không đúng định dạng");
+                returnError("Mật khẩu không đúng định dạng");
             }
         } else {
-            returnError("Nhập password");
+            returnError("Điền mật khẩu");
         }
 
         if (isset($_REQUEST['full_name'])) {
@@ -211,7 +211,7 @@ switch ($typeManager) {
 
         $fullname = $_REQUEST['full_name'];
 
-        $sql_check_account_code = "SELECT * FROM tbl_account_account WHERE account_code = '$account_code'";
+        $sql_check_account_code = "SELECT * FROM tbl_account_account WHERE account_code = '$account_code' AND id_type = 3";
         $result_check_account_code = db_qr($sql_check_account_code);
         if(db_nums($result_check_account_code) > 0){
             returnError("Mã giới thiệu đã tồn tại");
@@ -616,6 +616,19 @@ switch ($typeManager) {
 
         if ($num_result_check > 0) {
 
+            while($row_check = db_assoc($result_check)){
+                
+                $id_type = $row_check['id_type'];
+                if($id_type == 3){
+                    $account_code = $row_check['account_code'];
+                    $sql_check_customer = "SELECT * FROM tbl_customer_customer WHERE BINARY customer_introduce = '$account_code'";
+                    $result_check_customer = db_qr($sql_check_customer);
+                    if(db_nums($result_check_customer) > 0){
+                        returnError("Không thể xóa. \n Bạn có thể ủy quyền cho một nhân viên khác.");
+                    }
+                }
+
+            }
             $sql_check_account_role = "SELECT * FROM tbl_account_authorize WHERE id_admin = '" . $id_customer . "'";
 
             $result_check_role = mysqli_query($conn, $sql_check_account_role);
