@@ -18,9 +18,11 @@ $nums = db_nums($result);
 if ($nums > 0) {
     while ($row = db_assoc($result)) {
 
-        if ($row['customer_wallet_bet'] == '0') {
+        if($row['id_bank'] == 0){
+            returnError("Bạn chưa tạo phương thức thanh toán !");
+        }elseif ($row['customer_wallet_bet'] == '0') {
             returnError("Bạn không có tiền trong ví");
-        } elseif ($request_value > (int)$row['customer_wallet_bet']) {
+        }elseif ($request_value > (int)$row['customer_wallet_bet']) {
             returnError("Số tiền bạn rút vượt quá tài khoản trong ví");
         }
 

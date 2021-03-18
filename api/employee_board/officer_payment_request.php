@@ -69,12 +69,12 @@ switch ($typeManager) {
             if (isset($_REQUEST['request_comment'])) {   //*
                 if ($_REQUEST['request_comment'] == '') {
                     unset($_REQUEST['request_comment']);
-                    $request_comment = "";
+                    returnError("Vui lòng nhập lý do hủy");
                 } else {
                     $request_comment = $_REQUEST['request_comment'];
                 }
             } else {
-                $request_comment = "";
+                returnError("Vui lòng nhập lý do hủy");
             }
 
             $sql = "UPDATE tbl_request_payment SET
@@ -100,7 +100,7 @@ switch ($typeManager) {
                                 $money_bet_update = $row['customer_wallet_bet'] + $request_value;
                                 $money_payment_update = $row['customer_wallet_payment'] - $request_value;
                                 $sql_update = "UPDATE tbl_customer_customer SET 
-                                                customer_wallet_bet = '$money_update',
+                                                customer_wallet_bet = '$money_bet_update',
                                                 customer_wallet_payment = '$money_payment_update'
                                                 WHERE id = '$id_customer'
                                                 ";
@@ -109,7 +109,7 @@ switch ($typeManager) {
                                     $bodyMessage = "Yêu cầu rút tiền của bạn đã bị hủy bỏ!";
                                     $action = "customer_hasbeen_cancel_request_payment";
                                     $type_send = 'topic';
-                                    $to = 'KSE_customer_hasbeen_cancel_request_payment';
+                                    $to = 'KSE_customer_hasbeen_cancel_request_payment_'.strval($id_customer);
                                     pushNotification($title, $bodyMessage, $action, $to, $type_send);
                                     returnSuccess("Hủy yêu cầu rút tiền thành công");
                                 } else {

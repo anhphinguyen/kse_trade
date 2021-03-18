@@ -67,7 +67,7 @@ switch ($typeManager) {
                     $bodyMessage = "Yêu cầu rút tiền của bạn đã được xác nhận!";
                     $action = "customer_hasbeen_confirm_request_payment";
                     $type_send = 'topic';
-                    $to = 'KSE_customer_hasbeen_confirm_request_payment';
+                    $to = 'KSE_customer_hasbeen_confirm_request_payment_'.strval($id_customer);
                     pushNotification($title, $bodyMessage, $action, $to, $type_send);
                     returnSuccess("Cập nhật thành công");
                 } else {

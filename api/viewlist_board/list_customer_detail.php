@@ -36,6 +36,8 @@ if ($nums > 0) {
         $customer_paymented = get_customer_paymented_in_day($row['id']);
         $customer_item = array(
             'id_customer' => $row['id'],
+            'type_account' => "customer",
+            'type_customer' => 'customer',
             'id_bank' => ($row['id_bank'] != 0) ? $row['id_bank'] : "",
             'bank_name' => (!empty($row['bank_full_name'])) ? $row['bank_full_name'] : "",
             'bank_short_name' => (!empty($row['bank_short_name'])) ? $row['bank_short_name'] : "",

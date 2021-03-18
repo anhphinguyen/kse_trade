@@ -75,19 +75,23 @@ if ($type_customer == 'trainghiem') {
 
 
 if (isset($_REQUEST['customer_introduce']) && !(empty($_REQUEST['customer_introduce']))) {
-    $customer_introduce = $_REQUEST['customer_introduce'];
+    if(is_username($customer_introduce)){
+        $customer_introduce = $_REQUEST['customer_introduce'];
+    }else{
+        returnError("Mã giới thiệu không đúng định dạng");
+    }
 }
 
 if (isset($_REQUEST['customer_phone']) && !(empty($_REQUEST['customer_phone']))) {
     $customer_phone = $_REQUEST['customer_phone'];
 } else {
-    returnError("Nhập customer_phone");
+    returnError("Vui lòng nhập số điện thoại");
 }
 
 if (isset($_REQUEST['customer_name']) && !(empty($_REQUEST['customer_name']))) {
     $customer_name = $_REQUEST['customer_name'];
 } else {
-    returnError("Nhập customer_name");
+    returnError("Vui lòng điền Họ và Tên");
 }
 
 
@@ -95,27 +99,27 @@ if (isset($_REQUEST['customer_password']) && !(empty($_REQUEST['customer_passwor
     if (is_password($_REQUEST['customer_password'])) {
         $customer_password = md5($_REQUEST['customer_password']);
     } else {
-        returnError("customer_password không đúng định dạng");
+        returnError("Mật khẩu không đúng định dạng");
     }
 } else {
-    returnError("Nhập customer_password");
+    returnError("Vui lòng nhập mật khẩu");
 }
 
 if (isset($_REQUEST['customer_cert_no']) && !(empty($_REQUEST['customer_cert_no']))) {
     if (is_cert($_REQUEST['customer_cert_no'])) {
         $customer_cert_no = $_REQUEST['customer_cert_no'];
     } else {
-        returnError("customer_cert_no không đúng định dạng");
+        returnError("CMND không đúng định dạng");
     }
 } else {
-    returnError("Nhập customer_cert_no");
+    returnError("Vui lòng nhập CMND");
 }
 
 if (isset($_FILES['customer_cert_img'])) { // up product_img
     $customer_cert_img = 'customer_cert_img';
     $dir_save_customer_cert_img = "images/customer_customer/"; // sửa đường dẫn
 } else {
-    returnError("Nhập customer_cert_img");
+    returnError("Vui lòng chụp ảnh CMND mặt trước");
 }
 
 $sql = "SELECT * FROM tbl_customer_customer WHERE customer_phone = '$customer_phone'";

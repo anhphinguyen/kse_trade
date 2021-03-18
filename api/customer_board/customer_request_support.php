@@ -27,27 +27,28 @@ switch ($type_manager) {
             if (isset($_REQUEST['id_support_category'])) {
                 if ($_REQUEST['id_support_category'] == '') {
                     unset($_REQUEST['id_support_category']);
-                    returnError("Nhập id_support_category");
+                    returnError("Bạn chưa chọn yêu cầu hỗ trợ");
                 } else {
                     $id_support_category = $_REQUEST['id_support_category'];
                 }
             } else {
-                returnError("Nhập id_support_category");
+                returnError("Bạn chưa chọn yêu cầu hỗ trợ");
             }
 
             if (isset($_REQUEST['support_request'])) {
                 if ($_REQUEST['support_request'] == '') {
                     unset($_REQUEST['support_request']);
                 } else {
-                    $support_request = $_REQUEST['support_request'];
+                    $support_request = htmlspecialchars($_REQUEST['support_request']);
                 }
             }
 
             $sql = "INSERT INTO tbl_support_info SET 
                 id_category = '$id_support_category'
                 ";
-            if (isset($_REQUEST['support_request']) && !empty($_REQUEST['support_request'])) {
-                $sql .= ", support_request = '$support_request'";
+                
+            if (isset($support_request) && !empty($support_request)) {
+                $sql .= ", support_request = '".mysqli_escape_string($conn,$support_request)."'";
             }
 
             if (db_qr($sql)) {

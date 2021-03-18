@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 if (isset($_REQUEST['type_target'])) {
     if ($_REQUEST['type_target'] == '') {
@@ -7,11 +7,11 @@ if (isset($_REQUEST['type_target'])) {
     } else {
         $type_manager = $_REQUEST['type_target'];
     }
-}else{
+} else {
     returnError("Nhập type_target");
 }
 
-switch($type_manager){
+switch ($type_manager) {
     case 'customer':
         $tbl_log = 'tbl_trading_log';
         $id = 'id_customer';
@@ -28,7 +28,7 @@ switch($type_manager){
 $sql = "SELECT * FROM $tbl_log
         WHERE 1=1";
 
-if($type_manager != 'admin'){
+if ($type_manager != 'admin') {
     if (isset($_REQUEST['id_customer'])) {
         if ($_REQUEST['id_customer'] == '') {
             unset($_REQUEST['id_customer']);
@@ -37,7 +37,7 @@ if($type_manager != 'admin'){
             $id_customer = $_REQUEST['id_customer'];
             $sql .= " AND `$tbl_log`.`$id` = '{$id_customer}'";
         }
-    }else{
+    } else {
         returnError("id_customer");
     }
 }
@@ -47,7 +47,7 @@ if (isset($_REQUEST['date_begin'])) {
     if ($_REQUEST['date_begin'] == '') {
         unset($_REQUEST['date_begin']);
     } else {
-        $date_begin = strtotime($_REQUEST['date_begin']. " 00:00:00");
+        $date_begin = strtotime($_REQUEST['date_begin'] . " 00:00:00");
         $sql .= " AND `trading_log` >= '{$date_begin}'";
     }
 } else {
@@ -59,7 +59,7 @@ if (isset($_REQUEST['date_end'])) {
     if ($_REQUEST['date_end'] == '') {
         unset($_REQUEST['date_end']);
     } else {
-        $date_end = strtotime($_REQUEST['date_end']. " 23:59:59");
+        $date_end = strtotime($_REQUEST['date_end'] . " 23:59:59");
         $sql .= " AND `trading_log` <= '{$date_end}'";
     }
 } else {
@@ -106,24 +106,20 @@ $nums = db_nums($result);
 
 if ($nums > 0) {
     while ($row = db_assoc($result)) {
-        
+
         $customer_item = array(
             'id_trading' => $row['id'],
-            'id_customer' => (isset($row['id_customer']) && !empty($row['id_customer']))?$row['id_customer']:$row['id_demo'],
+            'id_customer' => (isset($row['id_customer']) && !empty($row['id_customer'])) ? $row['id_customer'] : $row['id_demo'],
             'trading_log' => date("d/m/Y - H:i", $row['trading_log']),
-            'trading_bet' => strval(($row['trading_bet']*(($row['trading_result'] == 'win')?$row['trading_percent']:100))/100),
+            'trading_bet' => strval(($row['trading_bet'] * (($row['trading_result'] == 'win') ? $row['trading_percent'] : 100)) / 100),
             'trading_type' => $row['trading_type'],
-            'trading_result' => (isset(($row['trading_result'])) && !empty(($row['trading_result'])))?$row['trading_result']:"",
-            'trading_percent' => ($row['trading_result'] == 'win')?$row['trading_percent']:"",
+            'trading_result' => (isset(($row['trading_result'])) && !empty(($row['trading_result']))) ? $row['trading_result'] : "",
+            'trading_percent' => ($row['trading_result'] == 'win') ? $row['trading_percent'] : "",
         );
 
         array_push($customer_arr['data'], $customer_item);
     }
     reJson($customer_arr);
 } else {
-    if($type_manager != 'admin'){
-        returnError("Lịch sử trống, hãy làm nên lịch sử nhé");
-    }else{
-        returnError("Lịch sử trống");
-    }
+    returnError("Lịch sử trống");
 }

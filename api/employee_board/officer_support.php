@@ -65,13 +65,13 @@ switch ($type_manager) {
 
             $sql = "SELECT * FROM tbl_support_customer 
                     WHERE id = '$id_support_customer'
-                    AND support_status != 'begin'
+                    AND support_status = 'finished'
                     ";
             $result = db_qr($sql);
             $nums = db_nums($result);
             if($nums > 0){
                 while($row = db_assoc($result)){
-                    returnError("Không phải trạng thái bắt đầu");
+                    returnError("Yêu cầu đã được xử lý");
                 }
             }
 
@@ -143,7 +143,7 @@ switch ($type_manager) {
                         'customer_name' => $row['customer_fullname'],
                         'customer_phone' => $row['customer_phone'],
                         'support_date' => $row['support_date'],
-                        'support_request' => $row['support_request'],
+                        'support_request' => htmlspecialchars_decode($row['support_request']),
                         'support_category' => $row['support_category'],
                         'support_status' => $row['support_status'],
                     );

@@ -123,7 +123,7 @@ switch ($type_manager) {
                         'customer_phone' => $row['customer_phone'],
                         'percent_win' => (isset($row['percent_win']) && !empty($row['percent_win']))?$row['percent_win']:"0",
                         'total_trade' => $row['total_trade'],
-                        'trading_log' => date("d/m/Y", $row['trading_log']),
+                        'trading_log' => (!empty($row['trading_log']))?date("d/m/Y", $row['trading_log']):"",
                     );
                     array_push($result_arr['data'], $result_item);
                 }

@@ -9,6 +9,7 @@ function is_username($username)
         return true;
 }
 
+
 function is_cert($cert_no)
 {
     // $parttern = "/^([A-Z]){1}([\w_\.!@#$%^&*()]+){5,31}$/";

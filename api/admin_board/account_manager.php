@@ -189,9 +189,13 @@ switch ($typeManager) {
                 $id_type = $_REQUEST['id_type'];
                 if($id_type == 3){
                     if(isset($_REQUEST['account_code']) && !empty($_REQUEST['account_code'])){
-                        $account_code = $_REQUEST['account_code'];
+                        if(is_username($_REQUEST['account_code'])){
+                            $account_code = $_REQUEST['account_code'];
+                        }else{
+                            returnError("Mã giới thiệu không đúng định dạng");
+                        }
                     }else{
-                        returnError("Nhập mã giới thiệu cho nhân viên sale : account_code");
+                        returnError("Nhập mã giới thiệu cho nhân viên sale");
                     }
                 }
             }

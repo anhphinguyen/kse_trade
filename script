@@ -1,3 +1,24 @@
+//===================================================================
+//===================================================================
+                  /***** KSE DEV HOST *******/
+
+
+                  >>>>>>>>>>>>>>>>File Browser
+                  https://s2d2.cloudnetwork.vn:8443
+
+                  >>>>>>>>>>>>>>>>PHP Myadmin
+                  https://s2d2.cloudnetwork.vn:8443/phpMyAdmin/index.php?db=die97053_KSE
+
+                  Login Access (file browser + PHP Myadmin) :
+                  Username : die97053
+                  Password : GuFa@3BoPe%1HeLa
+
+                  SQL Connect setting config
+                  Username : die97053_adKSE
+                  Password : n?myeun0m:Dndungm0
+                  Database : die97053_KSE
+//===================================================================
+//===================================================================
 kịch bản potman
 * customer_manager:
     - type_manager: delete : id_customer
