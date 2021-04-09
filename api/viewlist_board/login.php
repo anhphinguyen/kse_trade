@@ -72,8 +72,8 @@ if ($nums > 0) {
             'type_account' => $row['type_account'],
             'type_description' => $row['type_description'],
             'account_token' => $row['account_token'],
-            'type_account' => "admin",
-            'type_customer' => "admin",
+            // 'type_account' => "admin",
+            // 'type_customer' => "admin",
         );
 
         if ($row['id_type'] == '1') {

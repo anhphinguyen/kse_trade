@@ -12,15 +12,15 @@ if (isset($_REQUEST['type_target'])) {
 
 switch ($type_manager) {
     case 'list_customer': {
-            $sql = "SELECT account_code FROM tbl_account_account WHERE 1=1 ";
             if (isset($_REQUEST['id_account'])) {
                 if ($_REQUEST['id_account'] == '') {
                     unset($_REQUEST['id_account']);
                     returnError("Nhập id_account");
                 } else {
                     $id_account = $_REQUEST['id_account'];
-                    $sql .= " AND id = '$id_account'";
                 }
+            }else{
+                returnError("Nhập id_account");
             }
 
             if (isset($_REQUEST['type_sort'])) {
@@ -30,14 +30,12 @@ switch ($type_manager) {
                     $type_sort = $_REQUEST['type_sort'];
                 }
             }
-            // $sql = "SELECT account_code FROM tbl_account_account WHERE id = '$id_account' ";
-            if (isset($id_account) && !empty($id_account)) {
-                $result = db_qr($sql);
-                $nums = db_nums($result);
-                if ($nums > 0) {
-                    while ($row = db_assoc($result)) {
-                        $customer_introduce = $row['account_code'];
-                    }
+            $sql = "SELECT account_code FROM tbl_account_account WHERE id = '$id_account' ";
+            $result = db_qr($sql);
+            $nums = db_nums($result);
+            if($nums > 0){
+                while($row = db_assoc($result)){
+                    $customer_introduce = $row['account_code'];
                 }
             }
 
@@ -61,12 +59,8 @@ switch ($type_manager) {
                     
                     LEFT JOIN tbl_account_account 
                     ON tbl_customer_customer.customer_introduce = tbl_account_account.account_code
-                    WHERE  1=1
+                    WHERE  tbl_customer_customer.customer_introduce = '$customer_introduce'
                     ";
-            if (isset($id_account) && !empty($id_account)) {
-                $sql .= " AND tbl_customer_customer.customer_introduce = '$customer_introduce'";
-            }
-
             if (isset($_REQUEST['filter'])) {
                 if ($_REQUEST['filter'] == '') {
                     unset($_REQUEST['filter']);
@@ -76,10 +70,10 @@ switch ($type_manager) {
                     $sql .= " OR tbl_customer_customer.customer_phone LIKE '%{$filter}%' )";
                 }
             }
-
+		
             $sql .= " GROUP BY tbl_customer_customer.id";
             $result_arr = array();
-
+		
             $total = count(db_fetch_array($sql));
             $limit = 20;
             $page = 1;
@@ -93,7 +87,7 @@ switch ($type_manager) {
 
             $total_page = ceil($total / $limit);
             $start = ($page - 1) * $limit;
-
+            
             $result_arr['success'] = 'true';
 
             $result_arr['total'] = strval($total);
@@ -114,8 +108,6 @@ switch ($type_manager) {
                             break;
                         }
                 }
-            }else{
-                $sql .= " ORDER BY count DESC LIMIT {$start},{$limit}";
             }
             $result_arr['success'] = "true";
             $result_arr['total'] = strval($total);
@@ -126,17 +118,17 @@ switch ($type_manager) {
             if ($nums > 0) {
                 while ($row = db_assoc($result)) {
                     $result_item = array(
-                        'id_customer' => (isset($row['customer_id']) && !empty($row['customer_id'])) ? $row['customer_id'] : "",
+                        'id_customer' => (isset($row['customer_id']) && !empty($row['customer_id']))?$row['customer_id']:"",
                         'customer_name' => $row['customer_fullname'],
                         'customer_phone' => $row['customer_phone'],
-                        'percent_win' => (isset($row['percent_win']) && !empty($row['percent_win'])) ? $row['percent_win'] : "0",
+                        'percent_win' => (isset($row['percent_win']) && !empty($row['percent_win']))?$row['percent_win']:"0",
                         'total_trade' => $row['total_trade'],
-                        'trading_log' => (!empty($row['trading_log'])) ? date("d/m/Y", $row['trading_log']) : "",
+                        'trading_log' => (!empty($row['trading_log']))?date("d/m/Y", $row['trading_log']):"",
                     );
                     array_push($result_arr['data'], $result_item);
                 }
                 reJson($result_arr);
-            } else {
+            }else{
                 returnError("Danh sách trống");
             }
             break;

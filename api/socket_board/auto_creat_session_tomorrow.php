@@ -93,7 +93,7 @@ if ($nums > 0) {
         $time_start = $time_open_tomorrow;
 
         for ($i = 1; $i <= $quantity; $i++) {
-            $time_session = $time_start + $exchange_period;
+            $time_session = $time_start + $time_living;
             $time_break = $time_session - $time_idle;  // mặc đinh thời gian không cho phép đặt cược là 60s
             $sql = "INSERT INTO tbl_exchange_period SET 
                     id_exchange = '$id_exchange',

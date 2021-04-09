@@ -75,7 +75,7 @@ if ($type_customer == 'trainghiem') {
 
 
 if (isset($_REQUEST['customer_introduce']) && !(empty($_REQUEST['customer_introduce']))) {
-    if(is_username($customer_introduce)){
+    if(is_username($_REQUEST['customer_introduce'])){
         $customer_introduce = $_REQUEST['customer_introduce'];
     }else{
         returnError("Mã giới thiệu không đúng định dạng");

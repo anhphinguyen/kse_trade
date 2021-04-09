@@ -34,6 +34,10 @@ switch ($detect) {
 
     
     /*admin board*/
+    case 'notify_manager':{
+        include_once 'admin_board/notify_manager.php';
+        break;
+    }
     case 'exchange_update':{
         include_once 'admin_board/exchange_update.php';
         break;
@@ -202,6 +206,14 @@ switch ($detect) {
         break;
     }
     /*viewlist board*/
+    case 'get_notify':{
+        include_once 'viewlist_board/get_notify.php';
+        break;
+    }
+    case 'statictis_money':{
+        include_once 'viewlist_board/statictis_money.php';
+        break;
+    }
     case 'check_sign_out':{
         include_once 'viewlist_board/check_sign_out.php';
         break;

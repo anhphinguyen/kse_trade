@@ -57,6 +57,7 @@ switch ($typeManager) {
             $dir_save_request = handing_file_img($request_img, $dir_save_request_img);
             $sql = "UPDATE `tbl_request_payment`
                     SET `request_img` = '{$dir_save_request}',
+                        `request_completed` = '".time()."',
                         `request_status` = '3'
                     WHERE `id` = '{$id_request}'";
 

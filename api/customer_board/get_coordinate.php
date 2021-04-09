@@ -33,9 +33,8 @@ for ($i = 0; $i < $stock_quantity; $i++) {
                     LEFT JOIN tbl_exchange_period ON tbl_graph_info.id_period = tbl_exchange_period.id
                     WHERE 
                     tbl_exchange_period.period_open <= '$day_today'
+                    AND tbl_exchange_period.period_close > '$day_today'
                     ";
-    // echo $sql;
-    // exit();
 
     $result = db_qr($sql);
     $nums = db_nums($result);
