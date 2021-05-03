@@ -61,6 +61,7 @@ switch ($typeManager) {
                             `popup_title` = '{$popup_title}',
                             `popup_content` = '{$popup_content}'
                             ";
+		
         if (mysqli_query($conn, $sql)) {
             returnSuccess("Tạo thông báo thành công");
         } else {

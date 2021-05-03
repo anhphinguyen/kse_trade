@@ -23,12 +23,25 @@ $num = db_nums($result);
 if ($num > 0) {
     while ($row = db_assoc($result)) {
         $id_session = $row['id'];
+        $time_block = $row['period_close'];
         $session_time_close = strval((int)$row['period_close'] - 1);
     }
 } else {
     returnError('Chưa có phiên được tạo');
 }
+//////////////////////__GET_GRAPH_////////////////////////////////////////
+$sql_get_coordinate_g = "SELECT point_map FROM tbl_graph_info
+                            WHERE id_period = '$id_session'";
 
+$result_get_coordinate_g = db_qr($sql_get_coordinate_g);
+$nums_get_coordinate_g = db_nums($result_get_coordinate_g);
+
+if ($nums_get_coordinate_g > 0) {
+    while ($row_get_coordinate_g = db_assoc($result_get_coordinate_g)) {
+        $coordinate_g = $row_get_coordinate_g['point_map'];
+    }
+}
+//////////////////////__GET_GRAPH_////////////////////////////////////////
 $sql = "SELECT * FROM tbl_exchange_period 
         WHERE period_open <= '$session_time_break'
         AND period_point_idle > '$session_time_break'";
@@ -38,7 +51,9 @@ $nums = db_nums($result);
 if ($nums > 0) {
     $result_item = array(
         'status_trade' => "trading",
-        'result_trade' => (isset($result_trade)&&!empty($result_trade))?$result_trade:"",
+        'time_block' => $time_block,
+        'coordinate_g' => isset($coordinate_g) ? $coordinate_g : "null",
+        'result_trade' => "",////
     );
     array_push($result_arr['data'], $result_item);
     reJson($result_arr);
@@ -52,7 +67,6 @@ $result = db_qr($sql);
 $nums = db_nums($result);
 
 if ($nums > 0) {
-
     // WIN LOSE 
     $total_trade_up = get_total_money($id_session, 'up');
     $total_trade_down = get_total_money($id_session, 'down');
@@ -80,10 +94,14 @@ if ($nums > 0) {
 
     $result_item = array(
         'status_trade' => "block",
+        'time_block' => $time_block,
+        'coordinate_g' => isset($coordinate_g) ? $coordinate_g : "null",
         'result_trade' => (isset($result_trade)&&!empty($result_trade))?$result_trade:"",
     );
     array_push($result_arr['data'], $result_item);
     reJson($result_arr);
+}else{
+    returnError("Lỗi truy vấn trading");
 }
 
 

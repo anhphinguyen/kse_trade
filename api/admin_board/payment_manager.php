@@ -62,7 +62,22 @@ switch ($typeManager) {
                     WHERE `id` = '{$id_request}'";
 
             if (db_qr($sql)) {
-                $sql = "UPDATE tbl_customer_customer SET customer_wallet_payment = '0' WHERE id = '$id_customer'";
+                $sql = "SELECT request_value FROM tbl_request_payment WHERE id = '$id_request'";
+                $result = db_qr($sql);
+                if(db_nums($result) > 0){
+                    while($row = db_assoc($result)){
+                        $request_value = $row['request_value'];
+                    }
+                }
+
+                $sql = "SELECT customer_wallet_payment FROM tbl_customer_customer WHERE id = '$id_customer'";
+                $result = db_qr($sql);
+                if(db_nums($result) > 0){
+                    while($row = db_assoc($result)){
+                        $customer_wallet_payment_update = strval((int)$row['customer_wallet_payment'] - (int)$request_value);
+                    }
+                }
+                $sql = "UPDATE tbl_customer_customer SET customer_wallet_payment = '$customer_wallet_payment_update' WHERE id = '$id_customer'";
                 if (db_qr($sql)) {
                     $title = "Thông báo xác nhận yêu cầu rút tiền!!!";
                     $bodyMessage = "Yêu cầu rút tiền của bạn đã được xác nhận!";

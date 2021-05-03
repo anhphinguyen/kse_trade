@@ -23,6 +23,14 @@ switch ($typeManager) {
                 $id_account = $_REQUEST['id_account'];
             }
         }
+        $id_type = '';
+        if (isset($_REQUEST['id_type'])) {
+            if ($_REQUEST['id_type'] == '') {
+                unset($_REQUEST['id_type']);
+            } else {
+                $id_type = $_REQUEST['id_type'];
+            }
+        }
         $filter = '';
         if (isset($_REQUEST['filter'])) {
             if ($_REQUEST['filter'] == '') {
@@ -43,6 +51,9 @@ switch ($typeManager) {
         }
         if (!empty($id_account)) {
             $sql .= " AND id = '$id_account'";
+        }
+        if (!empty($id_type)) {
+            $sql .= " AND id_type = '$id_type'";
         }
 
         // echo $sql;
@@ -95,6 +106,9 @@ switch ($typeManager) {
         }
         if (!empty($id_account)) {
             $sql .= " AND tbl_account_account.id = '$id_account'";
+        }
+        if (!empty($id_type)) {
+            $sql .= " AND tbl_account_account.id_type = '$id_type'";
         }
 
         $sql .= " ORDER BY tbl_account_account.id DESC  LIMIT $start,$limit";
@@ -315,6 +329,30 @@ switch ($typeManager) {
             $query .= " WHERE id = '" . $idUser . "'";
             // Create post
             if ($conn->query($query)) {
+                $check--;
+            }
+        }
+        $customer_introduce = '';
+        if (isset($_REQUEST['account_code']) && !empty($_REQUEST['account_code'])) {
+            $sql = "SELECT account_code FROM tbl_account_account WHERE id = '$idUser'";
+            $result = db_qr($sql);
+            if(db_nums($result) > 0){
+                while($row = db_assoc($result)){
+                    $customer_introduce = $row['account_code'];
+                }
+            }
+            $check++;
+            $query = "UPDATE tbl_account_account  SET ";
+            $query .= " account_code  = '" . $_REQUEST['account_code'] . "' ";
+            $query .= " WHERE id = '" . $idUser . "'";
+
+            db_qr($query);
+            $query_customer = "UPDATE tbl_customer_customer  SET ";
+            $query_customer .= " customer_introduce  = '" . $_REQUEST['account_code'] . "' ";
+            $query_customer .= " WHERE customer_introduce = '" . $customer_introduce . "'";
+           
+            // Create post
+            if ($conn->query($query_customer)) {
                 $check--;
             }
         }

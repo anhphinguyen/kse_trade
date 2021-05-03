@@ -1,15 +1,99 @@
 <?php
+
+function get_discount($count) {
+    switch ($count) {
+        case 1: {
+                $fee = 0;
+                break;
+            }
+        case 2: {
+                $fee = 3;
+
+                break;
+            }
+        case 3: {
+                $fee = 5;
+                break;
+            }
+        case 4: {
+                $fee = 8;
+                break;
+            }
+        case 5: {
+                $fee = 10;
+                break;
+            }
+        case 6: {
+                $fee = 15;
+                break;
+            }
+        default: {
+                $fee = 20;
+                break;
+            }
+    }
+   
+    return $fee;
+}
+
+function checkweekOfMonth($dt)
+{
+    // $dt = strtotime($qDate);
+    $day = date('j', $dt);
+    $month = date('m', $dt);
+    $year = date('Y', $dt);
+    $totalDays = date('t', $dt);
+    $weekCnt = 1;
+    $retWeek = 0;
+    
+    for ($i = 1; $i <= $totalDays; $i ++) {
+        $curDay = date("N", mktime(0, 0, 0, $month, $i, $year));
+        
+        if ($curDay == 7) {
+            
+            if ($i == $day) {
+                $retWeek = $weekCnt + 1;
+            }
+            $weekCnt ++;
+        } else {
+            if ($i == $day) {
+                $retWeek = $weekCnt;
+            }
+        }
+    }
+    
+    return $retWeek;
+}
+function trading_result_demo_by_trading_type($id_session, $trading_type = '', $trading_result = '')
+{
+    $sql = "UPDATE tbl_customer_demo_log SET trading_result = '$trading_result' WHERE id_exchange_period = '$id_session' AND trading_type = '$trading_type'";
+    db_qr($sql);
+}
+function trading_result_by_trading_type($id_session, $trading_type = '', $trading_result = '')
+{
+    $sql = "UPDATE tbl_trading_log SET trading_result = '$trading_result' WHERE id_exchange_period = '$id_session' AND trading_type = '$trading_type'";
+    db_qr($sql);
+}
+function update_period_result($id_session, $result = '')
+{
+    $sql = "UPDATE tbl_exchange_period SET period_result = '$result' WHERE id = '$id_session'";
+    db_qr($sql);
+}
+
 function result_down($id_session)
 {
+    // update_period_result($id_session, 'down');
     $sql = "UPDATE tbl_exchange_period SET period_result = 'down' WHERE id = '$id_session' ";
     db_qr($sql);
-
+    // trading_result_by_trading_type($id_session, 'down', 'win');
+    // trading_result_by_trading_type($id_session, 'up', 'lose');
     $sql = "UPDATE tbl_trading_log SET trading_result = 'win' WHERE id_exchange_period = '$id_session' AND trading_type = 'down' ";
     db_qr($sql);
 
     $sql = "UPDATE tbl_trading_log SET trading_result = 'lose' WHERE id_exchange_period = '$id_session' AND trading_type = 'up' ";
     db_qr($sql);
-
+    // trading_result_demo_by_trading_type($id_session, 'down', 'win');
+    // trading_result_demo_by_trading_type($id_session, 'up', 'lose');
     $sql = "UPDATE tbl_customer_demo_log SET trading_result = 'win' WHERE id_exchange_period = '$id_session' AND trading_type = 'down'";
     db_qr($sql);
 
@@ -21,15 +105,19 @@ function result_down($id_session)
 }
 function result_up($id_session)
 {
+    // update_period_result($id_session, 'up');
     $sql = "UPDATE tbl_exchange_period SET period_result = 'up' WHERE id = '$id_session' ";
     db_qr($sql);
 
+    // trading_result_by_trading_type($id_session, 'down', 'lose');
+    // trading_result_by_trading_type($id_session, 'up', 'win');
     $sql = "UPDATE tbl_trading_log SET trading_result = 'lose' WHERE id_exchange_period = '$id_session' AND trading_type = 'down' ";
     db_qr($sql);
 
     $sql = "UPDATE tbl_trading_log SET  trading_result = 'win' WHERE id_exchange_period = '$id_session' AND trading_type = 'up' ";
     db_qr($sql);
-
+    // trading_result_demo_by_trading_type($id_session, 'down', 'lose');
+    // trading_result_demo_by_trading_type($id_session, 'up', 'win');
     $sql = "UPDATE tbl_customer_demo_log SET trading_result = 'lose' WHERE id_exchange_period = '$id_session' AND trading_type = 'down' ";
     db_qr($sql);
 
@@ -37,16 +125,6 @@ function result_up($id_session)
     db_qr($sql);
     customer_add_money($id_session, 'up');
     demo_add_money($id_session, 'up');
-}
-function trading_result_by_trading_type($id_session, $trading_type = '', $trading_result = '')
-{
-    $sql = "UPDATE tbl_trading_log SET trading_result = '$trading_result' WHERE id_exchange_period = '$id_session' AND trading_type = '$trading_type'";
-    db_qr($sql);
-}
-function update_period_result($id_session, $result = '')
-{
-    $sql = "UPDATE tbl_exchange_period SET period_result = '$result' WHERE id = '$id_session'";
-    db_qr($sql);
 }
 
 function get_total_money($id_session, $trading_type = '')
@@ -137,7 +215,7 @@ function demo_add_money($id_session, $trading_type = "")
 }
 function customer_add_money($id_session, $trading_type = "")
 {
-    $sql_win = "SELECT * FROM tbl_trading_log WHERE id_exchange_period = '$id_session' AND trading_type = '$trading_type'";
+    $sql_win = "SELECT * FROM tbl_trading_log WHERE id_exchange_period = '$id_session' AND trading_type = '$trading_type'"; 
 
     $result_win = db_qr($sql_win);
     $num_win = db_nums($result_win);

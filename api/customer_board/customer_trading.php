@@ -16,6 +16,18 @@ if (isset($_REQUEST['id_customer']) && !empty($_REQUEST['id_customer'])) {
     returnError("Nhập id_customer");
 }
 
+$exchange_active = 'Y';
+$sql_check_exchange_active = "SELECT * FROM tbl_exchange_exchange WHERE 1=1";
+$result_check_exchange_active = db_qr($sql_check_exchange_active);
+$num_result_check_exchange_active = db_nums($result_check_exchange_active);
+if ($num_result_check_exchange_active > 0) {
+    while ($row_check_exchange_active = db_assoc($result_check_exchange_active)) {
+        $exchange_active = $row_check_exchange_active['exchange_active'];
+    }
+}
+if($exchange_active == 'N'){
+    returnError("Sàn giao dịch đang bảo trì, vui lòng quay lại sau!");
+}
 
 $time = time();
 $sql = "SELECT * FROM tbl_exchange_period WHERE period_open <= '$time' AND period_close > '$time'";
@@ -33,6 +45,14 @@ $trading_log = time();
 
 if (isset($_REQUEST['trading_bet']) && !empty($_REQUEST['trading_bet'])) {
     $trading_bet = $_REQUEST['trading_bet'];
+    if($trading_bet < 30000){
+        returnError("Số tiền đặt cược tối thiểu là 30.000, xin vui lòng đặt thêm!");
+    }
+    if (strpos($trading_bet, '.') !== false)
+                    $trading_bet = str_replace(".", "", $trading_bet);
+
+                if (strpos($trading_bet, ',') !== false)
+                    $trading_bet = str_replace(",", "", $trading_bet);
 } else {
     returnError("Nhập trading_bet");
 }

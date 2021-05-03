@@ -7,7 +7,7 @@ if (isset($_REQUEST['session_time_open']) && !empty($_REQUEST['session_time_open
 
 
 
-$sql = "SELECT * FROM tbl_exchange_period 
+$sql = "SELECT period_open,id_exchange,id FROM tbl_exchange_period 
         WHERE period_open <= '$session_time_open' 
         AND period_close > '$session_time_open'";
 
@@ -45,7 +45,7 @@ $sql = "UPDATE tbl_exchange_period
 db_qr($sql);
 
 
-$sql = "SELECT * FROM tbl_graph_info WHERE id_period = '$id_session'";
+$sql = "SELECT id,id_exchange,id_period,x_y,point_map FROM tbl_graph_info WHERE id_period = '$id_session'";
 
 
 $result = db_qr($sql);

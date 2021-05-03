@@ -26,9 +26,10 @@ $num = db_nums($result);
 
 if ($num > 0) {
     while ($row = db_assoc($result)) {
-        $id_session = $row['id'];
+        // $id_session = $row['id'];
+        $id_session = 105929;
         // $exchange_percent = $row['exchange_percent'];
-        $session_time_close = strval((int)$row['period_close'] - 1);
+        $session_time_close = strval((int)$row['period_close']);
     }
 } else {
     returnError('Chưa có phiên được tạo');
@@ -60,37 +61,27 @@ if ($nums_trade_down > 0) {
     }
 }
 
-if ($total_trade_up <= $total_trade_down) {
+if ($total_trade_up < $total_trade_down) {
     $result_trade = "up";
     // Cộng tiền cho customer
     if ($time_break >= $session_time_close) {
-        $sql = "UPDATE tbl_exchange_period SET period_result = 'up' WHERE id = '$id_session' ";db_qr($sql);
-
-        $sql = "UPDATE tbl_trading_log SET trading_result = 'lose' WHERE id_exchange_period = '$id_session' AND trading_type = 'down' "; db_qr($sql);
-    
-        $sql = "UPDATE tbl_trading_log SET  trading_result = 'win' WHERE id_exchange_period = '$id_session' AND trading_type = 'up' "; db_qr($sql);
-    
-        $sql = "UPDATE tbl_customer_demo_log SET trading_result = 'lose' WHERE id_exchange_period = '$id_session' AND trading_type = 'down' "; db_qr($sql);
-    
-        $sql = "UPDATE tbl_customer_demo_log SET trading_result = 'win' WHERE id_exchange_period = '$id_session'  AND trading_type = 'up' "; db_qr($sql);
-        customer_add_money($id_session, 'up');
-        demo_add_money($id_session, 'up');
+        result_up($id_session);
     }
-} else {
+} elseif ($total_trade_up > $total_trade_down) {
     $result_trade = "down";
     // Cộng tiền cho customer
     if ($time_break >= $session_time_close) {
-        $sql = "UPDATE tbl_exchange_period SET period_result = 'down' WHERE id = '$id_session' "; db_qr($sql);
-
-        $sql = "UPDATE tbl_trading_log SET trading_result = 'win' WHERE id_exchange_period = '$id_session' AND trading_type = 'down' "; db_qr($sql);
-    
-        $sql = "UPDATE tbl_trading_log SET trading_result = 'lose' WHERE id_exchange_period = '$id_session' AND trading_type = 'up' "; db_qr($sql);
-    
-        $sql = "UPDATE tbl_customer_demo_log SET trading_result = 'win' WHERE id_exchange_period = '$id_session' AND trading_type = 'down'"; db_qr($sql);
-    
-        $sql = "UPDATE tbl_customer_demo_log SET trading_result = 'lose' WHERE id_exchange_period = '$id_session' AND trading_type = 'up' "; db_qr($sql);
-        customer_add_money($id_session, 'down');
-        demo_add_money($id_session, 'down');
+        result_down($id_session);
+    }
+} else {
+    $result_trade = array('up', 'down');
+    $result_random = array_rand($result_trade);
+    if ($time_break >= $session_time_close) {
+        if ($result_trade[$result_random] == 'up') {
+            result_up($id_session);
+        } else {
+            result_down($id_session);
+        }
     }
 }
 

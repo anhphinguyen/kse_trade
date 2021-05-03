@@ -142,3 +142,25 @@ Ngay 13-03-2021
  * push notify : gửi req rút tiền, support    
  * bug : sale_support_customer : chưa lọc theo đc khách hàng giao dịch nhiều, giao dịch ít 
        : kiểm tra sàn bảo trì k cho trade              
+
+Ngày 12-04-2021
+      Vấn đề cải thiện giao diện sử dụng & bổ sung chức năng
+      Quản lý Admin
+      1.Bổ sung thêm chức năng kiểm tra nhân viên kinh doanh đã giới thiệu được bao nhiêu khách hàng VVVV
+      2.Quản lý yêu cầu rút tiền , bổ sung thêm số điện thoại khách hàng để kiểm tra . XXXX
+      3.Quản lý yêu cầu rút tiền , bổ sung thêm bộ lọc trạng thái , hiện tại các trạng thái filter chung nên sẽ khó cho khách hàng trong việc quản lý trạng thái các đơn .  VVVVV
+      4.Báo cáo khách hàng của nhân viên kinh doanh , Bản Web thiếu tổng số khách hàng của 1 nhân viên kinh doanh XXXXX
+      5. Báo cáo tổng tiền nạp rút , mặc định cho hiển thị số tiền của tháng hiện tại. Bổ sung thêm yêu cầu : hiển thị danh sách có bao nhiêu người giao dịch (nạp - rút )  -------api
+      6. Danh sách khách hàng bổ sung ngày tháng năm đăng ký trên giao diện hiển thị  VVVVV
+      7. Bổ sung thêm chức năng điều chỉnh Tiền cá cược trên ví của khách hàng (phát sinh 1 số trường hợp khách hàng bị phạt nên nhà cái trực tiếp lấy lại tiền cá cược của khách hàng hoặc nhà cái tạo lệnh nạp sai số tiền nên cần điều chỉnh lại)
+
+
+Ngày 27-04-2021
+      Update customer_disable
+      -     list_customer_customer
+      -     list_customer_detail
+      -     customer_manager
+      -     check_customer_disable (new)
+      -     sale_support_customer
+      -     login
+      -     index

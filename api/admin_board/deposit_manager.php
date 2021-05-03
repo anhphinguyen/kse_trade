@@ -21,38 +21,127 @@ switch ($typeManager) {
                 returnError("Nhập id_customer");
             }
 
+            $request_type = '1';
+            if (isset($_REQUEST['request_type']) && !(empty($_REQUEST['request_type']))) {
+                $request_type = $_REQUEST['request_type'];
+            }
+
             if (isset($_REQUEST['request_value']) && !(empty($_REQUEST['request_value']))) {
                 $request_value = $_REQUEST['request_value'];
+                if(!is_numeric($request_value)){
+                    returnError("Sai định dạng request_value");  
+                }
+                if (strpos($request_value, '.') !== false)
+                    $request_value = str_replace(".", "", $request_value);
+
+                if (strpos($request_value, ',') !== false)
+                    $request_value = str_replace(",", "", $request_value);
             } else {
-                returnError("Nhập request_value");
+                if($request_type == '2')
+                 returnError("Nhập request_value");
+                 else{
+                    $request_value = '0';
+                 }
             }
+
+            $request_bonus = '0';
+            if (isset($_REQUEST['request_bonus']) && !(empty($_REQUEST['request_bonus']))) {
+                $request_bonus = $_REQUEST['request_bonus'];
+            }
+
+            if($request_value == '0' && $request_bonus =='0')
+            returnError("Nhập số tiền nạp");
 
             $request_code = "NT" . substr(time(), -8);
             $request_time_completed = time();
-            $sql = "INSERT INTO tbl_request_deposit SET
+            if( $request_value != '0'){
+
+                $sql = "INSERT INTO tbl_request_deposit SET
                     id_customer = '$id_customer',
                     request_value = '$request_value',
                     request_time_completed = '$request_time_completed',
+                    request_type = '$request_type',
                     request_code = '$request_code'
                     ";
-            if (db_qr($sql)) {
-                $sql = "SELECT customer_wallet_bet FROM tbl_customer_customer WHERE id = '$id_customer'";
-                $result = db_qr($sql);
-                $nums = db_nums($result);
-                if($nums > 0){
-                    while($row = db_assoc($result)){
-                        $customer_wallet_update = (int)$row['customer_wallet_bet'] + $request_value;
-                    }
-                }
-                $sql = "UPDATE tbl_customer_customer 
-                        SET customer_wallet_bet = '$customer_wallet_update' 
-                        WHERE id = '$id_customer'";
                 if (db_qr($sql)) {
-                    returnSuccess("Tạo lệnh nạp tiền thành công");
-                }else{
-                    returnError("Lỗi truy vấn");
+                    
+                    $sql = "SELECT customer_wallet_bet,customer_wallet_rewards FROM tbl_customer_customer WHERE id = '$id_customer'";
+                        $result = db_qr($sql);
+                        $nums = db_nums($result);
+                        $customer_wallet_update = 0;
+                        $sql = "";
+                        if($nums > 0){
+                            while($row = db_assoc($result)){
+                                if($request_type == '1'){
+                                    $customer_wallet_update = (int)$row['customer_wallet_bet'] + $request_value + (int)$request_bonus;
+                                    $sql = "UPDATE tbl_customer_customer 
+                                                SET customer_wallet_bet = '$customer_wallet_update' 
+                                                WHERE id = '$id_customer'";
+                                }else{
+                                    $customer_wallet_update = (int)$row['customer_wallet_rewards'] + $request_value ;
+                                    $sql = "UPDATE tbl_customer_customer 
+                                                SET customer_wallet_rewards = '$customer_wallet_update' 
+                                                WHERE id = '$id_customer'";
+                                }
+                                
+                            }
+                        }
+                        
+                        if (db_qr($sql)) {
+                            if($request_bonus != '0' && $request_type == '1'){
+                                $sql_get_id_account_by_customer = "SELECT tbl_account_account.id AS id_account
+                                FROM tbl_customer_customer 
+                                    LEFT JOIN tbl_account_account ON tbl_account_account.account_code = tbl_customer_customer.customer_introduce
+                                    WHERE tbl_customer_customer.id = '$id_customer'
+                                ";
+                                $result_get_id_account_by_customer = db_qr($sql_get_id_account_by_customer);
+                                $nums_result_get_id_account_by_customer = db_nums($result_get_id_account_by_customer);
+                            
+                                $id_account = '0';
+                                if($nums_result_get_id_account_by_customer > 0){
+                                    while($row_get_id_account_by_customer = db_assoc($result_get_id_account_by_customer)){
+                                        $id_account = $row_get_id_account_by_customer['id_account'];
+                                    }
+                                }
+
+
+                                $sql_insert_bonus = "INSERT INTO tbl_request_bonus SET
+                                id_customer = '$id_customer',
+                                request_value = '$request_bonus',
+                                id_account = '$id_account',
+                                request_time_completed = '$request_time_completed',
+                                request_code = '$request_code'
+                                ";
+                                db_qr($sql_insert_bonus);
+                            }
+                            
+                            returnSuccess("Tạo lệnh nạp tiền thành công");
+                        }else{
+                            returnError("Lỗi truy vấn");
+                        }
+                    
                 }
+            }else{
+                        $sql = "SELECT customer_wallet_bet,customer_wallet_rewards FROM tbl_customer_customer WHERE id = '$id_customer'";
+                        $result = db_qr($sql);
+                        $nums = db_nums($result);
+                        $customer_wallet_update = 0;
+                        if($nums > 0){
+                            while($row = db_assoc($result)){
+                                $customer_wallet_update = (int)$row['customer_wallet_bet'] + (int)$request_bonus;
+                                    $sql = "UPDATE tbl_customer_customer 
+                                                SET customer_wallet_bet = '$customer_wallet_update' 
+                                                WHERE id = '$id_customer'";
+                            }
+                        }
+                        if (db_qr($sql)) {
+                            returnSuccess("Tạo lệnh nạp tiền thành công");
+                        }else{
+                            returnError("Lỗi truy vấn");
+                        }
+
             }
+            
             break;
         }
     case 'list_customer': {

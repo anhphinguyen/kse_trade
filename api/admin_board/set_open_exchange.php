@@ -12,6 +12,7 @@ if(isset($_REQUEST['exchange_open']) && !empty($_REQUEST['exchange_open'])){
             }
         }
     }
+	
 }else{
     returnError("Nhập exchange_open");
 }
@@ -33,14 +34,15 @@ if(isset($_REQUEST['exchange_close']) && !empty($_REQUEST['exchange_close'])){
 }else{
     returnError("Nhập exchange_close");
 }
-
 if($exchange_close < $exchange_open){
 	returnError("Thời gian đóng sàn không thể thấp hơn thời gian mở sàn!");
 }
-
 $delta_time = $exchange_close - $exchange_open;
 
 $quantity = $delta_time / $exchange_period;
+if((int)$quantity <= 0 ){
+	returnError("Không thể tạo sàn vì số lượng phiên đang bằng 0");
+}
 $time_start = $exchange_open;
 
 $sql = "INSERT INTO tbl_exchange_exchange SET
@@ -49,7 +51,7 @@ $sql = "INSERT INTO tbl_exchange_exchange SET
         exchange_close = '$exchange_close',
         exchange_period = '$exchange_period'
         ";
-        
+
 if(db_qr($sql)){
     $id_stock = mysqli_insert_id($conn);
     $sql = "SELECT * FROM tbl_exchange_exchange WHERE id = '$id_stock'";
@@ -71,7 +73,7 @@ if(db_qr($sql)){
                 period_open = '$time_start', 
                 period_point_idle = '$time_break',
                 period_close = '$time_session'";
-                
+        
         if(db_qr($sql)){
             $success = true;
         };

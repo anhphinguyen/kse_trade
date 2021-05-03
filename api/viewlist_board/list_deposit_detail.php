@@ -41,7 +41,5 @@ if ($nums > 0) {
 
         array_push($request_arr['data'], $request_item);
     }
-    reJson($request_arr);
-} else {
-    returnError("Không tìm thấy yêu cầu");
 }
+reJson($request_arr);

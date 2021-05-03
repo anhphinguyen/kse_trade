@@ -27,7 +27,7 @@ if (db_qr($sql)) {
             }
             $action = "service_exchange";
             $type_send = 'topic';
-            
+            $to = 'KSE_service_exchange';
             pushNotification($title, $bodyMessage, $action, $to, $type_send);
             returnSuccess("Cập nhật thành công");
         }

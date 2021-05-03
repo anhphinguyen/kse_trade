@@ -1,7 +1,7 @@
 <?php
 
 $day_today = time();
-$sql = "SELECT * FROM tbl_exchange_exchange WHERE exchange_open > '1615449600'";
+$sql = "SELECT * FROM tbl_exchange_exchange WHERE exchange_open > '$day_today'";
 
 $result = db_qr($sql);
 $nums = db_nums($result);

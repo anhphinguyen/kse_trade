@@ -161,9 +161,7 @@ switch ($typeManager) {
             while ($row = db_assoc($result)) {
                 $id_session = $row['id'];
             }
-        } else {
-            returnError('Chưa có phiên được tạo');
-        }
+        } 
 
 
 

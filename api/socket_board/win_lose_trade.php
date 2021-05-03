@@ -73,10 +73,11 @@ if ($total_trade_up < $total_trade_down) {
         result_down($id_session);
     }
 } else {
-    $result_trade = array('up', 'down');
-    $result_random = array_rand($result_trade);
+    $result_trade_arr = array('up', 'down');
+    $result_random = array_rand($result_trade_arr);
+    $result_trade = $result_trade_arr[$result_random];
     if ($time_break >= $session_time_close) {
-        if ($result_trade[$result_random] == 'up') {
+        if ($result_trade === 'up') {
             result_up($id_session);
         } else {
             result_down($id_session);

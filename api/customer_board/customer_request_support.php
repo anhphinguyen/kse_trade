@@ -27,12 +27,12 @@ switch ($type_manager) {
             if (isset($_REQUEST['id_support_category'])) {
                 if ($_REQUEST['id_support_category'] == '') {
                     unset($_REQUEST['id_support_category']);
-                    returnError("Bạn chưa chọn yêu cầu hỗ trợ");
+                    returnError("Nhập id_support_category");
                 } else {
                     $id_support_category = $_REQUEST['id_support_category'];
                 }
             } else {
-                returnError("Bạn chưa chọn yêu cầu hỗ trợ");
+                returnError("Nhập id_support_category");
             }
 
             if (isset($_REQUEST['support_request'])) {
@@ -40,6 +40,7 @@ switch ($type_manager) {
                     unset($_REQUEST['support_request']);
                 } else {
                     $support_request = htmlspecialchars($_REQUEST['support_request']);
+					
                 }
             }
 
