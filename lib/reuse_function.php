@@ -108,7 +108,6 @@ function result_up($id_session)
     // update_period_result($id_session, 'up');
     $sql = "UPDATE tbl_exchange_period SET period_result = 'up' WHERE id = '$id_session' ";
     db_qr($sql);
-
     // trading_result_by_trading_type($id_session, 'down', 'lose');
     // trading_result_by_trading_type($id_session, 'up', 'win');
     $sql = "UPDATE tbl_trading_log SET trading_result = 'lose' WHERE id_exchange_period = '$id_session' AND trading_type = 'down' ";
@@ -189,7 +188,7 @@ function get_customer_paymented_in_day($id_customer)
 }
 function demo_add_money($id_session, $trading_type = "")
 {
-    $sql_win = "SELECT * FROM tbl_customer_demo_log WHERE id_exchange_period = '$id_session' AND trading_type = '$trading_type'";
+    $sql_win = "SELECT trading_bet,trading_percent,id_customer FROM tbl_customer_demo_log WHERE id_exchange_period = '$id_session' AND trading_type = '$trading_type'";
 
     $result_win = db_qr($sql_win);
     $num_win = db_nums($result_win);
@@ -215,7 +214,7 @@ function demo_add_money($id_session, $trading_type = "")
 }
 function customer_add_money($id_session, $trading_type = "")
 {
-    $sql_win = "SELECT * FROM tbl_trading_log WHERE id_exchange_period = '$id_session' AND trading_type = '$trading_type'"; 
+    $sql_win = "SELECT trading_bet,trading_percent,id_customer FROM tbl_trading_log WHERE id_exchange_period = '$id_session' AND trading_type = '$trading_type'"; 
 
     $result_win = db_qr($sql_win);
     $num_win = db_nums($result_win);

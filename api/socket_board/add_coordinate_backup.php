@@ -5,7 +5,9 @@ if (isset($_REQUEST['session_time_open']) && !empty($_REQUEST['session_time_open
     returnError("Nhập session_time_open");
 }
 
-$sql = "SELECT period_open,id_exchange,id FROM tbl_exchange_period 
+
+
+$sql = "SELECT * FROM tbl_exchange_period 
         WHERE period_open <= '$session_time_open' 
         AND period_close > '$session_time_open'";
 
@@ -16,8 +18,6 @@ if ($nums > 0) {
         $id_session = $row['id'];
         $id_stock = $row['id_exchange'];
         $time_open = $row['period_open'];
-        $time_block = $row['period_point_idle'];
-        $time_close = $row['period_close'];
         $day_session = date('d', $row['period_open']);
     }
 } else {
@@ -45,7 +45,7 @@ $sql = "UPDATE tbl_exchange_period
 db_qr($sql);
 
 
-$sql = "SELECT id,id_exchange,id_period,x_y,point_map FROM tbl_graph_info WHERE id_period = '$id_session'";
+$sql = "SELECT * FROM tbl_graph_info WHERE id_period = '$id_session'";
 
 
 $result = db_qr($sql);
@@ -65,17 +65,25 @@ if ($nums > 0) {
         $result_arr['data'] = array();
 
         if (db_qr($sql)) {
-            $sql = "SELECT 
-            tbl_exchange_period.period_open,
-            tbl_exchange_period.period_point_idle,
-            tbl_exchange_period.period_close,
-            tbl_graph_info.point_map
-            FROM tbl_graph_info 
-            LEFT JOIN tbl_exchange_period ON tbl_exchange_period.id = tbl_graph_info.id_period
-            WHERE id_period = '$id_session'";
+            $sql = "SELECT * FROM tbl_exchange_period 
+                    WHERE period_point_idle <= '$session_time_open' 
+                    AND period_close > '$session_time_open'";
+
             $result = db_qr($sql);
             $nums = db_nums($result);
-            if ($session_time_open >= $time_block && $session_time_open < $time_close) {
+            if ($nums > 0) {
+
+                $sql = "SELECT 
+                        tbl_exchange_period.period_open,
+                        tbl_exchange_period.period_point_idle,
+                        tbl_exchange_period.period_close,
+                        tbl_graph_info.*
+                        FROM tbl_graph_info 
+                        LEFT JOIN tbl_exchange_period ON tbl_exchange_period.id = tbl_graph_info.id_period
+                        WHERE id_period = '$id_session'";
+
+                $result = db_qr($sql);
+                $nums = db_nums($result);
                 if ($nums > 0) {
                     while ($row = db_assoc($result)) {
                         $result_item = array(
@@ -90,51 +98,17 @@ if ($nums > 0) {
                     }
                 }
                 reJson($result_arr);
-            } else {
-                if ($nums > 0) {
-                    while ($row = db_assoc($result)) {
-                        $result_item = array(
-                            'id_session' => $row['id_period'],
-                            'status_trade' => 'trading',
-                            'period_open' => $row['period_open'],
-                            'period_point_idle' => $row['period_point_idle'],
-                            'period_close' => $row['period_close'],
-                            'coordinate_g' => $row['point_map']
-                        );
-                        array_push($result_arr['data'], $result_item);
-                    }
-                }
-                reJson($result_arr);
             }
-        };
-    }
-} else {
-    $coordinate_xy_arr = "[" . $coordinate_xy . "]";
-    $sql = "INSERT INTO tbl_graph_info SET
-            id_exchange = '$id_stock',
-            id_period = '$id_session',
-            x_y = '$coordinate_xy_arr',
-            point_map = '$coordinate_xy'";
-
-    if (db_qr($sql)) {
-        $result_arr = array();
-        $result_arr['success'] = "true";
-        $result_arr['data'] = array();
-
-        $sql = "SELECT id FROM tbl_exchange_period WHERE id = '$id_session' AND period_open = '$session_time_open'";
-
-        $result = db_qr($sql);
-        $nums = db_nums($result);
-        if ($nums > 0) {
             $sql = "SELECT 
-                            tbl_exchange_period.period_open,
-                            tbl_exchange_period.period_point_idle,
-                            tbl_exchange_period.period_close,
-                            tbl_graph_info.point_map
-                            FROM tbl_graph_info 
-                            LEFT JOIN tbl_exchange_period ON tbl_exchange_period.id = tbl_graph_info.id_period
-                            WHERE id_period = '$id_session'";
-
+                        tbl_exchange_period.period_open,
+                        tbl_exchange_period.period_point_idle,
+                        tbl_exchange_period.period_close,
+                        tbl_graph_info.*
+                        FROM tbl_graph_info 
+                        LEFT JOIN tbl_exchange_period ON tbl_exchange_period.id = tbl_graph_info.id_period
+                        WHERE id_period = '$id_session'";
+            // echo $sql;
+            // exit();
             $result = db_qr($sql);
             $nums = db_nums($result);
             if ($nums > 0) {
@@ -151,8 +125,54 @@ if ($nums > 0) {
                 }
             }
             reJson($result_arr);
-        }
-    } else {
-        returnError("Lỗi truy vấn tọa độ");
+        };
     }
+}
+
+$coordinate_xy_arr = "[" . $coordinate_xy . "]";
+$sql = "INSERT INTO tbl_graph_info SET
+        id_exchange = '$id_stock',
+        id_period = '$id_session',
+        x_y = '$coordinate_xy_arr',
+        point_map = '$coordinate_xy'";
+
+if (db_qr($sql)) {
+    // $id_insert = mysqli_insert_id($conn);
+    $result_arr = array();
+    $result_arr['success'] = "true";
+    $result_arr['data'] = array();
+
+    $sql = "SELECT * FROM tbl_exchange_period WHERE id = '$id_session' AND period_open = '$session_time_open'";
+
+    $result = db_qr($sql);
+    $nums = db_nums($result);
+    if ($nums > 0) {
+        $sql = "SELECT 
+                        tbl_exchange_period.period_open,
+                        tbl_exchange_period.period_point_idle,
+                        tbl_exchange_period.period_close,
+                        tbl_graph_info.*
+                        FROM tbl_graph_info 
+                        LEFT JOIN tbl_exchange_period ON tbl_exchange_period.id = tbl_graph_info.id_period
+                        WHERE id_period = '$id_session'";
+
+        $result = db_qr($sql);
+        $nums = db_nums($result);
+        if ($nums > 0) {
+            while ($row = db_assoc($result)) {
+                $result_item = array(
+                    'id_session' => $row['id_period'],
+                    'status_trade' => 'trading',
+                    'period_open' => $row['period_open'],
+                    'period_point_idle' => $row['period_point_idle'],
+                    'period_close' => $row['period_close'],
+                    'coordinate_g' => $row['point_map']
+                );
+                array_push($result_arr['data'], $result_item);
+            }
+        }
+        reJson($result_arr);
+    }
+} else {
+    returnError("Lỗi truy vấn tọa độ");
 }

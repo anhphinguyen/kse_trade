@@ -19,6 +19,7 @@ $num = db_nums($result);
 if ($num > 0) {
     while ($row = db_assoc($result)) {
         $id_session = $row['id'];
+        // $exchange_percent = $row['exchange_percent'];
         $time_open = $row['period_open'];
         $time_block = $row['period_point_idle'];
         $time_close = $row['period_close'];
@@ -40,6 +41,12 @@ if ($nums_get_coordinate_g > 0) {
     }
 }
 ////////////////////////////////////////////////////////////////////////////
+// $sql = "SELECT id FROM tbl_exchange_period 
+//         WHERE period_point_idle <= '$session_time_break'
+//         AND period_close > '$session_time_break'";
+
+// $result = db_qr($sql);
+// $nums = db_nums($result);
 
 if ($session_time_break >= $time_block && $session_time_break < $time_close ) {
     $result_item = array(
@@ -52,6 +59,12 @@ if ($session_time_break >= $time_block && $session_time_break < $time_close ) {
     array_push($result_arr['data'], $result_item);
     reJson($result_arr);
 }
+
+// $sql = "SELECT * FROM tbl_exchange_period 
+//         WHERE period_open <= '$session_time_break'
+//         AND period_point_idle > '$session_time_break'";
+// $result = db_qr($sql);
+// $nums = db_nums($result);
 
 if ($session_time_break >= $time_open && $session_time_break < $time_block) {
     $result_item = array(

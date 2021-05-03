@@ -6,6 +6,17 @@ if (isset($_REQUEST['time_break']) && !empty($_REQUEST['time_break'])) {
     $time_break = time();
 }
 
+// $sql = "SELECT id FROM tbl_exchange_period 
+//         WHERE period_open <= '$time_break'
+//         AND period_point_idle > '$time_break'";
+
+// $result = db_qr($sql);
+// $nums = db_nums($result);
+// if ($nums > 0) {
+//     returnError("Chưa đến thời gian dừng đặt cược");
+// }
+
+
 $sql = "SELECT id,period_close FROM tbl_exchange_period 
         WHERE period_open <= '$time_break'
         AND period_close > '$time_break'";
@@ -51,27 +62,39 @@ if ($nums_trade_down > 0) {
 if ($total_trade_up < $total_trade_down) {
     $result_trade = "up";
     // Cộng tiền cho customer
-    if ($time_break === $session_time_close) {
+    if ($time_break >= $session_time_close) {
         result_up($id_session);
     }
 } elseif ($total_trade_up > $total_trade_down) {
     $result_trade = "down";
     // Cộng tiền cho customer
-    if ($time_break === $session_time_close) {
+    if ($time_break >= $session_time_close) {
         result_down($id_session);
     }
 } else {
     $result_trade_arr = array('up', 'down');
     $result_random = array_rand($result_trade_arr);
     $result_trade = $result_trade_arr[$result_random];
-    if ($time_break === $session_time_close) {
+    if ($time_break >= $session_time_close) {
         if ($result_trade === 'up') {
             result_up($id_session);
-        } elseif ($result_trade === 'down') {
+        } else {
             result_down($id_session);
         }
     }
 }
+
+// $sql_session = "SELECT id FROM tbl_exchange_period 
+//                 WHERE period_open <= '$time_break'
+//                 AND period_close >= '$time_break'";
+// $result_session = db_qr($sql_session);
+// $nums_session = db_nums($result_session);
+
+// if ($nums_session > 0) {
+//     while ($row_session = db_assoc($result_session)) {
+//         $id_session = $row_session['id'];
+//     }
+// }
 
 $sql_get_coordinate_g = "SELECT point_map FROM tbl_graph_info
                             WHERE id_period = '$id_session'";
@@ -93,5 +116,6 @@ $result_item = array(
     'time_close' => strval($session_time_close - 1)
 );
 array_push($result_arr['data'], $result_item);
+
 
 reJson($result_arr);
