@@ -1,7 +1,7 @@
 <?php
 
 if (isset($_REQUEST['time_break']) && !empty($_REQUEST['time_break'])) {
-    $time_break = $_REQUEST['time_break'];
+    $time_break = strval($_REQUEST['time_break']);
 } else {
     $time_break = time();
 }
@@ -65,32 +65,22 @@ if ($total_trade_up < $total_trade_down) {
     $result_random = array_rand($result_trade_arr);
     $result_trade = $result_trade_arr[$result_random];
     if ($time_break === $session_time_close) {
+        
         if ($result_trade === 'up') {
             result_up($id_session);
         } elseif ($result_trade === 'down') {
             result_down($id_session);
+        }else{
+            returnError("result_trade null");
         }
     }
 }
 
-$sql_get_coordinate_g = "SELECT point_map FROM tbl_graph_info
-                            WHERE id_period = '$id_session'";
-
-$result_get_coordinate_g = db_qr($sql_get_coordinate_g);
-$nums_get_coordinate_g = db_nums($result_get_coordinate_g);
-
-if ($nums_get_coordinate_g > 0) {
-    while ($row_get_coordinate_g = db_assoc($result_get_coordinate_g)) {
-        $coordinate_g = $row_get_coordinate_g['point_map'];
-    }
-}
 $result_arr = array();
 $result_arr['success'] = "true";
 $result_arr['data'] = array();
 $result_item = array(
     'result_trade' => $result_trade,
-    'coordinate_g' => isset($coordinate_g) ? $coordinate_g : "null",
-    'time_close' => strval($session_time_close - 1)
 );
 array_push($result_arr['data'], $result_item);
 

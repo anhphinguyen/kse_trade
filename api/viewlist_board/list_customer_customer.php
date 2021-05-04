@@ -7,9 +7,14 @@ if (isset($_REQUEST['customer_virtual'])) {
         unset($_REQUEST['customer_virtual']);
     } else {
         $customer_virtual = htmlspecialchars($_REQUEST['customer_virtual']);
-        $sql .= " AND `customer_virtual` LIKE '$customer_virtual'";
+        $sql .= " AND `customer_virtual` = '$customer_virtual'";
     }
 }
+$customer_disable = 'N';
+if (isset($_REQUEST['customer_disable']) && !empty($_REQUEST['customer_disable'])) {
+    $customer_disable = htmlspecialchars($_REQUEST['customer_disable']);
+}
+$sql .= " AND `customer_disable` = '$customer_disable'";
 
 if (isset($_REQUEST['filter'])) {
     if ($_REQUEST['filter'] == '') {
@@ -44,10 +49,10 @@ if (isset($_REQUEST['customer_introduce'])) {
     }
 }
 
-if(!empty($date_begin) && !empty($date_end)){
+if (!empty($date_begin) && !empty($date_end)) {
     $sql .= " AND (DATE(`customer_registered`) >= '$date_begin' AND DATE(`customer_registered`) <= '$date_end')";
 }
-if(!empty($customer_introduce)){
+if (!empty($customer_introduce)) {
     $sql .= " AND  `customer_introduce` = '$customer_introduce' ";
 }
 

@@ -82,18 +82,16 @@ function update_period_result($id_session, $result = '')
 
 function result_down($id_session)
 {
-    // update_period_result($id_session, 'down');
+
     $sql = "UPDATE tbl_exchange_period SET period_result = 'down' WHERE id = '$id_session' ";
     db_qr($sql);
-    // trading_result_by_trading_type($id_session, 'down', 'win');
-    // trading_result_by_trading_type($id_session, 'up', 'lose');
+
     $sql = "UPDATE tbl_trading_log SET trading_result = 'win' WHERE id_exchange_period = '$id_session' AND trading_type = 'down' ";
     db_qr($sql);
 
     $sql = "UPDATE tbl_trading_log SET trading_result = 'lose' WHERE id_exchange_period = '$id_session' AND trading_type = 'up' ";
     db_qr($sql);
-    // trading_result_demo_by_trading_type($id_session, 'down', 'win');
-    // trading_result_demo_by_trading_type($id_session, 'up', 'lose');
+
     $sql = "UPDATE tbl_customer_demo_log SET trading_result = 'win' WHERE id_exchange_period = '$id_session' AND trading_type = 'down'";
     db_qr($sql);
 
@@ -105,18 +103,15 @@ function result_down($id_session)
 }
 function result_up($id_session)
 {
-    // update_period_result($id_session, 'up');
     $sql = "UPDATE tbl_exchange_period SET period_result = 'up' WHERE id = '$id_session' ";
     db_qr($sql);
-    // trading_result_by_trading_type($id_session, 'down', 'lose');
-    // trading_result_by_trading_type($id_session, 'up', 'win');
+
     $sql = "UPDATE tbl_trading_log SET trading_result = 'lose' WHERE id_exchange_period = '$id_session' AND trading_type = 'down' ";
     db_qr($sql);
 
     $sql = "UPDATE tbl_trading_log SET  trading_result = 'win' WHERE id_exchange_period = '$id_session' AND trading_type = 'up' ";
     db_qr($sql);
-    // trading_result_demo_by_trading_type($id_session, 'down', 'lose');
-    // trading_result_demo_by_trading_type($id_session, 'up', 'win');
+
     $sql = "UPDATE tbl_customer_demo_log SET trading_result = 'lose' WHERE id_exchange_period = '$id_session' AND trading_type = 'down' ";
     db_qr($sql);
 
@@ -124,6 +119,7 @@ function result_up($id_session)
     db_qr($sql);
     customer_add_money($id_session, 'up');
     demo_add_money($id_session, 'up');
+    
 }
 
 function get_total_money($id_session, $trading_type = '')
@@ -188,7 +184,7 @@ function get_customer_paymented_in_day($id_customer)
 }
 function demo_add_money($id_session, $trading_type = "")
 {
-    $sql_win = "SELECT trading_bet,trading_percent,id_customer FROM tbl_customer_demo_log WHERE id_exchange_period = '$id_session' AND trading_type = '$trading_type'";
+    $sql_win = "SELECT trading_bet,trading_percent,id_demo FROM tbl_customer_demo_log WHERE id_exchange_period = '$id_session' AND trading_type = '$trading_type'";
 
     $result_win = db_qr($sql_win);
     $num_win = db_nums($result_win);
@@ -198,7 +194,7 @@ function demo_add_money($id_session, $trading_type = "")
             $trading_percent = (int)$row_win['trading_percent'];
             $id_demo = $row_win['id_demo'];
             $sql_wallet = "SELECT demo_wallet_bet FROM tbl_customer_demo WHERE id = '$id_demo'";
-
+            
             $result_wallet = db_qr($sql_wallet);
             $num_wallet = db_nums($result_wallet);
             if ($num_wallet > 0) {
@@ -215,7 +211,7 @@ function demo_add_money($id_session, $trading_type = "")
 function customer_add_money($id_session, $trading_type = "")
 {
     $sql_win = "SELECT trading_bet,trading_percent,id_customer FROM tbl_trading_log WHERE id_exchange_period = '$id_session' AND trading_type = '$trading_type'"; 
-
+    
     $result_win = db_qr($sql_win);
     $num_win = db_nums($result_win);
     if ($num_win > 0) {
@@ -230,7 +226,6 @@ function customer_add_money($id_session, $trading_type = "")
             if ($num_wallet > 0) {
                 while ($row_wallet = db_assoc($result_wallet)) {
                     $customer_wallet_add = $row_wallet['customer_wallet_bet'] + $trading_bet + ($trading_percent * $trading_bet) / 100;
-
                     $sql_add_money = "UPDATE tbl_customer_customer SET customer_wallet_bet = '$customer_wallet_add' WHERE id = '$id_customer'";
 
                     db_qr($sql_add_money);
