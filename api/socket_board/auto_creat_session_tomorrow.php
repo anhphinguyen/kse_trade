@@ -9,7 +9,7 @@ if (isset($_REQUEST['stock_time_close']) && !empty($_REQUEST['stock_time_close']
 
 $stock_time_close_tomorrow = $stock_time_close + 86400;
 
-$sql = "SELECT exchange_open,exchange_close,exchange_period,exchange_idle,id FROM tbl_exchange_exchange WHERE exchange_close = '$stock_time_close'";
+$sql = "SELECT exchange_open,exchange_close,exchange_period,exchange_idle,id FROM tbl_exchange_exchange WHERE exchange_close < '$stock_time_close'";
 $result = db_qr($sql);
 $nums = db_nums($result);
 if ($nums > 0) {
@@ -19,7 +19,6 @@ if ($nums > 0) {
         $time_living = $row['exchange_period'];
         $time_idle = $row['exchange_idle'];
         $id_exchange = $row['id'];
-        // $quantity = ($time_close - $time_open)/$time_living;
     }
 
 

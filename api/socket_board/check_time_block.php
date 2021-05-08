@@ -56,6 +56,7 @@ if ($session_time_break >= $time_block && $session_time_break < $time_close ) {
 if ($session_time_break >= $time_open && $session_time_break < $time_block) {
     $result_item = array(
         'status_trade' => "trading",
+        'id_period' => $id_session,
         'time_open' => $time_open,
         'time_block' => $time_block,
         'time_close' => $time_close,

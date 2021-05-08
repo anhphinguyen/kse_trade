@@ -41,17 +41,18 @@ $sql = "SELECT tbl_customer_customer.customer_fullname,
         tbl_customer_customer.customer_phone,
         
         tbl_trading_log.id_customer as customer_id,
-        (SELECT SUM(trading_bet)  FROM tbl_trading_log WHERE id_customer =customer_id AND id_exchange_period = '$id_session') as bet_total,
+        (SELECT SUM(trading_bet)  FROM tbl_trading_log WHERE id_customer = customer_id AND id_exchange_period = '$id_session') as bet_total,
         (SELECT SUM(trading_bet)  FROM tbl_trading_log WHERE trading_type = 'up' AND id_customer =customer_id AND id_exchange_period = '$id_session' ) as bet_up,
         (SELECT SUM(trading_bet) FROM  tbl_trading_log WHERE trading_type = 'down' AND id_customer =customer_id  AND id_exchange_period = '$id_session') as bet_down 
 
         FROM tbl_customer_customer
         LEFT JOIN tbl_trading_log ON tbl_customer_customer.id = tbl_trading_log.id_customer
         WHERE id_exchange_period = '$id_session'
-        GROUP BY tbl_trading_log.id_customer
+        
         ";
 
 
+$sql .= " GROUP BY tbl_trading_log.id_customer";
 $customer_arr = array();
 
 $total = count(db_fetch_array($sql));

@@ -1,0 +1,3 @@
+<?php
+
+returnSuccess("True");

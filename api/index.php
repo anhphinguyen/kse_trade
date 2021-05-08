@@ -116,6 +116,10 @@ switch ($detect) {
             break;
         }
         /*customer board*/
+    case 'add_money_win': {
+            include_once 'customer_board/add_money_win.php';
+            break;
+         }
     case 'check_customer_disable': {
             include_once 'customer_board/check_customer_disable.php';
             break;
@@ -204,6 +208,10 @@ switch ($detect) {
             break;
         }
         /*socket board*/
+    case 'add_money_win_socket': {
+            include_once 'socket_board/add_money_win_socket.php';
+            break;
+        }
     case 'get_detail_exchange': {
             include_once 'socket_board/get_detail_exchange.php';
             break;

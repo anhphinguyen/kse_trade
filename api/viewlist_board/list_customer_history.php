@@ -140,6 +140,7 @@ $total_page = ceil($total / $limit);
 $start = ($page - 1) * $limit;
 $sql .= " ORDER BY `$tbl_log`.`id` DESC LIMIT {$start},{$limit}";
 
+
 $result_total = db_qr($sql_total);
 if(db_nums($result_total) > 0){
     while($row_total = db_assoc($result_total)){
@@ -172,7 +173,7 @@ if ($nums > 0) {
         $customer_item = array(
             'id_trading' => $row['id'],
             'id_customer' => (isset($row['id_customer']) && !empty($row['id_customer'])) ? $row['id_customer'] : $row['id_demo'],
-            'trading_log' => date("d/m/Y - H:i", $row['trading_log']),
+            'trading_log' => date("d/m/Y - H:i:s", $row['trading_log']),
             'trading_bet' => strval(($row['trading_bet'] * (($row['trading_result'] == 'win') ? $row['trading_percent'] : 100)) / 100),
             'trading_type' => $row['trading_type'],
             'trading_result' => (isset(($row['trading_result'])) && !empty(($row['trading_result']))) ? $row['trading_result'] : "",

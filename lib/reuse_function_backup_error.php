@@ -65,16 +65,6 @@ function checkweekOfMonth($dt)
 
     return $retWeek;
 }
-function insert_tbl_temporary($id_session,$result_trade) {
-    $sql_delete = "DELETE FROM tbl_result_temporary WHERE id_period != '$id_session'";
-    db_qr($sql_delete);
-
-    $sql_insert = "INSERT INTO tbl_result_temporary SET id_period = '$id_session', result_type = '$result_trade'";
-    db_qr($sql_insert);
-
-    $sql = "UPDATE tbl_exchange_period SET period_result = '$result_trade' WHERE id = '$id_session' ";
-    db_qr($sql);
-}
 function trading_result_demo_by_trading_type($id_session, $trading_type = '', $trading_result = '')
 {
     $sql = "UPDATE tbl_customer_demo_log SET trading_result = '$trading_result' WHERE id_exchange_period = '$id_session' AND trading_type = '$trading_type'";
@@ -93,6 +83,10 @@ function update_period_result($id_session, $result = '')
 
 function result_down($id_session)
 {
+
+    $sql = "UPDATE tbl_exchange_period SET period_result = 'down' WHERE id = '$id_session' ";
+    db_qr($sql);
+
     $sql = "UPDATE tbl_trading_log SET trading_result = 'win' WHERE id_exchange_period = '$id_session' AND trading_type = 'down' ";
     db_qr($sql);
 
@@ -104,11 +98,14 @@ function result_down($id_session)
 
     $sql = "UPDATE tbl_customer_demo_log SET trading_result = 'lose' WHERE id_exchange_period = '$id_session' AND trading_type = 'up' ";
     db_qr($sql);
-    customer_add_money($id_session, 'down');
+    // customer_add_money($id_session, 'down');
     demo_add_money($id_session, 'down');
 }
 function result_up($id_session)
 {
+    $sql = "UPDATE tbl_exchange_period SET period_result = 'up' WHERE id = '$id_session' ";
+    db_qr($sql);
+
     $sql = "UPDATE tbl_trading_log SET trading_result = 'lose' WHERE id_exchange_period = '$id_session' AND trading_type = 'down' ";
     db_qr($sql);
 
@@ -120,7 +117,7 @@ function result_up($id_session)
 
     $sql = "UPDATE tbl_customer_demo_log SET trading_result = 'win' WHERE id_exchange_period = '$id_session'  AND trading_type = 'up' ";
     db_qr($sql);
-    customer_add_money($id_session, 'up');
+    // customer_add_money($id_session, 'up');
     demo_add_money($id_session, 'up');
 }
 
@@ -181,27 +178,56 @@ function get_customer_paymented_in_day($id_customer)
         }
     }
 }
+
 function demo_add_money($id_session, $trading_type = "")
 {
+    global $conn;
+    // $sql_b = "CALL getWalletDemo('1614');";
+    // $result_wallet_b = db_qr($sql_b);
+    // $num_wallet_b = db_nums($result_wallet_b);
+    // echo "A  " . json_encode($num_wallet_b) . "|| ";
+    // mysqli_free_result($result_wallet_b);
+    // mysqli_next_result($conn);
 
-    $sql_win = "SELECT (SUM(trading_bet) + SUM(trading_bet)*trading_percent/100) as demo_bet_win,id_demo FROM tbl_customer_demo_log WHERE id_exchange_period = '$id_session' AND trading_type = '$trading_type' GROUP BY id_demo";
+    // $sql = "CALL getBetTradingDemo($id_session,'$trading_type');";
+    // $result_wallet = db_qr($sql);
+    // $num_wallet = db_nums($result_wallet);
+    // echo "B  " . json_encode($num_wallet) . "|| ";
+    // mysqli_free_result($result_wallet);
+    // mysqli_next_result($conn);
+
+    $sql_win = "CALL getBetTradingDemo($id_session,'$trading_type');";
 
     $result_win = db_qr($sql_win);
     $num_win = db_nums($result_win);
+
+
+    echo "A  " . $num_win;
     if ($num_win > 0) {
         while ($row_win = db_assoc($result_win)) {
             $demo_bet_win = (int)$row_win['demo_bet_win'];
             $id_demo = $row_win['id_demo'];
-            $sql_wallet = "SELECT demo_wallet_bet FROM tbl_customer_demo WHERE id = '$id_demo'";
 
-            $result_wallet = db_qr($sql_wallet);
-            $num_wallet = db_nums($result_wallet);
-            if ($num_wallet > 0) {
-                while ($row_wallet = db_assoc($result_wallet)) {
-                    $customer_wallet_add = (int)$row_wallet['demo_wallet_bet'] + $demo_bet_win;
+            mysqli_free_result($result_win);
+            mysqli_next_result($conn);
+            $sql_win = "SELECT demo_wallet_bet FROM tbl_customer_demo WHERE id = '$id_demo'";
 
-                    $sql_add_money = "UPDATE tbl_customer_demo SET demo_wallet_bet = '$customer_wallet_add' WHERE id = '$id_demo'";
-                    db_qr($sql_add_money);
+            $result_win = db_qr($sql_win);
+            $num_win = db_nums($result_win);
+
+            echo "B  " . $num_win;
+            // exit();
+            if ($num_win > 0) {
+                while ($row_wallet = db_assoc($result_win)) {
+                    $customer_wallet_add = $row_wallet['demo_wallet_bet'] + $demo_bet_win;
+
+                    mysqli_free_result($result_win);
+                    mysqli_next_result($conn);
+                    $sql_win = "UPDATE tbl_customer_demo SET demo_wallet_bet = '$customer_wallet_add' WHERE id = '$id_demo'";
+                    $result_win = db_qr($sql_win);
+
+                    echo "C  " . json_encode($result_win);
+                    // exit();
                 }
             }
         }
@@ -209,22 +235,24 @@ function demo_add_money($id_session, $trading_type = "")
 }
 // function demo_add_money($id_session, $trading_type = "")
 // {
-//     $sql_win = "SELECT trading_bet,trading_percent,id_demo FROM tbl_customer_demo_log WHERE id_exchange_period = '$id_session' AND trading_type = '$trading_type'";
+//     $sql_win = "CALL getBetTradingDemo($id_session,'$trading_type');";
 
 //     $result_win = db_qr($sql_win);
 //     $num_win = db_nums($result_win);
 //     if ($num_win > 0) {
 //         while ($row_win = db_assoc($result_win)) {
-//             $trading_bet = (int)$row_win['trading_bet'];
-//             $trading_percent = (int)$row_win['trading_percent'];
+//             $demo_bet_win = (int)$row_win['demo_bet_win'];
 //             $id_demo = $row_win['id_demo'];
 //             $sql_wallet = "SELECT demo_wallet_bet FROM tbl_customer_demo WHERE id = '$id_demo'";
 
 //             $result_wallet = db_qr($sql_wallet);
 //             $num_wallet = db_nums($result_wallet);
+
+//             echo $sql_wallet;
+//             exit();
 //             if ($num_wallet > 0) {
 //                 while ($row_wallet = db_assoc($result_wallet)) {
-//                     $customer_wallet_add = $row_wallet['demo_wallet_bet'] + $trading_bet + ($trading_percent * $trading_bet) / 100;
+//                     $customer_wallet_add = $row_wallet['demo_wallet_bet'] + $demo_bet_win;
 
 //                     $sql_add_money = "UPDATE tbl_customer_demo SET demo_wallet_bet = '$customer_wallet_add' WHERE id = '$id_demo'";
 //                     db_qr($sql_add_money);
@@ -233,7 +261,6 @@ function demo_add_money($id_session, $trading_type = "")
 //         }
 //     }
 // }
-
 // function customer_add_money($id_session, $trading_type = "")
 // {
 //     $sql_win = "SELECT trading_bet,trading_percent,id_customer FROM tbl_trading_log WHERE id_exchange_period = '$id_session' AND trading_type = '$trading_type'"; 
@@ -249,6 +276,8 @@ function demo_add_money($id_session, $trading_type = "")
 
 //             $result_wallet = db_qr($sql_wallet);
 //             $num_wallet = db_nums($result_wallet);
+//             echo $num_wallet;
+//             exit;
 //             if ($num_wallet > 0) {
 //                 while ($row_wallet = db_assoc($result_wallet)) {
 //                     $customer_wallet_add = $row_wallet['customer_wallet_bet'] + $trading_bet + ($trading_percent * $trading_bet) / 100;
@@ -262,21 +291,26 @@ function demo_add_money($id_session, $trading_type = "")
 // }
 function customer_add_money($id_session, $trading_type = "")
 {
-    $sql_win = "SELECT (SUM(trading_bet) + SUM(trading_bet)*91/100) as customer_bet_win,id_customer FROM tbl_trading_log WHERE id_exchange_period = '$id_session' AND trading_type = '$trading_type' GROUP BY id_customer";
+    $sql_win = "CALL getBetTrading($id_session,'$trading_type')";
 
     $result_win = db_qr($sql_win);
     $num_win = db_nums($result_win);
+
     if ($num_win > 0) {
         while ($row_win = db_assoc($result_win)) {
             $customer_bet_win = (int)$row_win['customer_bet_win'];
             $id_customer = $row_win['id_customer'];
+
+            $id_customer = $row_win['id_customer'];
             $sql_wallet = "SELECT customer_wallet_bet FROM tbl_customer_customer WHERE id = '$id_customer'";
 
             $result_wallet = db_qr($sql_wallet);
-            $num_wallet = db_nums($result_wallet);
+            $num_wallet = mysqli_num_rows($result_wallet);
+
             if ($num_wallet > 0) {
                 while ($row_wallet = db_assoc($result_wallet)) {
                     $customer_wallet_add = (int)$row_wallet['customer_wallet_bet'] + $customer_bet_win;
+
                     $sql_add_money = "UPDATE tbl_customer_customer SET customer_wallet_bet = '$customer_wallet_add' WHERE id = '$id_customer'";
                     db_qr($sql_add_money);
                 }
@@ -284,6 +318,7 @@ function customer_add_money($id_session, $trading_type = "")
         }
     }
 }
+
 function get_list_customer_by_level($id, $id_business, $point_arr = array(), $id_level_arr = array())
 {
     $sql_customer = "SELECT `customer_point` FROM `tbl_customer_customer` WHERE `id_business` = '{$id_business}' ";
