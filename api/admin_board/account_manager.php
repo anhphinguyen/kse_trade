@@ -31,6 +31,15 @@ switch ($typeManager) {
                 $id_type = $_REQUEST['id_type'];
             }
         }
+        $account_status = '';
+        if (isset($_REQUEST['account_status'])) {
+            if ($_REQUEST['account_status'] == '') {
+                unset($_REQUEST['account_status']);
+            } else {
+                $account_status = $_REQUEST['account_status'];
+            }
+        }
+
         $filter = '';
         if (isset($_REQUEST['filter'])) {
             if ($_REQUEST['filter'] == '') {
@@ -39,6 +48,7 @@ switch ($typeManager) {
                 $filter = $_REQUEST['filter'];
             }
         }
+        
 
         $employee_arr = array();
         // get total customer
@@ -54,6 +64,9 @@ switch ($typeManager) {
         }
         if (!empty($id_type)) {
             $sql .= " AND id_type = '$id_type'";
+        }
+        if (!empty($id_type)) {
+            $sql .= " AND account_status = '$account_status'";
         }
 
         // echo $sql;
@@ -109,6 +122,9 @@ switch ($typeManager) {
         }
         if (!empty($id_type)) {
             $sql .= " AND tbl_account_account.id_type = '$id_type'";
+        }
+        if (!empty($account_status)) {
+            $sql .= " AND tbl_account_account.account_status = '$account_status'";
         }
 
         $sql .= " ORDER BY tbl_account_account.id DESC  LIMIT $start,$limit";

@@ -38,6 +38,9 @@ $sql = "SELECT
         WHERE tbl_customer_customer.customer_virtual = 'N'
         ";
 
+if($typeManager == 'request_deposit'){
+    $sql .= " AND tbl_request_deposit.request_type != '2' ";
+}
 
 
 if (isset($_REQUEST['id_account']) && !empty($_REQUEST['id_account'])) {
@@ -107,55 +110,11 @@ if ($nums > 0) {
             'total' => $row['total'],
         );
         $total_bonus = 0;
-        if($typeManager == 'request_deposit'){
-            $sql_check_total_bonus = "SELECT SUM(request_value) as total_bonus FROM tbl_request_bonus WHERE id_customer = '{$row['id_customer']}'";
-            if (isset($id_account) && !empty($id_account)) {
-                $sql_check_total_bonus .= " AND id_account = '$id_account'";
-            }
-
-            if (isset($date_begin) && !empty($date_begin) && isset($date_end) && !empty($date_end)) {
-                $sql_check_total_bonus .= " AND ( request_time_completed  >= '$date_begin' AND request_time_completed <= '$date_end' )";
-            }else{
-                $sql_check_total_bonus .= " AND ( request_time_completed  >= '$three_month_ago' AND request_time_completed <= '$month' )";
-            }
-            $result_check_total_bonus = db_qr($sql_check_total_bonus);
-                                    $nums_result_check_total_bonus = db_nums($result_check_total_bonus);
-                                
-                                    if($nums_result_check_total_bonus > 0){
-                                        while($row_result_check_total_bonus = db_assoc($result_check_total_bonus)){
-                                            $total_bonus += $row_result_check_total_bonus['total_bonus'];
-                                        }
-                                    }
-
-            $result_item['total_money'] = strval($row['total_money'] - $total_bonus);
-        }
+        
         $total_temp += ($row['total_money'] - $total_bonus);
         array_push($result_arr['data'], $result_item);
     }
 } 
 
-// $total_bonus = 0;
-// if($typeManager == 'request_deposit'){
-//     $sql_check_total_bonus = "SELECT SUM(request_value) as total_bonus FROM tbl_request_bonus WHERE 1=1 ";
-//     if (isset($id_account) && !empty($id_account)) {
-//         $sql_check_total_bonus .= " AND id_account = '$id_account'";
-//     }
-
-//     if (isset($date_begin) && !empty($date_begin) && isset($date_end) && !empty($date_end)) {
-//         $sql_check_total_bonus .= " AND ( request_time_completed  >= '$date_begin' AND request_time_completed <= '$date_end' )";
-//     }else{
-//         $sql_check_total_bonus .= " AND ( request_time_completed  >= '$three_month_ago' AND request_time_completed <= '$month' )";
-//     }
-//     $result_check_total_bonus = db_qr($sql_check_total_bonus);
-//                             $nums_result_check_total_bonus = db_nums($result_check_total_bonus);
-                        
-//                             if($nums_result_check_total_bonus > 0){
-//                                 while($row_result_check_total_bonus = db_assoc($result_check_total_bonus)){
-//                                     $total_bonus += $row_result_check_total_bonus['total_bonus'];
-//                                 }
-//                             }
-
-    
-// }
 $result_arr['total'] = strval($total_temp );
 reJson($result_arr);

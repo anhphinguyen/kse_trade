@@ -95,6 +95,10 @@ switch ($detect) {
             break;
         }
         /*employee board*/
+    case 'sale_support_customer_list_customer': {
+            include_once 'employee_board/sale_support_customer_list_customer.php';
+            break;
+        }
     case 'sale_update_info': {
             include_once 'employee_board/sale_update_info.php';
             break;
@@ -238,6 +242,18 @@ switch ($detect) {
             break;
         }
         /*viewlist board*/
+    case 'list_history_bonus': {
+            include_once 'viewlist_board/list_history_bonus.php';
+            break;
+        }
+    case 'list_history_invest': {
+            include_once 'viewlist_board/list_history_invest.php';
+            break;
+        }
+    case 'check_customer_error': {
+            include_once 'viewlist_board/check_customer_error.php';
+            break;
+        }
     case 'statictis_money': {
             include_once 'viewlist_board/statictis_money.php';
             break;

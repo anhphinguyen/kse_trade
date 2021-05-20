@@ -7,9 +7,9 @@ if (isset($_REQUEST['id_customer']) && !empty($_REQUEST['id_customer'])) {
 }
 
 
-$sql_total_money = "SELECT SUM(request_value) as total_money FROM tbl_request_deposit 
+$sql_total_money = "SELECT SUM(request_value) as total_money FROM tbl_request_bonus 
                     WHERE id_customer = '$id_customer'
-                    AND request_type = '2'
+                    AND request_type = '1'
                     ";
 $result_total_money = db_qr($sql_total_money);
 if(db_nums($result_total_money) > 0){
@@ -19,9 +19,9 @@ if(db_nums($result_total_money) > 0){
 }
 
 
-$sql = "SELECT * FROM tbl_request_deposit
-        WHERE id_customer = '$id_customer' AND request_type = '2'
-        ORDER BY `tbl_request_deposit`.`request_time_completed` DESC";
+$sql = "SELECT request_value,request_time_completed,request_code FROM tbl_request_bonus
+        WHERE id_customer = '$id_customer' AND request_type = '1'
+        ORDER BY `tbl_request_bonus`.`request_time_completed` DESC";
 
 $result_arr = array();
 $result_arr['success'] = "true";

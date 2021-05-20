@@ -22,7 +22,7 @@ if ($nums > 0) {
                 result_down($row['id_period']);
             }else{
                 returnError('Lỗi result');
-            }
+            } 
             returnSuccess("true");
         }
     }

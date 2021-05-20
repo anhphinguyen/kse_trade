@@ -15,7 +15,6 @@ $num = db_nums($result);
 if ($num > 0) {
     while ($row = db_assoc($result)) {
         $id_session = $row['id'];
-        $session_time_close = strval((int)$row['period_close'] - 1);
     }
 } else {
     returnError('Chưa có phiên được tạo');
@@ -49,33 +48,26 @@ if ($nums_trade_down > 0) {
 
 if ($total_trade_up < $total_trade_down) {
     $result_trade = "up";
-    // Cộng tiền cho customer
-    
-    if ($time_break === $session_time_close) {
-        result_up($id_session);
-    }
+    // insert tbl temporary
+    insert_tbl_temporary($id_session, $result_trade);
 } elseif ($total_trade_up > $total_trade_down) {
     $result_trade = "down";
-    // Cộng tiền cho customer
-    if ($time_break === $session_time_close) {
-        result_down($id_session);
-    }
+    // insert tbl temporary
+    insert_tbl_temporary($id_session, $result_trade);
 } else {
     $result_trade_arr = array('up', 'down');
     $result_random = array_rand($result_trade_arr);
     $result_trade = $result_trade_arr[$result_random];
-    if ($time_break === $session_time_close) {
-        
-        if ($result_trade === 'up') {
-            result_up($id_session);
-        } elseif ($result_trade === 'down') {
-            result_down($id_session);
-        }else{
-            returnError("result_trade null");
-        }
+
+    if ($result_trade === 'up') {
+        insert_tbl_temporary($id_session, $result_trade);
+    } elseif ($result_trade === 'down') {
+        insert_tbl_temporary($id_session, $result_trade);
+    } else {
+        returnError("result_trade null");
     }
 }
-$e = microtime(true);
+
 
 $result_arr = array();
 $result_arr['success'] = "true";
