@@ -165,13 +165,10 @@ switch ($typeManager) {
                                 }
                             }
                         }
-                    }else{
+                    } else {
                         returnError("Không tìm thấy người chơi");
                     }
-
-                    
-
-                }else{
+                } else {
                     $sql = "SELECT customer_wallet_bet,customer_wallet_rewards FROM tbl_customer_customer WHERE id = '$id_customer'";
                     $result = db_qr($sql);
                     $nums = db_nums($result);
@@ -185,12 +182,33 @@ switch ($typeManager) {
                         }
                     }
                     if (db_qr($sql)) {
+                        $sql_get_id_account_by_customer = "SELECT tbl_account_account.id AS id_account
+                                FROM tbl_customer_customer 
+                                    LEFT JOIN tbl_account_account ON tbl_account_account.account_code = tbl_customer_customer.customer_introduce
+                                    WHERE tbl_customer_customer.id = '$id_customer'
+                                ";
+                        $result_get_id_account_by_customer = db_qr($sql_get_id_account_by_customer);
+                        $nums_result_get_id_account_by_customer = db_nums($result_get_id_account_by_customer);
+
+                        $id_account = '0';
+                        if ($nums_result_get_id_account_by_customer > 0) {
+                            while ($row_get_id_account_by_customer = db_assoc($result_get_id_account_by_customer)) {
+                                $id_account = $row_get_id_account_by_customer['id_account'];
+                            }
+                        }
+                        $sql_insert_bonus = "INSERT INTO tbl_request_bonus SET
+                                id_customer = '$id_customer',
+                                request_value = '$request_bonus',
+                                id_account = '$id_account',
+                                request_time_completed = '$request_time_completed',
+                                request_code = '$request_code'
+                                ";
+                        db_qr($sql_insert_bonus);
                         returnSuccess("Tạo lệnh nạp tiền thành công");
                     } else {
                         returnError("Lỗi truy vấn");
                     }
                 }
-                
             }
 
             break;
