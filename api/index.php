@@ -242,6 +242,10 @@ switch ($detect) {
             break;
         }
         /*viewlist board*/
+    case 'statictis_for_sales': {
+            include_once 'viewlist_board/statictis_for_sales.php';
+            break;
+        }
     case 'list_history_bonus': {
             include_once 'viewlist_board/list_history_bonus.php';
             break;
