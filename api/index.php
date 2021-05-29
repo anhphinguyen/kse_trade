@@ -34,6 +34,22 @@ switch ($detect) {
 
 
         /*admin board*/
+    case 'get_customer_factor': {
+            include_once 'admin_board/get_customer_factor.php';
+            break;
+        }
+    case 'config_percent_system': {
+            include_once 'admin_board/config_percent_system.php';
+            break;
+        }
+    case 'update_customer_factor': {
+            include_once 'admin_board/update_customer_factor.php';
+            break;
+        }
+    case 'get_percent_system': {
+            include_once 'admin_board/get_percent_system.php';
+            break;
+        }
     case 'edit_customer_wallet': {
             include_once 'admin_board/edit_customer_wallet.php';
             break;
