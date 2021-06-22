@@ -16,7 +16,28 @@ $sql = "SELECT
 
         FROM tbl_customer_customer
         WHERE customer_virtual = 'N' AND customer_disable = 'N'
+        AND tbl_customer_customer.id >= 1501 AND tbl_customer_customer.id <= 2712
         ";
+
+// if (isset($_REQUEST['id_customer_from'])) {
+//     if ($_REQUEST['id_customer_from'] == '') {
+//         unset($_REQUEST['id_customer_from']);
+        
+//     } else {
+//         $id_customer_from = $_REQUEST['id_customer_from'];
+//         $sql .= " AND `tbl_customer_customer`.`id` >= '{$id_customer_from}'";
+//     }
+// } 
+// if (isset($_REQUEST['id_customer_to'])) {
+//     if ($_REQUEST['id_customer_to'] == '') {
+//         unset($_REQUEST['id_customer_to']);
+        
+//     } else {
+//         $id_customer_to = $_REQUEST['id_customer_to'];
+//         $sql .= " AND `tbl_customer_customer`.`id` <= '{$id_customer_to}'";
+//     }
+// } 
+
 
 if (isset($_REQUEST['id_customer'])) {
     if ($_REQUEST['id_customer'] == '') {

@@ -19,7 +19,8 @@ $sql = "SELECT
             LEFT JOIN tbl_customer_customer
             ON tbl_customer_customer.id = tbl_request_deposit.id_customer
 
-            WHERE 1=1";
+            WHERE tbl_request_deposit.request_type = '1'
+            ";
 
 
 $sql_bonus = "";

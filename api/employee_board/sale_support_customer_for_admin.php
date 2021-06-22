@@ -37,8 +37,8 @@ $sql = "SELECT
             tbl_customer_customer.customer_registered as customer_registered,
 
             -- tbl_trading_log.trading_type as trading_type,
-            (SELECT MAX(tbl_trading_log.trading_log) FROM tbl_trading_log WHERE tbl_trading_log.id_customer = customer_id) as trading_log,
-            (SELECT COUNT(tbl_trading_log.id_customer) FROM tbl_trading_log WHERE tbl_trading_log.id_customer = customer_id) as count
+            (SELECT SUM(tbl_request_deposit.request_value) FROM tbl_request_deposit WHERE tbl_request_deposit.id_customer = customer_id AND tbl_request_deposit.request_type != '2') as total_money_deposit,
+            (SELECT SUM(tbl_request_payment.request_value) FROM tbl_request_payment WHERE tbl_request_payment.id_customer = customer_id AND  tbl_request_payment.request_status = '3') as total_money_payment
                         
             FROM  tbl_customer_customer
             
@@ -94,7 +94,7 @@ if (isset($_REQUEST['page']) && !empty($_REQUEST['page'])) {
 $total_page = ceil($total / $limit);
 $start = ($page - 1) * $limit;
 
-$sql .= " ORDER BY count DESC LIMIT {$start},{$limit}";
+$sql .= " ORDER BY tbl_customer_customer.id DESC LIMIT {$start},{$limit}";
 
 
 $result_arr['total_page'] = strval($total_page);

@@ -30,7 +30,7 @@ $nums_trade_up = db_nums($result_trade_up);
 
 if ($nums_trade_up > 0) {
     while ($row_up = db_assoc($result_trade_up)) {
-        $total_trade_up = (!empty($row_up['total_money_up']))?$row_up['total_money_up']:0;
+        $total_trade_up = (!empty($row_up['total_money_up'])) ? $row_up['total_money_up'] : '0';
     }
 }
 
@@ -43,7 +43,7 @@ $nums_trade_down = db_nums($result_trade_down);
 
 if ($nums_trade_down > 0) {
     while ($row_down = db_assoc($result_trade_down)) {
-        $total_trade_down = (!empty($row_down['total_money_down']))?$row_down['total_money_down']:0;
+        $total_trade_down = (!empty($row_down['total_money_down'])) ? $row_down['total_money_down'] : '0';
     }
 }
 
@@ -59,7 +59,8 @@ if ($nums_trade_down > 0) {
 // Muốn lấy tỉ lệ thắng cần phải có id_customer -> duyệt từ tbl_trading_log ( nếu chỉ có 1 khách hàng )
 // Tỷ lệ thắng của khách hàng phải được update sau khi kết thúc từng phiên thông qua socket
 // ==============> Thuật toán update tỷ lệ thắng : ??
-if ($total_trade_down == '0' || $total_trade_up == '0') {
+
+if (($total_trade_down == '0' && $total_trade_up > '0')  || ($total_trade_up == '0' && $total_trade_down > '0')) {
 
 
     $percent_system = "0";
@@ -80,24 +81,28 @@ if ($total_trade_down == '0' || $total_trade_up == '0') {
     $sql_total_customer = "SELECT COUNT(DISTINCT id_customer) as total_customer, id_customer, trading_type 
                            FROM tbl_trading_log 
                            WHERE id_exchange_period = '$id_session' 
-                           GROUP BY id_customer";
+                           ";
     $result_total_customer = db_qr($sql_total_customer);
     if (db_nums($result_total_customer)) {
         while ($row_total_customer = db_assoc($result_total_customer)) {
-            // lây id_customer
-            $id_customer = $row_total_customer['id_customer'];
-            
-            $sql_get_customer_factor = "SELECT customer_factor FROM tbl_customer_customer WHERE id = '$id_customer'";
-            $result_get_customer_factor = db_qr($sql_get_customer_factor);
-            if(db_nums($result_get_customer_factor) > 0){
-                while($row_get_customer_factor = db_assoc($result_get_customer_factor)){
-                    $customer_factor = (int)$row_get_customer_factor['customer_factor'];
-                }
-            }
+
 
             // // lấy hệ số khách hàng
             // $customer_factor = (int)$row_total_customer['customer_factor'];
             if ((int)$row_total_customer['total_customer'] === 1) {
+
+                // lây id_customer
+                $id_customer = $row_total_customer['id_customer'];
+
+                $sql_get_customer_factor = "SELECT customer_factor FROM tbl_customer_customer WHERE id = '$id_customer'";
+                $result_get_customer_factor = db_qr($sql_get_customer_factor);
+                if (db_nums($result_get_customer_factor) > 0) {
+                    while ($row_get_customer_factor = db_assoc($result_get_customer_factor)) {
+                        $customer_factor = (int)$row_get_customer_factor['customer_factor'];
+                    }
+                }
+
+
                 // lây trading type
                 $trading_type = $row_total_customer['trading_type'];
                 if ($percent_status === "Y") {
@@ -107,7 +112,7 @@ if ($total_trade_down == '0' || $total_trade_up == '0') {
                         $percent_winlose_one_customer = $percent_system * (int)$customer_factor;
                     } else {
                         // lấy tỉ lệ thắng của khách hàng
-                        
+
                         $sql_total_trade_customer = "SELECT COUNT(id) as total_trade 
                                                  FROM tbl_trading_log
                                                  WHERE id_customer = '$id_customer'
@@ -134,17 +139,23 @@ if ($total_trade_down == '0' || $total_trade_up == '0') {
                         // percent_winlose_one_customer
                         $percent_winlose_one_customer = ((100 - $percent_win) / 2) * (int)$customer_factor;
                     }
-                }
-                // Tỷ lệ random
-                $radom = rand(1,100);
-                if($radom <= $percent_winlose_one_customer){
-                    insert_tbl_temporary($id_session, $trading_type);
-                }else{
-                    if($trading_type === 'up'){
-                        insert_tbl_temporary($id_session, 'down');
-                    }else{
-                        insert_tbl_temporary($id_session, 'up');
+                    // Tỷ lệ random
+                    $radom = rand(1, 100);
+                    if ($radom <= $percent_winlose_one_customer) {
+                        insert_tbl_temporary($id_session, $trading_type);
+                    } else {
+                        if ($trading_type === 'up') {
+                            insert_tbl_temporary($id_session, 'down');
+                        } else {
+                            insert_tbl_temporary($id_session, 'up');
+                        }
                     }
+                }
+            } else {
+                if ($total_trade_down == '0') {
+                    insert_tbl_temporary($id_session, 'down');
+                } else {
+                    insert_tbl_temporary($id_session, 'up');
                 }
             }
         }

@@ -35,10 +35,16 @@ $result = db_qr($sql);
 $nums = db_nums($result);
 if ($nums > 0) {
     while ($row = db_assoc($result)) {
+        $period_point_idle = $row['period_point_idle'];
+        $period_close = $row['period_close'];
         $id_exchange_period = $row['id'];
     }
 } else {
     returnError("Chưa có phiên giao dịch");
+}
+
+if($period_point_idle <= $time && $period_close > $time){
+    returnError('Đã qua thời gian đặt cược, vui lòng đợi đến phiên sau');
 }
 
 $trading_log = time();

@@ -29,6 +29,8 @@ if ($nums > 0) {
             returnError("Bạn không có tiền trong ví");
         } elseif ($request_value > (int)$row['customer_wallet_bet']) {
             returnError("Số tiền bạn rút vượt quá tài khoản trong ví");
+        } elseif ($request_value < '700000') {
+            returnError("Bạn cần rút tối thiểu là 700.000 VND");
         }
 
         $customer_paymented = get_customer_paymented_in_day($id_customer);

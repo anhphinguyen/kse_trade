@@ -111,6 +111,10 @@ switch ($detect) {
             break;
         }
         /*employee board*/
+    case 'sale_support_customer_for_admin': {
+            include_once 'employee_board/sale_support_customer_list_customer.php';
+            break;
+        }
     case 'sale_support_customer_list_customer': {
             include_once 'employee_board/sale_support_customer_list_customer.php';
             break;
