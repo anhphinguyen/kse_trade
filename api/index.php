@@ -112,7 +112,7 @@ switch ($detect) {
         }
         /*employee board*/
     case 'sale_support_customer_for_admin': {
-            include_once 'employee_board/sale_support_customer_list_customer.php';
+            include_once 'employee_board/sale_support_customer_for_admin.php';
             break;
         }
     case 'sale_support_customer_list_customer': {
@@ -232,6 +232,10 @@ switch ($detect) {
             break;
         }
         /*socket board*/
+    case 'reset_trading_log': {
+            include_once 'socket_board/reset_trading_log.php';
+            break;
+        }
     case 'add_money_win_socket': {
             include_once 'socket_board/add_money_win_socket.php';
             break;

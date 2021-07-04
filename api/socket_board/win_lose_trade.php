@@ -21,6 +21,7 @@ if ($num > 0) {
     returnError('Chưa có phiên được tạo');
 }
 
+
 $sql_trade_up = "SELECT SUM(trading_bet) as total_money_up FROM tbl_trading_log 
                  WHERE id_exchange_period = '$id_session' 
                  AND trading_type = 'up'";
@@ -149,6 +150,13 @@ if (($total_trade_down == '0' && $total_trade_up > '0')  || ($total_trade_up == 
                         } else {
                             insert_tbl_temporary($id_session, 'up');
                         }
+                    }
+                }else{
+                    // trở lại bình thường
+                    if ($total_trade_down == '0') {
+                        insert_tbl_temporary($id_session, 'down');
+                    } else {
+                        insert_tbl_temporary($id_session, 'up');
                     }
                 }
             } else {

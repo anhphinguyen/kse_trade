@@ -56,10 +56,13 @@ switch ($type_manager) {
                         tbl_customer_customer.customer_introduce,
                         tbl_customer_customer.id as customer_id,
                         tbl_customer_customer.customer_registered as customer_registered,
+                        tbl_customer_customer.customer_percent_win as customer_percent_win,
+                        tbl_customer_customer.customer_timebet_nearly as customer_timebet_nearly,
+                        tbl_customer_customer.customer_total_trade as customer_total_trade,
 
                         -- tbl_trading_log.trading_type as trading_type,
                         (SELECT MAX(tbl_trading_log.trading_log) FROM tbl_trading_log WHERE tbl_trading_log.id_customer = customer_id) as trading_log,
-                        (SELECT COUNT(tbl_trading_log.id_customer) FROM tbl_trading_log WHERE tbl_trading_log.id_customer = customer_id) as count, 
+                        -- (SELECT COUNT(tbl_trading_log.id_customer) FROM tbl_trading_log WHERE tbl_trading_log.id_customer = customer_id) as count, 
                         
                         
                         (SELECT COUNT(tbl_trading_log.id_customer) FROM tbl_trading_log WHERE tbl_trading_log.id_customer = customer_id) as total_trade,
@@ -110,16 +113,15 @@ switch ($type_manager) {
 
             $sql .= " GROUP BY tbl_customer_customer.id";
             $result_arr = array();
-           
+
             $result_total = db_qr($sql_total);
             if (db_nums($result_total) > 0) {
                 while ($row_total = db_assoc($result_total)) {
                     $total = $row_total['total'];
-                    
                 }
             }
-            
-            
+
+
             $limit = 20;
             $page = 1;
 
@@ -135,23 +137,23 @@ switch ($type_manager) {
             $start = ($page - 1) * $limit;
 
 
-            
+
             if (isset($type_sort) && !empty($type_sort)) {
                 switch ($type_sort) {
                     case 'desc': {
-                            $sql .= " ORDER BY count DESC LIMIT {$start},{$limit}";
+                            $sql .= " ORDER BY tbl_customer_customer.customer_total_trade DESC LIMIT {$start},{$limit}";
                             break;
                         }
                     case 'asc': {
-                            $sql .= " ORDER BY count ASC LIMIT {$start},{$limit}";
+                            $sql .= " ORDER BY tbl_customer_customer.customer_total_trade ASC LIMIT {$start},{$limit}";
                             break;
                         }
                 }
             } else {
-                $sql .= " ORDER BY count DESC LIMIT {$start},{$limit}";
+                $sql .= " ORDER BY tbl_customer_customer.customer_total_trade DESC LIMIT {$start},{$limit}";
             }
-         
-            
+
+
 
             $result_arr['total_page'] = strval($total_page);
             $result_arr['limit'] = strval($limit);
@@ -164,6 +166,25 @@ switch ($type_manager) {
             $nums = db_nums($result);
             if ($nums > 0) {
                 while ($row = db_assoc($result)) {
+
+                    if (!empty($row['percent_win'])) {
+                        if($row['customer_percent_win'] != 0){
+                            $percent_win = floor(((int)$row['customer_percent_win'] + (int)$row['percent_win']) / 2);
+                        }else{
+                            $percent_win = $row['percent_win'];
+                        }
+                    } else {
+                        $percent_win = $row['customer_percent_win'];
+                    }
+
+                    if (!empty($row['trading_log'])) {
+                        $trading_log = $row['trading_log'];
+                    } else {
+                        $trading_log = $row['customer_timebet_nearly'];
+                    }
+
+                    $total_trade = strval((int)$row['total_trade'] + (int)$row['customer_total_trade']);
+
                     $result_item = array(
                         'id_customer' => (isset($row['customer_id']) && !empty($row['customer_id'])) ? $row['customer_id'] : "",
                         'customer_name' => $row['customer_fullname'],
@@ -171,9 +192,9 @@ switch ($type_manager) {
                         'customer_registered' => $row['customer_registered'],
                         'total_money_deposit' => (!empty($row['total_money_deposit'])) ? $row['total_money_deposit'] : "0",
                         'total_money_payment' => (!empty($row['total_money_payment'])) ? $row['total_money_payment'] : "0",
-                        'percent_win' => (isset($row['percent_win']) && !empty($row['percent_win'])) ? $row['percent_win'] : "0",
-                        'total_trade' => $row['total_trade'],
-                        'trading_log' => (!empty($row['trading_log'])) ? date("d/m/Y", $row['trading_log']) : "",
+                        'percent_win' => (isset($percent_win) && !empty($percent_win)) ? strval($percent_win) : "0",
+                        'total_trade' => $total_trade,
+                        'trading_log' => (!empty($trading_log)) ? date("d/m/Y", $trading_log) : "",
                     );
                     array_push($result_arr['data'], $result_item);
                 }
