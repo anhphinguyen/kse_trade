@@ -50,20 +50,20 @@ $sql_total_deposit = "SELECT
 //                         ";
 $sql_total_win = "SELECT
                         SUM(trading_bet) as total_win
-                        FROM tbl_trading_log
+                        FROM tbl_trading_log_record
                         LEFT JOIN tbl_customer_customer 
-                        ON tbl_trading_log.id_customer = tbl_customer_customer.id
+                        ON tbl_trading_log_record.id_customer = tbl_customer_customer.id
                         WHERE tbl_customer_customer.customer_introduce = '$account_code'
-                        AND tbl_trading_log.trading_result = 'win'
+                        AND tbl_trading_log_record.trading_result = 'win'
                         AND tbl_customer_customer.customer_virtual = 'N'
                         ";
 $sql_total_lose = "SELECT
                         SUM(trading_bet) as total_lose
-                        FROM tbl_trading_log
+                        FROM tbl_trading_log_record
                         LEFT JOIN tbl_customer_customer 
-                        ON tbl_trading_log.id_customer = tbl_customer_customer.id
+                        ON tbl_trading_log_record.id_customer = tbl_customer_customer.id
                         WHERE tbl_customer_customer.customer_introduce = '$account_code'
-                        AND tbl_trading_log.trading_result = 'lose'
+                        AND tbl_trading_log_record.trading_result = 'lose'
                         AND tbl_customer_customer.customer_virtual = 'N'
                         ";
 
@@ -112,8 +112,8 @@ if (isset($_REQUEST['date_begin'])) {
         $date_begin = strtotime($_REQUEST['date_begin'] . " 00:00:00");
         $sql_count_customer .= " AND tbl_customer_customer.customer_registered >= '{$date_begin_customer}'";
         $sql_total_deposit .= " AND tbl_request_deposit.request_time_completed >= '{$date_begin}'";
-        $sql_total_win .= " AND tbl_trading_log.trading_log >= '{$date_begin}'";
-        $sql_total_lose .= " AND tbl_trading_log.trading_log >= '{$date_begin}'";
+        $sql_total_win .= " AND tbl_trading_log_record.trading_log >= '{$date_begin}'";
+        $sql_total_lose .= " AND tbl_trading_log_record.trading_log >= '{$date_begin}'";
         $sql_total_bonus .= " AND tbl_request_bonus.request_time_completed >= '{$date_begin}'";
         $sql_total_bonus_type_2 .= " AND tbl_request_bonus.request_time_completed >= '{$date_begin}'";
 
@@ -129,8 +129,8 @@ if (isset($_REQUEST['date_begin'])) {
 
     $sql_count_customer .= " AND tbl_customer_customer.customer_registered >= '{$date_begin_customer}'";
     $sql_total_deposit .= " AND tbl_request_deposit.request_time_completed >= '{$three_month_ago}'";
-    $sql_total_win .= " AND tbl_trading_log.trading_log >= '{$three_month_ago}'";
-    $sql_total_lose .= " AND tbl_trading_log.trading_log >= '{$three_month_ago}'";
+    $sql_total_win .= " AND tbl_trading_log_record.trading_log >= '{$three_month_ago}'";
+    $sql_total_lose .= " AND tbl_trading_log_record.trading_log >= '{$three_month_ago}'";
     $sql_total_bonus .= " AND tbl_request_bonus.request_time_completed >= '{$three_month_ago}'";
     $sql_total_bonus_type_2 .= " AND tbl_request_bonus.request_time_completed >= '{$three_month_ago}'";
 
@@ -148,8 +148,8 @@ if (isset($_REQUEST['date_end'])) {
         $date_end = strtotime($_REQUEST['date_end'] . " 23:59:59");
         $sql_count_customer .= " AND tbl_customer_customer.customer_registered <= '{$date_end_customer}'";
         $sql_total_deposit .= " AND tbl_request_deposit.request_time_completed <= '{$date_end}'";
-        $sql_total_win .= " AND tbl_trading_log.trading_log <= '{$date_end}'";
-        $sql_total_lose .= " AND tbl_trading_log.trading_log <= '{$date_end}'";
+        $sql_total_win .= " AND tbl_trading_log_record.trading_log <= '{$date_end}'";
+        $sql_total_lose .= " AND tbl_trading_log_record.trading_log <= '{$date_end}'";
         $sql_total_bonus .= " AND tbl_request_bonus.request_time_completed <= '{$date_end}'";
         $sql_total_bonus_type_2 .= " AND tbl_request_bonus.request_time_completed <= '{$date_end}'";
 
@@ -166,8 +166,8 @@ if (isset($_REQUEST['date_end'])) {
     $sql .= " AND `$time_complete` <= '" . $month . "'";
     $sql_count_customer .= " AND tbl_customer_customer.customer_registered <= '{$date_end_customer}'";
     $sql_total_deposit .= " AND tbl_request_deposit.request_time_completed <= '{$month}'";
-    $sql_total_win .= " AND tbl_trading_log.trading_log <= '{$month}'";
-    $sql_total_lose .= " AND tbl_trading_log.trading_log <= '{$month}'";
+    $sql_total_win .= " AND tbl_trading_log_record.trading_log <= '{$month}'";
+    $sql_total_lose .= " AND tbl_trading_log_record.trading_log <= '{$month}'";
     $sql_total_bonus .= " AND tbl_request_bonus.request_time_completed <= '{$month}'";
     $sql_total_bonus_type_2 .= " AND tbl_request_bonus.request_time_completed <= '{$month}'";
 

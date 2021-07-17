@@ -42,8 +42,8 @@ $sql = "SELECT
                         
             FROM  tbl_customer_customer
             
-            LEFT JOIN tbl_trading_log
-            ON tbl_customer_customer.id = tbl_trading_log.id_customer
+            -- LEFT JOIN tbl_trading_log
+            -- ON tbl_customer_customer.id = tbl_trading_log.id_customer
             
             LEFT JOIN tbl_account_account 
             ON tbl_customer_customer.customer_introduce = tbl_account_account.account_code

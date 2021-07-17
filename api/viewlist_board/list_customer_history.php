@@ -13,11 +13,11 @@ if (isset($_REQUEST['type_target'])) {
 
 switch ($type_manager) {
     case 'customer':
-        $tbl_log = 'tbl_trading_log';
+        $tbl_log = 'tbl_trading_log_record';
         $id = 'id_customer';
         break;
     case 'admin':
-        $tbl_log = 'tbl_trading_log';
+        $tbl_log = 'tbl_trading_log_record';
         break;
     case 'trainghiem':
         $tbl_log = 'tbl_customer_demo_log';

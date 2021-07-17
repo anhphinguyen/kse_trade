@@ -121,6 +121,10 @@ switch($type_customer){
         $sql = "INSERT INTO tbl_trading_log SET
             id_customer = '$id_customer'
             ";
+            // backup
+        $sql_backup = "INSERT INTO tbl_trading_log_record SET
+            id_customer = '$id_customer'
+            ";
         break;
     }
     case 'trainghiem':{
@@ -136,8 +140,17 @@ $sql .= ", id_exchange_period = '$id_exchange_period',
             trading_log = '$trading_log',
             trading_percent = '$exchange_percent',
             trading_type = '$trading_type'";
-
+if($type_customer === 'customer'){
+    $sql_backup .= ", id_exchange_period = '$id_exchange_period',
+                    trading_bet = '$trading_bet',
+                    trading_log = '$trading_log',
+                    trading_percent = '$exchange_percent',
+                    trading_type = '$trading_type'";
+}
 if (db_qr($sql)) {
+    if($type_customer === 'customer'){
+        db_qr($sql_backup);                
+    }
     returnSuccess("Bạn đã đặt " . $trading_type);
 } else {
     returnError("Lỗi truy vấn");

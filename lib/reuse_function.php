@@ -98,6 +98,12 @@ function result_down($id_session)
 
     $sql = "UPDATE tbl_trading_log SET trading_result = 'lose' WHERE id_exchange_period = '$id_session' AND trading_type = 'up' ";
     db_qr($sql);
+    // backup
+    $sql = "UPDATE tbl_trading_log_record SET trading_result = 'win' WHERE id_exchange_period = '$id_session' AND trading_type = 'down' ";
+    db_qr($sql);
+
+    $sql = "UPDATE tbl_trading_log_record SET trading_result = 'lose' WHERE id_exchange_period = '$id_session' AND trading_type = 'up' ";
+    db_qr($sql);
 
     $sql = "UPDATE tbl_customer_demo_log SET trading_result = 'win' WHERE id_exchange_period = '$id_session' AND trading_type = 'down'";
     db_qr($sql);
@@ -113,6 +119,12 @@ function result_up($id_session)
     db_qr($sql);
 
     $sql = "UPDATE tbl_trading_log SET  trading_result = 'win' WHERE id_exchange_period = '$id_session' AND trading_type = 'up' ";
+    db_qr($sql);
+    // backup
+    $sql = "UPDATE tbl_trading_log_record SET trading_result = 'lose' WHERE id_exchange_period = '$id_session' AND trading_type = 'down' ";
+    db_qr($sql);
+
+    $sql = "UPDATE tbl_trading_log_record SET  trading_result = 'win' WHERE id_exchange_period = '$id_session' AND trading_type = 'up' ";
     db_qr($sql);
 
     $sql = "UPDATE tbl_customer_demo_log SET trading_result = 'lose' WHERE id_exchange_period = '$id_session' AND trading_type = 'down' ";

@@ -140,6 +140,10 @@ switch ($detect) {
             break;
         }
         /*customer board*/
+    case 'check_customer_authend': {
+            include_once 'customer_board/check_customer_authend.php';
+            break;
+         }
     case 'add_money_win': {
             include_once 'customer_board/add_money_win.php';
             break;

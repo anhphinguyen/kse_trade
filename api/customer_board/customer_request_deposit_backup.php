@@ -79,36 +79,16 @@ if ($nums > 0) {
         $sql_momo = "SELECT *
                         FROM tbl_momo_info
                         ";
-        $sql_bank = "SELECT *
-                        FROM tbl_nasdaqbank_info
-                        ";
         $momo_arr = db_fetch_array($sql_momo);
         $momo_random = array_rand($momo_arr);
-        $bank_arr = db_fetch_array($sql_bank);
-        $bank_random = array_rand($bank_arr);
-        $customer_item_momo = array(
+        $customer_item = array(
             'id_customer' => $row['id'],
-            'bank_name' => "",
-            'bank_holder' => "",
-            'bank_number' => "",
             'customer_name' => $momo_arr[$momo_random]['momo_account'],
             'customer_phone' => $momo_arr[$momo_random]['momo_no'],
-            'request_syntax' => "NASDAQNAPTIEN" . $row['customer_phone'],
-            'type' => 'momo'
-        );
-        $customer_item_bank = array(
-            'id_customer' => $row['id'],
-            'bank_name' => $bank_arr[$bank_random]['bank_name'],
-            'bank_holder' => $bank_arr[$bank_random]['bank_holder'],
-            'bank_number' => $bank_arr[$bank_random]['bank_number'],
-            'customer_name' => "",
-            'customer_phone' => "",
-            'request_syntax' => $bank_arr[$bank_random]['bank_number'],
-            'type' => 'bank'
+            'request_syntax' => "NASDAQNAPTIEN" . $row['customer_phone']
         );
 
-        array_push($customer_arr['data'], $customer_item_momo);
-        array_push($customer_arr['data'], $customer_item_bank);
+        array_push($customer_arr['data'], $customer_item);
     }
     reJson($customer_arr);
 } else {

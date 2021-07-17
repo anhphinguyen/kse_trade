@@ -260,7 +260,6 @@ switch ($type_manager) {
                 $customer_authend = htmlspecialchars($_REQUEST['customer_authend']);
                 $sql = "UPDATE `tbl_customer_customer` SET";
                 $sql .= " `customer_authend` = '{$customer_authend}'";
-                $sql .= " `customer_authend` = '{$customer_authend}'";
                 $sql .= " WHERE `id` = '{$id_customer}'";
 
                 if (mysqli_query($conn, $sql)) {

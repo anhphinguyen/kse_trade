@@ -67,9 +67,9 @@ $sql = "SELECT
 $sql_exchange_total_win = "";
 $sql_exchange_total_lose = "";
 if ($type_target == 'admin') {
-    $sql_exchange_total_win = "SELECT SUM(trading_bet)*(91/100) as total_win FROM tbl_trading_log WHERE trading_result = 'win'";
+    $sql_exchange_total_win = "SELECT SUM(trading_bet)*(91/100) as total_win FROM tbl_trading_log_record WHERE trading_result = 'win'";
 
-    $sql_exchange_total_lose = "SELECT SUM(trading_bet) as total_lose FROM tbl_trading_log WHERE trading_result = 'lose'";
+    $sql_exchange_total_lose = "SELECT SUM(trading_bet) as total_lose FROM tbl_trading_log_record WHERE trading_result = 'lose'";
 }
 // //////////////////////////////////////////////////////
 
@@ -77,21 +77,21 @@ if (!empty($date_begin)) {
     $sql .= " AND tbl_exchange_period.period_close > $date_begin";
     $sql .= " AND tbl_exchange_period.period_close <= $date_end";
 
-    $sql_exchange_total_win .= " AND tbl_trading_log.trading_log >= $date_begin";
-    $sql_exchange_total_win .= " AND tbl_trading_log.trading_log <= $date_end";
+    $sql_exchange_total_win .= " AND tbl_trading_log_record.trading_log >= $date_begin";
+    $sql_exchange_total_win .= " AND tbl_trading_log_record.trading_log <= $date_end";
 
-    $sql_exchange_total_lose .= " AND tbl_trading_log.trading_log >= $date_begin";
-    $sql_exchange_total_lose .= " AND tbl_trading_log.trading_log <= $date_end";
+    $sql_exchange_total_lose .= " AND tbl_trading_log_record.trading_log >= $date_begin";
+    $sql_exchange_total_lose .= " AND tbl_trading_log_record.trading_log <= $date_end";
 } else {
     $sql .= " AND tbl_exchange_period.period_close > $date_begin_current";
     $sql .= " AND tbl_exchange_period.period_close <= $timestamp_current";
 
 
-    $sql_exchange_total_win .= " AND tbl_trading_log.trading_log >= $date_begin_current";
-    $sql_exchange_total_win .= " AND tbl_trading_log.trading_log <= $timestamp_current";
+    $sql_exchange_total_win .= " AND tbl_trading_log_record.trading_log >= $date_begin_current";
+    $sql_exchange_total_win .= " AND tbl_trading_log_record.trading_log <= $timestamp_current";
 
-    $sql_exchange_total_lose .= " AND tbl_trading_log.trading_log >= $date_begin_current";
-    $sql_exchange_total_lose .= " AND tbl_trading_log.trading_log <= $timestamp_current";
+    $sql_exchange_total_lose .= " AND tbl_trading_log_record.trading_log >= $date_begin_current";
+    $sql_exchange_total_lose .= " AND tbl_trading_log_record.trading_log <= $timestamp_current";
 }
 
 $exchange_total_win = 0;
@@ -164,13 +164,13 @@ if ($nums > 0) {
         );
         $id_session = $row['id'];
 
-        $sql_get_total_win = "SELECT SUM(trading_bet) FROM tbl_trading_log WHERE trading_result = 'win' AND id_exchange_period = " . $id_session . "";
-        $sql_get_total_lose = "SELECT SUM(trading_bet) FROM tbl_trading_log WHERE trading_result = 'lose' AND id_exchange_period = " . $id_session . "";
+        $sql_get_total_win = "SELECT SUM(trading_bet) FROM tbl_trading_log_record WHERE trading_result = 'win' AND id_exchange_period = " . $id_session . "";
+        $sql_get_total_lose = "SELECT SUM(trading_bet) FROM tbl_trading_log_record WHERE trading_result = 'lose' AND id_exchange_period = " . $id_session . "";
 
         $sql_total_bet = "SELECT 
                 ($sql_get_total_win) * (91/100) as total_win,
                 ($sql_get_total_lose) as total_lose
-                FROM `tbl_trading_log`
+                FROM `tbl_trading_log_record`
                 WHERE 1=1
                 ";
 
